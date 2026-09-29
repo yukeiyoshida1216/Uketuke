@@ -101,7 +101,7 @@ export const copy = {
   interview: "面接・研修",
   interviewHint: "面接・研修でお越しの方",
   other: "その他",
-  otherHint: "配達など",
+  otherHint: "配達や点検など",
   home: "最初の画面へ",
   homeFromError: "最初の画面へ戻る",
   companyName: "会社名",
