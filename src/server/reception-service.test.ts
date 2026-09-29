@@ -224,6 +224,17 @@ describe("受付通知", () => {
     expect(posts[1]).toContain("<@UYANASE>");
     expect(posts[1]).not.toContain("UITO");
     expect(posts[1]).not.toContain("UHACKER");
+
+    const briefing = await service.submit({
+      idempotencyKey: "key-briefing-1",
+      type: "interview",
+      purpose: "briefing",
+      visitorName: "佐藤",
+    });
+    expect(briefing.status).toBe(200);
+    expect(posts[2]).toContain("【会社説明】来客がありました");
+    expect(posts[2]).toContain("<@UNOSAKA>");
+    expect(posts[2]).toContain("お名前: 佐藤");
   });
 
   it("DRY RUN では Slack を呼ばずに成功する", async () => {

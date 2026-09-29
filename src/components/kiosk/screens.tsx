@@ -336,7 +336,7 @@ export function InterviewScreen({
             onChange={(event) => onVisitorName(event.target.value)}
           />
           <div className="grid gap-3">
-            <div className="grid grid-cols-2 gap-3" role="group" aria-label={copy.interviewTitle}>
+            <div className="grid grid-cols-3 gap-3" role="group" aria-label={copy.interviewTitle}>
               {interviewPurposes.map((item) => (
                 <KioskButton
                   key={item.id}

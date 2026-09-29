@@ -76,6 +76,7 @@ export type VisitorCountChoiceId = (typeof visitorCountChoices)[number]["id"];
 export const interviewPurposes = [
   { id: "interview", label: "面接" },
   { id: "training", label: "研修" },
+  { id: "briefing", label: "会社説明" },
 ] as const;
 
 export type InterviewPurpose = (typeof interviewPurposes)[number]["id"];
@@ -117,7 +118,7 @@ export const copy = {
   destinationEmpty: "訪問先が登録されていません",
   reload: "再読み込み",
   interviewTitle: "面接・研修",
-  interviewRequired: "面接か研修を選び、氏名を入力してください",
+  interviewRequired: "面接・研修・会社説明のいずれかを選び、氏名を入力してください",
   back: "戻る",
   next: "次へ",
   send: "送信する",
@@ -131,6 +132,7 @@ export const copy = {
     generalTitle: "【総合受付】来客がありました",
     interviewTitle: "【面接】来客がありました",
     trainingTitle: "【研修】来客がありました",
+    briefingTitle: "【会社説明】来客がありました",
     otherTitle: "【その他】配達の受付がありました",
     companyLabel: "会社名",
     nameLabel: "お名前",

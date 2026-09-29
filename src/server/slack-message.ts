@@ -1,4 +1,4 @@
-import { copy } from "@/config/reception";
+import { copy, type InterviewPurpose } from "@/config/reception";
 
 const SLACK_USER_ID = /^[UW][A-Z0-9]{2,32}$/;
 
@@ -22,7 +22,7 @@ export function buildSlackText(input: {
   visitorCount?: number;
   visitorCountOrMore?: boolean;
   destinationName?: string;
-  purpose?: "interview" | "training";
+  purpose?: InterviewPurpose;
 }): string {
   if (input.mentionSlackIds.length === 0) throw new MentionConfigError();
   const mentionLine = input.mentionSlackIds.map((id) => formatMention(id)).join(" ");
@@ -38,7 +38,12 @@ export function buildSlackText(input: {
     ].join("\n");
   }
   if (input.kind === "interview") {
-    const title = input.purpose === "training" ? copy.slack.trainingTitle : copy.slack.interviewTitle;
+    const titles: Record<InterviewPurpose, string> = {
+      interview: copy.slack.interviewTitle,
+      training: copy.slack.trainingTitle,
+      briefing: copy.slack.briefingTitle,
+    };
+    const title = input.purpose ? titles[input.purpose] : copy.slack.interviewTitle;
     return [mentionLine, title, `${copy.slack.nameLabel}: ${input.visitorName}`].join("\n");
   }
   return [mentionLine, copy.slack.otherTitle].join("\n");

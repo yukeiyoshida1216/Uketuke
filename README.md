@@ -139,7 +139,7 @@ http://127.0.0.1:8787 で画面、http://127.0.0.1:8787/api/health で死活監�
 }
 ```
 
-4人以上は `visitorCount: 4` と `visitorCountOrMore: true` です。面接は `type: "interview"`、`purpose: "interview"` または `"training"`、`visitorName` です。その他は `type: "other"` だけです。人数は 1、2、3、または 4人以上だけです。不正なリクエストは 400、Slack 失敗は 502 です。
+4人以上は `visitorCount: 4` と `visitorCountOrMore: true` です。面接・研修・会社説明は `type: "interview"`、`purpose: "interview"`、`"training"` または `"briefing"`、`visitorName` です。その他は `type: "other"` だけです。人数は 1、2、3、または 4人以上だけです。不正なリクエストは 400、Slack 失敗は 502 です。
 
 `GET /api/destinations` は `{ "id", "name" }` だけを返します。
 
