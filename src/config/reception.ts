@@ -122,7 +122,7 @@ export const copy = {
   next: "次へ",
   send: "送信する",
   sending: "送信しています",
-  thanks: "入力ありがとうございます！",
+  thanks: "受付ありがとうございます！",
   thanksHint: "まもなく最初の画面に戻ります",
   errorTitle: "送信できませんでした",
   errorBody: "通信に失敗しました。入力内容は残っています。もう一度送信できます。",
