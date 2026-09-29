@@ -62,6 +62,7 @@ describe("受付通知", () => {
     const interview = await service.submit({
       idempotencyKey: "key-interview-1",
       type: "interview",
+      purpose: "interview",
       visitorName: "佐藤",
       destinationId: "ito",
       mentions: ["UHACKER"],
@@ -86,7 +87,7 @@ describe("受付通知", () => {
         "人数: 2名",
         "訪問先: 伊藤 功",
       ].join("\n"),
-      ["<@UNOSAKA> <@UYANASE>", "【面接・研修】来客がありました", "お名前: 佐藤"].join("\n"),
+      ["<@UNOSAKA> <@UYANASE>", "【面接】来客がありました", "お名前: 佐藤"].join("\n"),
       ["<@UITO>", "【その他】配達の受付がありました"].join("\n"),
     ]);
     expect(posts[0]).not.toContain("UNOSAKA");
@@ -108,9 +109,11 @@ describe("受付通知", () => {
       { ...generalBody, idempotencyKey: "key-missing-3", visitorCount: 0 },
       { ...generalBody, idempotencyKey: "key-missing-4", visitorCount: 1.5 },
       { ...generalBody, idempotencyKey: "key-missing-5", visitorCount: "2" },
-      { ...generalBody, idempotencyKey: "key-missing-6", visitorCount: 31 },
-      { ...generalBody, idempotencyKey: "key-missing-7", destinationId: "unknown" },
-      { idempotencyKey: "key-interview-x", type: "interview", visitorName: "  " },
+      { ...generalBody, idempotencyKey: "key-missing-6", visitorCount: 4 },
+      { ...generalBody, idempotencyKey: "key-missing-7", visitorCount: 4, visitorCountOrMore: "yes" },
+      { ...generalBody, idempotencyKey: "key-missing-8", destinationId: "unknown" },
+      { idempotencyKey: "key-interview-x", type: "interview", visitorName: "  ", purpose: "interview" },
+      { idempotencyKey: "key-interview-y", type: "interview", visitorName: "佐藤" },
       { idempotencyKey: "key-type-x", type: "delivery" },
     ];
     for (const body of cases) {
@@ -193,6 +196,34 @@ describe("受付通知", () => {
     const afterWindow = await service.submit({ ...generalBody, idempotencyKey: "key-retry-3" });
     expect(afterWindow.status).toBe(200);
     expect(posts).toBe(3);
+  });
+
+  it("4人以上と研修は見出しを分け、メンション先は設定どおり", async () => {
+    const { service, posts } = harness();
+    const general = await service.submit({
+      ...generalBody,
+      idempotencyKey: "key-four-1",
+      visitorCount: 4,
+      visitorCountOrMore: true,
+    });
+    const training = await service.submit({
+      idempotencyKey: "key-training-1",
+      type: "interview",
+      purpose: "training",
+      visitorName: "佐藤",
+      destinationId: "ito",
+      mentions: ["UHACKER"],
+    });
+    expect(general.status).toBe(200);
+    expect(training.status).toBe(200);
+    expect(posts[0]).toContain("人数: 4名以上");
+    expect(posts[0]).toContain("<@UITO>");
+    expect(posts[0]).not.toContain("UNOSAKA");
+    expect(posts[1]).toContain("【研修】来客がありました");
+    expect(posts[1]).toContain("<@UNOSAKA>");
+    expect(posts[1]).toContain("<@UYANASE>");
+    expect(posts[1]).not.toContain("UITO");
+    expect(posts[1]).not.toContain("UHACKER");
   });
 
   it("DRY RUN では Slack を呼ばずに成功する", async () => {

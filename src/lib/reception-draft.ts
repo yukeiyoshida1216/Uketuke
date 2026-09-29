@@ -3,6 +3,7 @@ export type Draft = {
   visitorName: string;
   visitorCount: string;
   interviewName: string;
+  interviewPurpose: string;
 };
 
 export function emptyDraft(): Draft {
@@ -11,5 +12,6 @@ export function emptyDraft(): Draft {
     visitorName: "",
     visitorCount: "",
     interviewName: "",
+    interviewPurpose: "",
   };
 }

@@ -11,6 +11,7 @@ export function toRequestBody(pending: PendingReception): Record<string, unknown
       companyName: payload.companyName,
       visitorName: payload.visitorName,
       visitorCount: payload.visitorCount,
+      visitorCountOrMore: payload.visitorCountOrMore,
       destinationId: payload.destinationId,
     };
   }
@@ -19,6 +20,7 @@ export function toRequestBody(pending: PendingReception): Record<string, unknown
       idempotencyKey: pending.idempotencyKey,
       type: "interview",
       visitorName: payload.visitorName,
+      purpose: payload.purpose,
     };
   }
   return {

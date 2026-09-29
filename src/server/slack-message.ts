@@ -20,24 +20,26 @@ export function buildSlackText(input: {
   companyName?: string;
   visitorName?: string;
   visitorCount?: number;
+  visitorCountOrMore?: boolean;
   destinationName?: string;
+  purpose?: "interview" | "training";
 }): string {
   if (input.mentionSlackIds.length === 0) throw new MentionConfigError();
   const mentionLine = input.mentionSlackIds.map((id) => formatMention(id)).join(" ");
   if (input.kind === "general") {
+    const countText = input.visitorCountOrMore ? copy.slack.countOrMoreSuffix : copy.slack.countSuffix;
     return [
       mentionLine,
       copy.slack.generalTitle,
       `${copy.slack.companyLabel}: ${input.companyName}`,
       `${copy.slack.nameLabel}: ${input.visitorName}`,
-      `${copy.slack.countLabel}: ${input.visitorCount}${copy.slack.countSuffix}`,
+      `${copy.slack.countLabel}: ${input.visitorCount}${countText}`,
       `${copy.slack.destinationLabel}: ${input.destinationName}`,
     ].join("\n");
   }
   if (input.kind === "interview") {
-    return [mentionLine, copy.slack.interviewTitle, `${copy.slack.nameLabel}: ${input.visitorName}`].join(
-      "\n",
-    );
+    const title = input.purpose === "training" ? copy.slack.trainingTitle : copy.slack.interviewTitle;
+    return [mentionLine, title, `${copy.slack.nameLabel}: ${input.visitorName}`].join("\n");
   }
   return [mentionLine, copy.slack.otherTitle].join("\n");
 }

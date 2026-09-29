@@ -41,6 +41,7 @@ describe("受付入力の検証", () => {
       companyName: "株式会社あおぞら",
       visitorName: "山田 花",
       visitorCount: 2,
+      visitorCountOrMore: false,
       destinationId: "ito",
     });
     expect(JSON.stringify(parsed.payload)).not.toContain("CLIENT_CONTROLLED_TEXT");

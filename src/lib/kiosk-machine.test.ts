@@ -75,8 +75,11 @@ describe("受付画面の状態", () => {
 
     state = kioskReducer(state, { type: "editDraft", patch: { interviewName: "  佐藤  " } });
     state = kioskReducer(state, { type: "submitInterview", now: 0, key });
+    expect(state.phase).toBe("interview");
+    state = kioskReducer(state, { type: "editDraft", patch: { interviewPurpose: "interview" } });
+    state = kioskReducer(state, { type: "submitInterview", now: 0, key });
     expect(state.phase).toBe("sending");
-    expect(state.pending?.payload).toEqual({ type: "interview", visitorName: "佐藤" });
+    expect(state.pending?.payload).toEqual({ type: "interview", visitorName: "佐藤", purpose: "interview" });
     const sessionId = state.sessionId;
     state = kioskReducer(state, { type: "sendFailed", sessionId });
     expect(state.phase).toBe("error");
@@ -84,7 +87,7 @@ describe("受付画面の状態", () => {
     state = kioskReducer(state, { type: "retry" });
     expect(state.phase).toBe("sending");
     expect(state.pending?.idempotencyKey).toBe(key);
-    expect(state.pending?.payload).toEqual({ type: "interview", visitorName: "佐藤" });
+    expect(state.pending?.payload).toEqual({ type: "interview", visitorName: "佐藤", purpose: "interview" });
     expect(state.pending?.attempt).toBe(2);
   });
 
@@ -146,6 +149,7 @@ describe("受付画面の状態", () => {
       companyName: "株式会社あおぞら",
       visitorName: "山田 花",
       visitorCount: 2,
+      visitorCountOrMore: false,
     });
     state = kioskReducer(state, { type: "sendFailed", sessionId: state.sessionId });
     expect(state.phase).toBe("error");

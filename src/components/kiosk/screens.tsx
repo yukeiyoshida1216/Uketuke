@@ -1,53 +1,49 @@
 "use client";
 
-import { copy, theme } from "@/config/reception";
+import { copy, interviewPurposes, theme, visitorCountChoices } from "@/config/reception";
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
-import { normalizeCountInput } from "@/lib/reception";
 
 export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
   return (
     <button
       type="button"
       onClick={onEnter}
-      className="relative grid h-full w-full grid-rows-[1fr_auto_1fr] place-items-center overflow-hidden px-6 text-center"
-      style={{
-        background: `radial-gradient(circle at 50% 16%, ${theme.white} 0%, ${theme.backgroundDeep} 36%, ${theme.background} 72%)`,
-        color: theme.ink,
-      }}
+      className="flex h-full w-full flex-col items-center justify-center overflow-hidden px-6 text-center"
+      style={{ background: theme.background, color: theme.ink }}
     >
       <span
-        aria-hidden
-        className="kiosk-pulse pointer-events-none absolute top-1/2 left-1/2 size-[min(78vw,30rem)] -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{
-          background: `radial-gradient(circle, ${theme.white} 0%, rgba(255, 224, 138, 0.2) 68%, transparent 70%)`,
-        }}
-      />
-      <span className="relative z-10 flex flex-col items-center self-end pb-[clamp(0.35rem,1.4vh,0.9rem)]">
-        <span
-          className="font-bold tracking-[0.04em]"
-          style={{ color: theme.ink, fontSize: "clamp(2.6rem, 8.6vw, 5.2rem)", lineHeight: 1.15 }}
-        >
-          {copy.welcomeCompany}
-        </span>
-        <span
-          className="mt-[clamp(0.15rem,0.8vh,0.45rem)] font-bold tracking-[0.14em]"
-          style={{ color: theme.amberDeep, fontSize: "clamp(1.45rem, 3.4vh, 2.35rem)" }}
-        >
-          {copy.welcomeTitle}
-        </span>
+        className="font-bold tracking-[0.14em]"
+        style={{ color: theme.amberDeep, fontSize: "clamp(2.05rem, 5.2vh, 3.2rem)" }}
+      >
+        {copy.welcomeTitle}
       </span>
       <img
-        src="/logo-light-path.png"
-        alt="LIGHT PATH"
-        className="relative z-10 h-[min(42vh,20rem)] w-auto max-w-[min(78vw,24rem)] object-contain"
+        src="/logo-mark.png"
+        alt=""
+        width={283}
+        height={280}
+        decoding="sync"
+        fetchPriority="high"
+        className="mt-[clamp(0.4rem,1.6vh,1rem)] h-[min(26vh,16rem)] w-auto max-w-[min(70vw,18rem)] object-contain"
       />
       <span
-        className="relative z-10 mt-[clamp(0.8rem,2.4vh,1.4rem)] self-start rounded-full px-8 py-4 font-medium shadow-sm"
-        style={{
-          background: theme.white,
-          color: theme.ink,
-          fontSize: "clamp(1.2rem, 3vh, 2rem)",
-        }}
+        className="mt-[clamp(0.2rem,1vh,0.6rem)] font-bold tracking-[0.04em]"
+        style={{ color: theme.ink, fontSize: "clamp(1.8rem, 5.6vw, 3.4rem)", lineHeight: 1.15 }}
+      >
+        {copy.welcomeCompany}
+      </span>
+      <img
+        src="/logo-wordmark.png"
+        alt="LIGHT PATH"
+        width={252}
+        height={87}
+        decoding="sync"
+        fetchPriority="high"
+        className="mt-[clamp(0.15rem,0.8vh,0.45rem)] h-[min(8vh,4.4rem)] w-auto max-w-[min(64vw,16rem)] object-contain"
+      />
+      <span
+        className="mt-[clamp(0.7rem,2.2vh,1.3rem)] font-medium"
+        style={{ color: theme.yamabuki, fontSize: "clamp(1.35rem, 3.2vh, 2.15rem)" }}
       >
         {copy.welcomeSubtitle}
       </span>
@@ -67,18 +63,18 @@ export function MenuScreen({
   onHome: () => void;
 }) {
   const choices = [
-    { label: copy.general, hint: copy.generalHint, onClick: onGeneral, tone: "primary" as const },
-    { label: copy.interview, hint: copy.interviewHint, onClick: onInterview, tone: "white" as const },
-    { label: copy.other, hint: copy.otherHint, onClick: onOther, tone: "white" as const },
+    { label: copy.general, hint: copy.generalHint, onClick: onGeneral },
+    { label: copy.interview, hint: copy.interviewHint, onClick: onInterview },
+    { label: copy.other, hint: copy.otherHint, onClick: onOther },
   ];
   return (
     <KioskFrame title={copy.menuTitle}>
       <div className="grid min-h-0 flex-1 grid-rows-[1fr_1fr_1fr_auto] gap-[clamp(0.5rem,1.5vh,1rem)] landscape:grid-cols-3 landscape:grid-rows-[1fr_auto]">
         {choices.map((choice) => (
-          <KioskButton key={choice.label} tone={choice.tone} onClick={choice.onClick} aria-label={choice.label}>
+          <KioskButton key={choice.label} tone="white" onClick={choice.onClick} aria-label={choice.label}>
             <span className="flex flex-col items-center gap-1">
               <span>{choice.label}</span>
-              <span className="font-medium" style={{ fontSize: "0.72em", color: choice.tone === "primary" ? theme.white : theme.inkSoft }}>
+              <span className="font-medium" style={{ fontSize: "0.72em", color: theme.inkSoft }}>
                 {choice.hint}
               </span>
             </span>
@@ -139,15 +135,25 @@ export function GeneralScreen({
             autoComplete="name"
             onChange={(event) => onVisitorName(event.target.value)}
           />
-          <KioskField
-            id="visitorCount"
-            label={copy.visitorCount}
-            value={visitorCount}
-            placeholder={copy.visitorCountPlaceholder}
-            inputMode="numeric"
-            autoComplete="off"
-            onChange={(event) => onVisitorCount(normalizeCountInput(event.target.value))}
-          />
+          <div className="grid gap-2">
+            <span className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1rem, 2.2vh, 1.3rem)" }}>
+              {copy.visitorCount}
+            </span>
+            <div className="grid grid-cols-4 gap-2" role="group" aria-label={copy.visitorCount}>
+              {visitorCountChoices.map((choice) => (
+                <KioskButton
+                  key={choice.id}
+                  type="button"
+                  tone={visitorCount === choice.id ? "primary" : "white"}
+                  aria-pressed={visitorCount === choice.id}
+                  style={{ minHeight: "clamp(3.1rem, 8vh, 4.4rem)" }}
+                  onClick={() => onVisitorCount(choice.id)}
+                >
+                  {choice.label}
+                </KioskButton>
+              ))}
+            </div>
+          </div>
           <p className="text-center font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(0.95rem, 2vh, 1.15rem)" }}>
             {copy.generalRequired}
           </p>
@@ -224,14 +230,18 @@ export function DestinationScreen({
 
 export function InterviewScreen({
   visitorName,
+  purpose,
   ready,
   onVisitorName,
+  onPurpose,
   onBack,
   onSubmit,
 }: {
   visitorName: string;
+  purpose: string;
   ready: boolean;
   onVisitorName: (value: string) => void;
+  onPurpose: (value: string) => void;
   onBack: () => void;
   onSubmit: () => void;
 }) {
@@ -245,6 +255,19 @@ export function InterviewScreen({
         }}
       >
         <div className="grid gap-3">
+          <div className="grid grid-cols-2 gap-3" role="group" aria-label={copy.interviewTitle}>
+            {interviewPurposes.map((item) => (
+              <KioskButton
+                key={item.id}
+                type="button"
+                tone={purpose === item.id ? "primary" : "white"}
+                aria-pressed={purpose === item.id}
+                onClick={() => onPurpose(item.id)}
+              >
+                {item.label}
+              </KioskButton>
+            ))}
+          </div>
           <KioskField
             id="interviewName"
             label={copy.visitorName}

@@ -1,4 +1,4 @@
-import { limits } from "@/config/reception";
+import { interviewPurposes, limits, visitorCountChoices, type InterviewPurpose } from "@/config/reception";
 
 export type ReceptionType = "general" | "interview" | "other";
 
@@ -7,12 +7,14 @@ export type GeneralPayload = {
   companyName: string;
   visitorName: string;
   visitorCount: number;
+  visitorCountOrMore: boolean;
   destinationId: string;
 };
 
 export type InterviewPayload = {
   type: "interview";
   visitorName: string;
+  purpose: InterviewPurpose;
 };
 
 export type OtherPayload = {
@@ -28,7 +30,8 @@ export type FieldName =
   | "companyName"
   | "visitorName"
   | "visitorCount"
-  | "destinationId";
+  | "destinationId"
+  | "purpose";
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -41,10 +44,36 @@ export function normalizeText(value: unknown, maxLength: number): string | null 
   return trimmed;
 }
 
-export function parseVisitorCount(value: unknown): number | null {
+export function parseVisitorCount(value: unknown, orMore: unknown = false): number | null {
+  const parsed = parseVisitorSelection(value, orMore);
+  return parsed?.visitorCount ?? null;
+}
+
+export function parseVisitorSelection(
+  value: unknown,
+  orMore: unknown = false,
+): { visitorCount: number; visitorCountOrMore: boolean } | null {
   if (typeof value !== "number" || !Number.isInteger(value)) return null;
-  if (value < limits.minVisitorCount || value > limits.maxVisitorCount) return null;
-  return value;
+  if (orMore !== undefined && typeof orMore !== "boolean") return null;
+  const more = orMore === true;
+  if (!more && value >= limits.minVisitorCount && value <= limits.maxVisitorCount) {
+    return { visitorCount: value, visitorCountOrMore: false };
+  }
+  if (more && value === limits.orMoreVisitorCount) {
+    return { visitorCount: value, visitorCountOrMore: true };
+  }
+  return null;
+}
+
+export function visitorChoiceFromId(id: string): { visitorCount: number; visitorCountOrMore: boolean } | null {
+  const choice = visitorCountChoices.find((item) => item.id === id);
+  if (!choice) return null;
+  return { visitorCount: choice.count, visitorCountOrMore: choice.orMore };
+}
+
+export function interviewPurposeFromId(id: string): InterviewPurpose | null {
+  const purpose = interviewPurposes.find((item) => item.id === id);
+  return purpose?.id ?? null;
 }
 
 export function normalizeCountInput(raw: string): string {
@@ -52,11 +81,6 @@ export function normalizeCountInput(raw: string): string {
     .replace(/[０-９]/g, (digit) => String.fromCharCode(digit.charCodeAt(0) - 0xfee0))
     .replace(/\D/g, "");
   return digits.slice(0, String(limits.maxVisitorCount).length);
-}
-
-export function digitsToCount(digits: string): number | null {
-  if (!/^[0-9]+$/.test(digits)) return null;
-  return parseVisitorCount(Number(digits));
 }
 
 export function receptionFingerprint(payload: ReceptionPayload): string {
@@ -67,10 +91,11 @@ export function receptionFingerprint(payload: ReceptionPayload): string {
         payload.companyName,
         payload.visitorName,
         payload.visitorCount,
+        payload.visitorCountOrMore,
         payload.destinationId,
       ]);
     case "interview":
-      return JSON.stringify(["interview", payload.visitorName]);
+      return JSON.stringify(["interview", payload.purpose, payload.visitorName]);
     case "other":
       return JSON.stringify(["other"]);
   }
@@ -119,27 +144,36 @@ export function parseReceptionBody(body: unknown): ParsedReception {
   if (body.type === "general") {
     const companyName = normalizeText(body.companyName, limits.maxCompanyLength);
     const visitorName = normalizeText(body.visitorName, limits.maxNameLength);
-    const visitorCount = parseVisitorCount(body.visitorCount);
+    const visitors = parseVisitorSelection(body.visitorCount, body.visitorCountOrMore);
     const destinationId = normalizeText(body.destinationId, 40);
     if (!companyName) fields.push("companyName");
     if (!visitorName) fields.push("visitorName");
-    if (visitorCount === null) fields.push("visitorCount");
+    if (!visitors) fields.push("visitorCount");
     if (!destinationId) fields.push("destinationId");
-    if (!idempotencyKey || !companyName || !visitorName || visitorCount === null || !destinationId) {
+    if (!idempotencyKey || !companyName || !visitorName || !visitors || !destinationId) {
       return { ok: false, fields };
     }
     return {
       ok: true,
       idempotencyKey,
-      payload: { type: "general", companyName, visitorName, visitorCount, destinationId },
+      payload: {
+        type: "general",
+        companyName,
+        visitorName,
+        visitorCount: visitors.visitorCount,
+        visitorCountOrMore: visitors.visitorCountOrMore,
+        destinationId,
+      },
     };
   }
 
   if (body.type === "interview") {
     const visitorName = normalizeText(body.visitorName, limits.maxNameLength);
+    const purpose = typeof body.purpose === "string" ? interviewPurposeFromId(body.purpose) : null;
     if (!visitorName) fields.push("visitorName");
-    if (!idempotencyKey || !visitorName) return { ok: false, fields };
-    return { ok: true, idempotencyKey, payload: { type: "interview", visitorName } };
+    if (!purpose) fields.push("purpose");
+    if (!idempotencyKey || !visitorName || !purpose) return { ok: false, fields };
+    return { ok: true, idempotencyKey, payload: { type: "interview", visitorName, purpose } };
   }
 
   if (!idempotencyKey) return { ok: false, fields };
@@ -151,19 +185,40 @@ export function validatedGeneralDraft(draft: {
   visitorName: string;
   visitorCount: string;
 }):
-  | { ok: true; companyName: string; visitorName: string; visitorCount: number }
+  | {
+      ok: true;
+      companyName: string;
+      visitorName: string;
+      visitorCount: number;
+      visitorCountOrMore: boolean;
+    }
   | { ok: false; fields: FieldName[] } {
   const fields: FieldName[] = [];
   const companyName = normalizeText(draft.companyName, limits.maxCompanyLength);
   const visitorName = normalizeText(draft.visitorName, limits.maxNameLength);
-  const visitorCount = digitsToCount(draft.visitorCount);
+  const visitors = visitorChoiceFromId(draft.visitorCount);
   if (!companyName) fields.push("companyName");
   if (!visitorName) fields.push("visitorName");
-  if (visitorCount === null) fields.push("visitorCount");
-  if (!companyName || !visitorName || visitorCount === null) return { ok: false, fields };
-  return { ok: true, companyName, visitorName, visitorCount };
+  if (!visitors) fields.push("visitorCount");
+  if (!companyName || !visitorName || !visitors) return { ok: false, fields };
+  return {
+    ok: true,
+    companyName,
+    visitorName,
+    visitorCount: visitors.visitorCount,
+    visitorCountOrMore: visitors.visitorCountOrMore,
+  };
 }
 
 export function validatedInterviewName(value: string): string | null {
   return normalizeText(value, limits.maxNameLength);
+}
+
+export function validatedInterviewDraft(draft: { interviewName: string; interviewPurpose: string }):
+  | { ok: true; visitorName: string; purpose: InterviewPurpose }
+  | { ok: false } {
+  const visitorName = validatedInterviewName(draft.interviewName);
+  const purpose = interviewPurposeFromId(draft.interviewPurpose);
+  if (!visitorName || !purpose) return { ok: false };
+  return { ok: true, visitorName, purpose };
 }

@@ -47,6 +47,7 @@ function composeMessage(
       companyName: payload.companyName,
       visitorName: payload.visitorName,
       visitorCount: payload.visitorCount,
+      visitorCountOrMore: payload.visitorCountOrMore,
       destinationName: destination?.name ?? "",
     });
   }
@@ -55,6 +56,7 @@ function composeMessage(
       kind: "interview",
       mentionSlackIds: resolveSlackIds(interviewMentionIds, staff),
       visitorName: payload.visitorName,
+      purpose: payload.purpose,
     });
   }
   return buildSlackText({

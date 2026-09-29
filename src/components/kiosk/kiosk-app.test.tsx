@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 
-import { copy, timings } from "@/config/reception";
+import { copy, theme, timings } from "@/config/reception";
 import { KioskApp } from "@/components/kiosk/kiosk-app";
 import { resetInFlightForTests } from "@/lib/share-in-flight";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
@@ -43,14 +43,24 @@ describe("受付画面", () => {
     fireEvent.click(screen.getByRole("button", { name: copy.general }));
   }
 
-  it("WELCOME の上に会社名を出し、中央にロゴを出す", () => {
+  it("ロゴと LIGHT PATH の間に会社名を出す", () => {
     render(<KioskApp />);
     const welcome = screen.getByRole("button", { name: /WELCOME/ });
-    expect(welcome.textContent?.indexOf(copy.welcomeCompany)).toBeLessThan(
-      welcome.textContent?.indexOf(copy.welcomeTitle) ?? -1,
-    );
-    const logo = screen.getByRole("img", { name: "LIGHT PATH" });
-    expect(logo.getAttribute("src")).toBe("/logo-light-path.png");
+    const html = welcome.innerHTML;
+    expect(html.indexOf(copy.welcomeTitle)).toBeLessThan(html.indexOf("/logo-mark.png"));
+    expect(html.indexOf("/logo-mark.png")).toBeLessThan(html.indexOf(copy.welcomeCompany));
+    expect(html.indexOf(copy.welcomeCompany)).toBeLessThan(html.indexOf("/logo-wordmark.png"));
+    expect(html.indexOf("/logo-wordmark.png")).toBeLessThan(html.indexOf(copy.welcomeSubtitle));
+    const hint = [...welcome.querySelectorAll("span")].find((node) => node.textContent === copy.welcomeSubtitle);
+    expect(hint?.getAttribute("style")).toContain(theme.yamabuki);
+    expect(hint?.getAttribute("style") ?? "").not.toContain("background");
+  });
+
+  it("用件へ進んでもロゴ画像を外さない", () => {
+    render(<KioskApp />);
+    fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
+    expect(document.querySelector("img[src='/logo-mark.png']")).toBeTruthy();
+    expect(document.querySelector("img[src='/logo-wordmark.png']")).toBeTruthy();
   });
 
   it("必須が揃うまで次へ進めず、戻っても入力が残る", async () => {
@@ -60,7 +70,7 @@ describe("受付画面", () => {
     expect(next.disabled).toBe(true);
     fireEvent.change(screen.getByLabelText(copy.companyName), { target: { value: "  株式会社あおぞら  " } });
     fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "   " } });
-    fireEvent.change(screen.getByLabelText(copy.visitorCount), { target: { value: "2" } });
+    fireEvent.click(screen.getByRole("button", { name: "2人" }));
     expect((screen.getByRole("button", { name: copy.next }) as HTMLButtonElement).disabled).toBe(true);
     fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "山田 花" } });
     fireEvent.click(screen.getByRole("button", { name: copy.next }));
@@ -86,7 +96,7 @@ describe("受付画面", () => {
     await openGeneral();
     fireEvent.change(screen.getByLabelText(copy.companyName), { target: { value: "株式会社あおぞら" } });
     fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "山田 花" } });
-    fireEvent.change(screen.getByLabelText(copy.visitorCount), { target: { value: "3" } });
+    fireEvent.click(screen.getByRole("button", { name: "3人" }));
     fireEvent.click(screen.getByRole("button", { name: copy.next }));
     fireEvent.click(await screen.findByRole("button", { name: "伊藤 功" }));
     expect(await screen.findByRole("button", { name: copy.retry })).toBeTruthy();
@@ -100,6 +110,7 @@ describe("受付画面", () => {
       companyName: "株式会社あおぞら",
       visitorName: "山田 花",
       visitorCount: 3,
+      visitorCountOrMore: false,
       destinationId: "ito",
     });
     expect(calls[1]).toMatchObject(calls[0] as Record<string, unknown>);
@@ -165,6 +176,8 @@ describe("受付画面", () => {
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
     fireEvent.click(screen.getByRole("button", { name: copy.interview }));
     fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "佐藤" } });
+    expect((screen.getByRole("button", { name: copy.send }) as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: "面接" }));
     fireEvent.click(screen.getByRole("button", { name: copy.send }));
     await vi.waitFor(() => {
       expect(screen.getByText(copy.thanks)).toBeTruthy();

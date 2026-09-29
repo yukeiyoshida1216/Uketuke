@@ -15,7 +15,7 @@ import { postReceptionOnce } from "@/lib/api-client";
 import { createIdleTimer } from "@/lib/idle-timer";
 import { initialKioskState, kioskReducer } from "@/lib/kiosk-machine";
 import { createIdempotencyKey, requestKeepAwake, requestKioskSurface } from "@/lib/kiosk-surface";
-import { validatedGeneralDraft, validatedInterviewName } from "@/lib/reception";
+import { validatedGeneralDraft, validatedInterviewDraft } from "@/lib/reception";
 import { createSubmitLock } from "@/lib/submit-lock";
 import { useEffect, useReducer, useRef, useState } from "react";
 
@@ -124,26 +124,26 @@ export function KioskApp() {
   }
 
   const generalReady = validatedGeneralDraft(state.draft).ok;
-  const interviewReady = validatedInterviewName(state.draft.interviewName) !== null;
+  const interviewReady = validatedInterviewDraft(state.draft).ok;
 
   return (
     <main
       data-phase={state.phase}
       className="kiosk-root h-dvh overflow-hidden"
       style={{
-        background: `linear-gradient(180deg, ${theme.backgroundDeep} 0%, ${theme.background} 42%, ${theme.white} 100%)`,
+        background: theme.background,
         color: theme.ink,
         fontFamily: theme.fontFamily,
       }}
     >
-      {state.phase === "welcome" ? (
+      <div className="h-full" hidden={state.phase !== "welcome"}>
         <WelcomeScreen
           onEnter={() => {
             engage();
             dispatch({ type: "tapWelcome" });
           }}
         />
-      ) : null}
+      </div>
       {state.phase === "menu" ? (
         <MenuScreen
           onGeneral={() => {
@@ -188,8 +188,10 @@ export function KioskApp() {
       {state.phase === "interview" ? (
         <InterviewScreen
           visitorName={state.draft.interviewName}
+          purpose={state.draft.interviewPurpose}
           ready={interviewReady}
           onVisitorName={(value) => dispatch({ type: "editDraft", patch: { interviewName: value } })}
+          onPurpose={(value) => dispatch({ type: "editDraft", patch: { interviewPurpose: value } })}
           onBack={() => dispatch({ type: "back" })}
           onSubmit={() => {
             startSend({ type: "submitInterview", now: Date.now(), key: createIdempotencyKey() });

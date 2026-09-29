@@ -3,7 +3,7 @@ import { emptyDraft, type Draft } from "@/lib/reception-draft";
 import {
   receptionFingerprint,
   validatedGeneralDraft,
-  validatedInterviewName,
+  validatedInterviewDraft,
   type ReceptionPayload,
 } from "@/lib/reception";
 
@@ -130,7 +130,6 @@ export function kioskReducer(state: KioskState, action: KioskAction): KioskState
           ...state.draft,
           companyName: validated.companyName,
           visitorName: validated.visitorName,
-          visitorCount: String(validated.visitorCount),
         },
       };
     }
@@ -150,6 +149,7 @@ export function kioskReducer(state: KioskState, action: KioskAction): KioskState
         companyName: validated.companyName,
         visitorName: validated.visitorName,
         visitorCount: validated.visitorCount,
+        visitorCountOrMore: validated.visitorCountOrMore,
         destinationId,
       };
       return beginSend(
@@ -165,13 +165,17 @@ export function kioskReducer(state: KioskState, action: KioskAction): KioskState
     }
     case "submitInterview": {
       if (state.phase !== "interview") return state;
-      const visitorName = validatedInterviewName(state.draft.interviewName);
-      if (!visitorName) return state;
-      const payload: ReceptionPayload = { type: "interview", visitorName };
+      const interview = validatedInterviewDraft(state.draft);
+      if (!interview.ok) return state;
+      const payload: ReceptionPayload = {
+        type: "interview",
+        visitorName: interview.visitorName,
+        purpose: interview.purpose,
+      };
       return beginSend(
         {
           ...state,
-          draft: { ...state.draft, interviewName: visitorName },
+          draft: { ...state.draft, interviewName: interview.visitorName },
         },
         {
           payload,

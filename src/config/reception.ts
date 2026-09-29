@@ -9,6 +9,8 @@
 export const theme = {
   background: "#FFF4C8",
   backgroundDeep: "#FFE08A",
+  /** ロゴ中央の山吹色。案内文の文字色に使う。 */
+  yamabuki: "#F8B828",
   amber: "#F5A524",
   amberDeep: "#E09412",
   white: "#FFFFFF",
@@ -44,11 +46,30 @@ export const timings = {
 
 export const limits = {
   minVisitorCount: 1,
-  maxVisitorCount: 30,
+  maxVisitorCount: 3,
+  orMoreVisitorCount: 4,
   maxNameLength: 80,
   maxCompanyLength: 120,
   maxIdempotencyKeyLength: 80,
 } as const;
+
+/** 来社人数の選択肢。4人以上だけ orMore を立てて送る。 */
+export const visitorCountChoices = [
+  { id: "1", label: "1人", count: 1, orMore: false },
+  { id: "2", label: "2人", count: 2, orMore: false },
+  { id: "3", label: "3人", count: 3, orMore: false },
+  { id: "4plus", label: "4人以上", count: 4, orMore: true },
+] as const;
+
+export type VisitorCountChoiceId = (typeof visitorCountChoices)[number]["id"];
+
+/** 面接・研修で選ぶ用件。通知見出しは copy.slack 側。 */
+export const interviewPurposes = [
+  { id: "interview", label: "面接" },
+  { id: "training", label: "研修" },
+] as const;
+
+export type InterviewPurpose = (typeof interviewPurposes)[number]["id"];
 
 /** 面接・研修と配達のメンションに使える人。この三択以外は設定できない。 */
 export const mentionChoices = [
@@ -78,7 +99,6 @@ export const copy = {
   visitorName: "氏名",
   visitorPlaceholder: "山田 花",
   visitorCount: "来社人数",
-  visitorCountPlaceholder: "1",
   generalTitle: "総合受付",
   generalRequired: "会社名・氏名・人数はすべて必須です",
   destinationTitle: "訪問先を選択してください",
@@ -87,7 +107,7 @@ export const copy = {
   destinationEmpty: "訪問先が登録されていません",
   reload: "再読み込み",
   interviewTitle: "面接・研修",
-  interviewRequired: "氏名は必須です",
+  interviewRequired: "面接か研修を選び、氏名を入力してください",
   back: "戻る",
   next: "次へ",
   send: "送信する",
@@ -99,12 +119,14 @@ export const copy = {
   retry: "再試行",
   slack: {
     generalTitle: "【総合受付】来客がありました",
-    interviewTitle: "【面接・研修】来客がありました",
+    interviewTitle: "【面接】来客がありました",
+    trainingTitle: "【研修】来客がありました",
     otherTitle: "【その他】配達の受付がありました",
     companyLabel: "会社名",
     nameLabel: "お名前",
     countLabel: "人数",
     destinationLabel: "訪問先",
     countSuffix: "名",
+    countOrMoreSuffix: "名以上",
   },
 } as const;
