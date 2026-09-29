@@ -15,8 +15,8 @@ export const theme = {
   yamabuki: "#F8B828",
   amber: "#F5A524",
   amberDeep: "#E09412",
-  /** WELCOME の文字色。琥珀色をやわらかくしたもの。 */
-  welcomeSoft: "#E6BC78",
+  /** WELCOME の文字色。明るく、やわらかい金色。 */
+  welcomeSoft: "#F6D49A",
   white: "#FFFFFF",
   ink: "#4A3728",
   inkSoft: "#7A6552",
