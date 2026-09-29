@@ -21,10 +21,10 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
         {copy.welcomeTitle}
       </span>
       <img
-        src="/logo-mark.png"
+        src="/logo-mark.svg"
         alt=""
-        width={283}
-        height={280}
+        width={1132}
+        height={1120}
         decoding="sync"
         fetchPriority="high"
         className="mt-[clamp(0.4rem,1.6vh,1rem)] h-[min(26vh,16rem)] w-auto max-w-[min(70vw,18rem)] object-contain"
@@ -36,10 +36,10 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
         {copy.welcomeCompany}
       </span>
       <img
-        src="/logo-wordmark.png"
+        src="/logo-wordmark.svg"
         alt="LIGHT PATH"
-        width={252}
-        height={87}
+        width={1512}
+        height={522}
         decoding="sync"
         fetchPriority="high"
         className="mt-[clamp(0.15rem,0.8vh,0.45rem)] h-[min(8vh,4.4rem)] w-auto max-w-[min(64vw,16rem)] object-contain"

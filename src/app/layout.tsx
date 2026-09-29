@@ -28,8 +28,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ja" className="h-dvh antialiased">
       <head>
-        <link rel="preload" href="/logo-mark.png" as="image" />
-        <link rel="preload" href="/logo-wordmark.png" as="image" />
+        <link rel="preload" href="/logo-mark.svg" as="image" />
+        <link rel="preload" href="/logo-wordmark.svg" as="image" />
       </head>
       <body
         className="h-dvh overflow-hidden"

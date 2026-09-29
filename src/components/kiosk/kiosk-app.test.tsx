@@ -47,10 +47,10 @@ describe("受付画面", () => {
     render(<KioskApp />);
     const welcome = screen.getByRole("button", { name: /WELCOME/ });
     const html = welcome.innerHTML;
-    expect(html.indexOf(copy.welcomeTitle)).toBeLessThan(html.indexOf("/logo-mark.png"));
-    expect(html.indexOf("/logo-mark.png")).toBeLessThan(html.indexOf(copy.welcomeCompany));
-    expect(html.indexOf(copy.welcomeCompany)).toBeLessThan(html.indexOf("/logo-wordmark.png"));
-    expect(html.indexOf("/logo-wordmark.png")).toBeLessThan(html.indexOf(copy.welcomeSubtitle));
+    expect(html.indexOf(copy.welcomeTitle)).toBeLessThan(html.indexOf("/logo-mark.svg"));
+    expect(html.indexOf("/logo-mark.svg")).toBeLessThan(html.indexOf(copy.welcomeCompany));
+    expect(html.indexOf(copy.welcomeCompany)).toBeLessThan(html.indexOf("/logo-wordmark.svg"));
+    expect(html.indexOf("/logo-wordmark.svg")).toBeLessThan(html.indexOf(copy.welcomeSubtitle));
     const hint = [...welcome.querySelectorAll("span")].find((node) => node.textContent === copy.welcomeSubtitle);
     expect(hint?.getAttribute("style")).toContain(theme.yamabuki);
     expect(hint?.getAttribute("style") ?? "").not.toContain("background");
@@ -59,8 +59,8 @@ describe("受付画面", () => {
   it("用件へ進んでもロゴ画像を外さない", () => {
     render(<KioskApp />);
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
-    expect(document.querySelector("img[src='/logo-mark.png']")).toBeTruthy();
-    expect(document.querySelector("img[src='/logo-wordmark.png']")).toBeTruthy();
+    expect(document.querySelector("img[src='/logo-mark.svg']")).toBeTruthy();
+    expect(document.querySelector("img[src='/logo-wordmark.svg']")).toBeTruthy();
   });
 
   it("必須が揃うまで次へ進めず、戻っても入力が残る", async () => {
