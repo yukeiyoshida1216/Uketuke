@@ -21,6 +21,9 @@ export const theme = {
   fontFamily: '"Noto Sans JP", sans-serif',
 } as const;
 
+/** 画面全体の背景。上から下へ、中央からの放射にはしない。 */
+export const backgroundGradient = `linear-gradient(180deg, ${theme.white} 0%, ${theme.backgroundDeep} 42%, ${theme.background} 100%)`;
+
 export const network = {
   /** Docker と開発サーバーの待受ポート。docker-compose.yml の ports と揃える。 */
   port: 8787,

@@ -1,6 +1,6 @@
 "use client";
 
-import { theme, timings } from "@/config/reception";
+import { backgroundGradient, theme, timings } from "@/config/reception";
 import {
   CompleteScreen,
   DestinationScreen,
@@ -131,7 +131,7 @@ export function KioskApp() {
       data-phase={state.phase}
       className="kiosk-root h-dvh overflow-hidden"
       style={{
-        background: `linear-gradient(180deg, ${theme.backgroundDeep} 0%, ${theme.background} 42%, ${theme.white} 100%)`,
+        background: backgroundGradient,
         color: theme.ink,
         fontFamily: theme.fontFamily,
       }}

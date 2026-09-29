@@ -1,6 +1,6 @@
 "use client";
 
-import { copy, interviewPurposes, theme, visitorCountChoices } from "@/config/reception";
+import { backgroundGradient, copy, interviewPurposes, theme, visitorCountChoices } from "@/config/reception";
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
 
 export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
@@ -10,7 +10,7 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
       onClick={onEnter}
       className="flex h-full w-full flex-col items-center justify-center overflow-hidden px-6 text-center"
       style={{
-        background: `radial-gradient(circle at 50% 16%, ${theme.white} 0%, ${theme.backgroundDeep} 36%, ${theme.background} 72%)`,
+        background: backgroundGradient,
         color: theme.ink,
       }}
     >
