@@ -61,6 +61,7 @@ export type MentionChoiceId = (typeof mentionChoices)[number]["id"];
 
 export const copy = {
   appTitle: "受付",
+  welcomeCompany: "株式会社ライトパス",
   welcomeTitle: "WELCOME",
   welcomeSubtitle: "画面をタッチしてください",
   menuTitle: "ご用件を選択してください",

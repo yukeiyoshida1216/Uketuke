@@ -43,8 +43,12 @@ describe("受付画面", () => {
     fireEvent.click(screen.getByRole("button", { name: copy.general }));
   }
 
-  it("WELCOME の中央にロゴを出す", () => {
+  it("WELCOME の上に会社名を出し、中央にロゴを出す", () => {
     render(<KioskApp />);
+    const welcome = screen.getByRole("button", { name: /WELCOME/ });
+    expect(welcome.textContent?.indexOf(copy.welcomeCompany)).toBeLessThan(
+      welcome.textContent?.indexOf(copy.welcomeTitle) ?? -1,
+    );
     const logo = screen.getByRole("img", { name: "LIGHT PATH" });
     expect(logo.getAttribute("src")).toBe("/logo-light-path.png");
   });

@@ -22,16 +22,24 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
           background: `radial-gradient(circle, ${theme.white} 0%, rgba(255, 224, 138, 0.2) 68%, transparent 70%)`,
         }}
       />
-      <span
-        className="relative z-10 mb-[clamp(0.4rem,1.6vh,1rem)] self-end font-bold tracking-[0.14em]"
-        style={{ color: theme.amberDeep, fontSize: "clamp(2.4rem, 8vh, 4.5rem)" }}
-      >
-        {copy.welcomeTitle}
+      <span className="relative z-10 flex flex-col items-center self-end pb-[clamp(0.35rem,1.4vh,0.9rem)]">
+        <span
+          className="font-bold tracking-[0.04em]"
+          style={{ color: theme.ink, fontSize: "clamp(2.6rem, 8.6vw, 5.2rem)", lineHeight: 1.15 }}
+        >
+          {copy.welcomeCompany}
+        </span>
+        <span
+          className="mt-[clamp(0.15rem,0.8vh,0.45rem)] font-bold tracking-[0.14em]"
+          style={{ color: theme.amberDeep, fontSize: "clamp(1.45rem, 3.4vh, 2.35rem)" }}
+        >
+          {copy.welcomeTitle}
+        </span>
       </span>
       <img
         src="/logo-light-path.png"
         alt="LIGHT PATH"
-        className="relative z-10 h-[min(46vh,22rem)] w-auto max-w-[min(86vw,28rem)] object-contain"
+        className="relative z-10 h-[min(42vh,20rem)] w-auto max-w-[min(78vw,24rem)] object-contain"
       />
       <span
         className="relative z-10 mt-[clamp(0.8rem,2.4vh,1.4rem)] self-start rounded-full px-8 py-4 font-medium shadow-sm"
