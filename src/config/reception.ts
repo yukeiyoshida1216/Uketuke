@@ -118,7 +118,7 @@ export const copy = {
   destinationEmpty: "訪問先が登録されていません",
   reload: "再読み込み",
   interviewTitle: "面接・研修",
-  interviewRequired: "面接・研修・会社説明のいずれかを選び、氏名を入力してください",
+  interviewRequired: "氏名を入力し、面接・研修・会社説明のいずれかを選択してください",
   back: "戻る",
   next: "次へ",
   send: "送信する",
