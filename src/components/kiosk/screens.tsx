@@ -1,6 +1,6 @@
 "use client";
 
-import { backgroundGradient, copy, interviewPurposes, theme, visitorCountChoices } from "@/config/reception";
+import { backgroundGradient, copy, interviewPurposes, theme, timings, visitorCountChoices } from "@/config/reception";
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
 
 export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
@@ -45,8 +45,12 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
         className="mt-[clamp(0.15rem,0.8vh,0.45rem)] h-[min(8vh,4.4rem)] w-auto max-w-[min(64vw,16rem)] object-contain"
       />
       <span
-        className="mt-[clamp(0.7rem,2.2vh,1.3rem)] font-medium"
-        style={{ color: theme.yamabuki, fontSize: "clamp(1.35rem, 3.2vh, 2.15rem)" }}
+        className="kiosk-blink mt-[clamp(0.7rem,2.2vh,1.3rem)] font-medium"
+        style={{
+          color: theme.yamabuki,
+          fontSize: "clamp(1.35rem, 3.2vh, 2.15rem)",
+          animationDuration: `${timings.hintBlinkMs}ms`,
+        }}
       >
         {copy.welcomeSubtitle}
       </span>

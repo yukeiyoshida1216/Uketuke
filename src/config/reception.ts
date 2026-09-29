@@ -34,6 +34,8 @@ export const network = {
 } as const;
 
 export const timings = {
+  /** 「画面をタッチしてください」が薄くなって戻るまでの周期。 */
+  hintBlinkMs: 2_800,
   /** 無操作で WELCOME へ戻す。入力中も計測し、戻るときに入力は捨てる。 */
   inactivityMs: 60_000,
   /** 送信成功の完了画面を出してから WELCOME へ戻す。 */

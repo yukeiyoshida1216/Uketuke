@@ -157,8 +157,25 @@
   animation: kiosk-soft-pulse 2.8s ease-in-out infinite;
 }
 
+@keyframes kiosk-soft-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.kiosk-blink {
+  animation-name: kiosk-soft-blink;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .kiosk-pulse {
+  .kiosk-pulse,
+  .kiosk-blink {
     animation: none;
   }
 }
