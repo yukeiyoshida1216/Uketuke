@@ -16,7 +16,7 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
     >
       <span
         className="font-bold tracking-[0.14em]"
-        style={{ color: theme.amberDeep, fontSize: "clamp(3.6rem, 11vh, 7rem)" }}
+        style={{ color: theme.welcomeSoft, fontSize: "clamp(3.6rem, 11vh, 7rem)" }}
       >
         {copy.welcomeTitle}
       </span>
@@ -251,13 +251,13 @@ export function InterviewScreen({
   return (
     <KioskFrame title={copy.interviewTitle}>
       <form
-        className="grid min-h-0 flex-1 content-center gap-[clamp(0.6rem,2vh,1.2rem)] landscape:grid-cols-[minmax(0,1.4fr)_minmax(13rem,0.7fr)] landscape:items-end"
+        className="grid min-h-0 flex-1 grid-rows-[1fr_auto] gap-[clamp(0.45rem,1.5vh,1rem)] landscape:grid-cols-[minmax(0,1.5fr)_minmax(13rem,0.7fr)] landscape:grid-rows-1"
         onSubmit={(event) => {
           event.preventDefault();
           if (ready) onSubmit();
         }}
       >
-        <div className="grid gap-3">
+        <div className="grid min-h-0 content-center gap-[clamp(1.35rem,3.6vh,2.15rem)]">
           <KioskField
             id="interviewName"
             label={copy.visitorName}
@@ -266,24 +266,26 @@ export function InterviewScreen({
             autoComplete="name"
             onChange={(event) => onVisitorName(event.target.value)}
           />
-          <div className="grid grid-cols-2 gap-3" role="group" aria-label={copy.interviewTitle}>
-            {interviewPurposes.map((item) => (
-              <KioskButton
-                key={item.id}
-                type="button"
-                tone={purpose === item.id ? "primary" : "white"}
-                aria-pressed={purpose === item.id}
-                onClick={() => onPurpose(item.id)}
-              >
-                {item.label}
-              </KioskButton>
-            ))}
+          <div className="grid gap-3">
+            <div className="grid grid-cols-2 gap-3" role="group" aria-label={copy.interviewTitle}>
+              {interviewPurposes.map((item) => (
+                <KioskButton
+                  key={item.id}
+                  type="button"
+                  tone={purpose === item.id ? "primary" : "white"}
+                  aria-pressed={purpose === item.id}
+                  onClick={() => onPurpose(item.id)}
+                >
+                  {item.label}
+                </KioskButton>
+              ))}
+            </div>
+            <p className="text-center font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(0.95rem, 2vh, 1.15rem)" }}>
+              {copy.interviewRequired}
+            </p>
           </div>
-          <p className="text-center font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(0.95rem, 2vh, 1.15rem)" }}>
-            {copy.interviewRequired}
-          </p>
         </div>
-        <div className="grid grid-cols-2 gap-3 landscape:grid-cols-1">
+        <div className="grid grid-cols-2 gap-3 landscape:grid-cols-1 landscape:content-end">
           <KioskButton type="button" tone="ghost" onClick={onBack}>
             {copy.back}
           </KioskButton>

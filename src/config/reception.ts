@@ -13,6 +13,8 @@ export const theme = {
   yamabuki: "#F8B828",
   amber: "#F5A524",
   amberDeep: "#E09412",
+  /** WELCOME の文字色。琥珀色をやわらかくしたもの。 */
+  welcomeSoft: "#E6BC78",
   white: "#FFFFFF",
   ink: "#4A3728",
   inkSoft: "#7A6552",
@@ -21,8 +23,8 @@ export const theme = {
   fontFamily: '"Noto Sans JP", sans-serif',
 } as const;
 
-/** 画面全体の背景。上から下へ、中央からの放射にはしない。 */
-export const backgroundGradient = `linear-gradient(180deg, ${theme.white} 0%, ${theme.backgroundDeep} 42%, ${theme.background} 100%)`;
+/** 画面全体の背景。上は明るく、下へ濃くなる。 */
+export const backgroundGradient = `linear-gradient(180deg, ${theme.white} 0%, ${theme.background} 46%, ${theme.backgroundDeep} 100%)`;
 
 export const network = {
   /** Docker と開発サーバーの待受ポート。docker-compose.yml の ports と揃える。 */
