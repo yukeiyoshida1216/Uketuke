@@ -28,9 +28,15 @@ type DestinationResult = {
   people: DestinationPerson[];
 };
 
-export function KioskApp() {
+export function KioskApp({
+  initialDestinations = [],
+}: {
+  initialDestinations?: DestinationPerson[];
+}) {
   const [state, dispatch] = useReducer(kioskReducer, undefined, initialKioskState);
-  const [destinationResult, setDestinationResult] = useState<DestinationResult | null>(null);
+  const [destinationResult, setDestinationResult] = useState<DestinationResult | null>(() =>
+    initialDestinations.length > 0 ? { token: 0, status: "ready", people: initialDestinations } : null,
+  );
   const [destinationReload, setDestinationReload] = useState(0);
   const lockRef = useRef(createSubmitLock());
 
@@ -83,7 +89,6 @@ export function KioskApp() {
   }, [state.phase, state.pending, state.sessionId]);
 
   useEffect(() => {
-    if (state.phase !== "general" && state.phase !== "destination") return;
     const controller = new AbortController();
     const token = destinationReload;
     void fetch("/api/destinations", { signal: controller.signal })
@@ -101,13 +106,16 @@ export function KioskApp() {
       })
       .catch(() => {
         if (controller.signal.aborted) return;
-        setDestinationResult({ token, status: "error", people: [] });
+        setDestinationResult((current) => {
+          if (token === 0 && current?.status === "ready" && current.people.length > 0) return current;
+          return { token, status: "error", people: [] };
+        });
       });
     return () => controller.abort();
-  }, [state.phase, destinationReload]);
+  }, [destinationReload]);
 
   const destinations =
-    (state.phase === "general" || state.phase === "destination") && destinationResult?.token === destinationReload
+    destinationResult && (destinationResult.token === destinationReload || destinationResult.status === "ready")
       ? destinationResult
       : { status: "loading" as const, people: [] as DestinationPerson[] };
 

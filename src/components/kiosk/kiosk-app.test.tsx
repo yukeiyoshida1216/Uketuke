@@ -63,6 +63,14 @@ describe("受付画面", () => {
     expect(document.querySelector("img[src='/logo-wordmark.svg']")).toBeTruthy();
   });
 
+  it("渡された担当者名は通信を待たずに出す", () => {
+    render(<KioskApp initialDestinations={[{ id: "nosaka", name: "野坂 星司" }]} />);
+    fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
+    fireEvent.click(screen.getByRole("button", { name: copy.general }));
+    expect(screen.getByRole("button", { name: "野坂 星司" })).toBeTruthy();
+    expect(screen.queryByText(copy.destinationLoading)).toBeNull();
+  });
+
   it("必須が揃うまで送信できず、戻っても入力が残る", async () => {
     render(<KioskApp />);
     await openGeneral();
