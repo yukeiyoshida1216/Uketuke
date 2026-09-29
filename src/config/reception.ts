@@ -9,6 +9,8 @@
 export const theme = {
   background: "#FFF4C8",
   backgroundDeep: "#FFE08A",
+  /** グラデーションの下端。backgroundDeep より少し薄い。 */
+  backgroundBottom: "#FFE9A8",
   /** ロゴ中央の山吹色。案内文の文字色に使う。 */
   yamabuki: "#F8B828",
   amber: "#F5A524",
@@ -24,7 +26,7 @@ export const theme = {
 } as const;
 
 /** 画面全体の背景。上は明るく、下へ濃くなる。 */
-export const backgroundGradient = `linear-gradient(180deg, ${theme.white} 0%, ${theme.background} 46%, ${theme.backgroundDeep} 100%)`;
+export const backgroundGradient = `linear-gradient(180deg, ${theme.white} 0%, ${theme.background} 46%, ${theme.backgroundBottom} 100%)`;
 
 export const network = {
   /** Docker と開発サーバーの待受ポート。docker-compose.yml の ports と揃える。 */
