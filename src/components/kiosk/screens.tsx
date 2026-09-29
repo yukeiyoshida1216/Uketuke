@@ -76,7 +76,7 @@ export function MenuScreen({
   ];
   return (
     <KioskFrame title={copy.menuTitle}>
-      <div className="grid min-h-0 flex-1 grid-rows-[1fr_1fr_1fr_0.48fr] gap-[clamp(0.5rem,1.5vh,1rem)] landscape:grid-cols-3 landscape:grid-rows-[1fr_0.42fr]">
+      <div className="grid h-[88%] min-h-0 w-full self-center grid-rows-[1fr_1fr_1fr_0.48fr] gap-[clamp(0.5rem,1.5vh,1rem)] landscape:grid-cols-3 landscape:grid-rows-[1fr_0.42fr]">
         {choices.map((choice) => (
           <KioskButton key={choice.label} tone="white" onClick={choice.onClick} aria-label={choice.label}>
             <span className="flex flex-col items-center gap-2">
@@ -87,8 +87,8 @@ export function MenuScreen({
             </span>
           </KioskButton>
         ))}
-        <KioskButton tone="ghost" className="landscape:col-span-3" style={{ minHeight: "clamp(4.25rem, 11vh, 6rem)" }} onClick={onHome}>
-          <span style={{ fontSize: "clamp(1.55rem, 3.8vh, 2.35rem)" }}>{copy.home}</span>
+        <KioskButton tone="ghost" className="landscape:col-span-3" style={{ minHeight: "clamp(3.4rem, 8vh, 4.6rem)" }} onClick={onHome}>
+          <span style={{ fontSize: "clamp(1.35rem, 3.1vh, 1.9rem)" }}>{copy.home}</span>
         </KioskButton>
       </div>
     </KioskFrame>
