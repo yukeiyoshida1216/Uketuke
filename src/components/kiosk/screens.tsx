@@ -317,8 +317,13 @@ export function InterviewScreen({
 export function SendingScreen() {
   return (
     <section className="grid h-full place-items-center px-8 text-center" aria-live="polite" aria-busy="true">
-      <p className="font-bold" style={{ color: theme.ink, fontSize: "clamp(1.8rem, 5vh, 3rem)" }}>
+      <p className="font-bold" style={{ color: theme.ink, fontSize: "clamp(1.8rem, 5vh, 3rem)", whiteSpace: "nowrap" }}>
         {copy.sending}
+        <span className="kiosk-loading-dots" aria-hidden="true">
+          <span>.</span>
+          <span>.</span>
+          <span>.</span>
+        </span>
       </p>
     </section>
   );
