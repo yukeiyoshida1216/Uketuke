@@ -9,7 +9,7 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
     <button
       type="button"
       onClick={onEnter}
-      className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden px-6 text-center"
+      className="relative grid h-full w-full grid-rows-[1fr_auto_1fr] place-items-center overflow-hidden px-6 text-center"
       style={{
         background: `radial-gradient(circle at 50% 16%, ${theme.white} 0%, ${theme.backgroundDeep} 36%, ${theme.background} 72%)`,
         color: theme.ink,
@@ -17,19 +17,24 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
     >
       <span
         aria-hidden
-        className="kiosk-pulse pointer-events-none absolute size-[min(78vw,30rem)] rounded-full"
+        className="kiosk-pulse pointer-events-none absolute top-1/2 left-1/2 size-[min(78vw,30rem)] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
           background: `radial-gradient(circle, ${theme.white} 0%, rgba(255, 224, 138, 0.2) 68%, transparent 70%)`,
         }}
       />
       <span
-        className="relative font-bold tracking-[0.14em]"
-        style={{ color: theme.amberDeep, fontSize: "clamp(3.5rem, 12vh, 7.5rem)" }}
+        className="relative z-10 mb-[clamp(0.4rem,1.6vh,1rem)] self-end font-bold tracking-[0.14em]"
+        style={{ color: theme.amberDeep, fontSize: "clamp(2.4rem, 8vh, 4.5rem)" }}
       >
         {copy.welcomeTitle}
       </span>
+      <img
+        src="/logo-light-path.png"
+        alt="LIGHT PATH"
+        className="relative z-10 h-[min(46vh,22rem)] w-auto max-w-[min(86vw,28rem)] object-contain"
+      />
       <span
-        className="relative mt-[clamp(0.8rem,3vh,2rem)] rounded-full px-8 py-4 font-medium shadow-sm"
+        className="relative z-10 mt-[clamp(0.8rem,2.4vh,1.4rem)] self-start rounded-full px-8 py-4 font-medium shadow-sm"
         style={{
           background: theme.white,
           color: theme.ink,

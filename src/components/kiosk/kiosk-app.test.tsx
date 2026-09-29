@@ -43,6 +43,12 @@ describe("受付画面", () => {
     fireEvent.click(screen.getByRole("button", { name: copy.general }));
   }
 
+  it("WELCOME の中央にロゴを出す", () => {
+    render(<KioskApp />);
+    const logo = screen.getByRole("img", { name: "LIGHT PATH" });
+    expect(logo.getAttribute("src")).toBe("/logo-light-path.png");
+  });
+
   it("必須が揃うまで次へ進めず、戻っても入力が残る", async () => {
     render(<KioskApp />);
     await openGeneral();
