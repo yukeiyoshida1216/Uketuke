@@ -95,7 +95,7 @@ export function MenuScreen({
           </KioskButton>
         ))}
         <KioskButton
-          tone="ghost"
+          tone="white"
           className="landscape:col-span-3"
           style={{ height: "auto", minHeight: "clamp(3.4rem, 8vh, 4.6rem)" }}
           onClick={onHome}
