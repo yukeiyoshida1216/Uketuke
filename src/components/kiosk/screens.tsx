@@ -111,22 +111,30 @@ export function GeneralScreen({
   companyName,
   visitorName,
   visitorCount,
+  destinationId,
+  destinations,
   ready,
   onCompanyName,
   onVisitorName,
   onVisitorCount,
+  onDestination,
+  onReloadDestinations,
   onBack,
-  onNext,
+  onSubmit,
 }: {
   companyName: string;
   visitorName: string;
   visitorCount: string;
+  destinationId: string;
+  destinations: { status: "loading" | "ready" | "error"; people: Array<{ id: string; name: string }> };
   ready: boolean;
   onCompanyName: (value: string) => void;
   onVisitorName: (value: string) => void;
   onVisitorCount: (value: string) => void;
+  onDestination: (id: string) => void;
+  onReloadDestinations: () => void;
   onBack: () => void;
-  onNext: () => void;
+  onSubmit: () => void;
 }) {
   return (
     <KioskFrame title={copy.generalTitle}>
@@ -134,10 +142,10 @@ export function GeneralScreen({
         className="grid min-h-0 flex-1 grid-rows-[1fr_auto] gap-[clamp(0.45rem,1.5vh,1rem)] landscape:grid-cols-[minmax(0,1.5fr)_minmax(13rem,0.7fr)] landscape:grid-rows-1"
         onSubmit={(event) => {
           event.preventDefault();
-          if (ready) onNext();
+          if (ready) onSubmit();
         }}
       >
-        <div className="grid min-h-0 content-center gap-[clamp(0.4rem,1.3vh,0.85rem)]">
+        <div className="grid min-h-0 content-center gap-[clamp(0.35rem,1.1vh,0.7rem)]">
           <KioskField
             id="companyName"
             label={copy.companyName}
@@ -173,6 +181,51 @@ export function GeneralScreen({
               ))}
             </div>
           </div>
+          <div className="grid gap-2">
+            <span className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1rem, 2.2vh, 1.3rem)" }}>
+              {copy.mentionTarget}
+            </span>
+            {destinations.status === "loading" ? (
+              <p className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1rem, 2.2vh, 1.3rem)" }}>
+                {copy.destinationLoading}
+              </p>
+            ) : null}
+            {destinations.status === "error" ? (
+              <div className="grid gap-2">
+                <p className="font-medium" style={{ color: theme.danger, fontSize: "clamp(1rem, 2.2vh, 1.3rem)" }}>
+                  {copy.destinationError}
+                </p>
+                <KioskButton type="button" tone="white" onClick={onReloadDestinations}>
+                  {copy.reload}
+                </KioskButton>
+              </div>
+            ) : null}
+            {destinations.status === "ready" && destinations.people.length === 0 ? (
+              <p className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1rem, 2.2vh, 1.3rem)" }}>
+                {copy.destinationEmpty}
+              </p>
+            ) : null}
+            {destinations.status === "ready" && destinations.people.length > 0 ? (
+              <div
+                className="grid grid-cols-3 gap-2"
+                role="group"
+                aria-label={copy.mentionTarget}
+              >
+                {destinations.people.map((person) => (
+                  <KioskButton
+                    key={person.id}
+                    type="button"
+                    tone={destinationId === person.id ? "primary" : "white"}
+                    aria-pressed={destinationId === person.id}
+                    style={{ minHeight: "clamp(3rem, 7.5vh, 4.2rem)" }}
+                    onClick={() => onDestination(person.id)}
+                  >
+                    <span style={{ fontSize: "clamp(1.05rem, 2.5vh, 1.45rem)", lineHeight: 1.25 }}>{person.name}</span>
+                  </KioskButton>
+                ))}
+              </div>
+            ) : null}
+          </div>
           <p className="text-center font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(0.95rem, 2vh, 1.15rem)" }}>
             {copy.generalRequired}
           </p>
@@ -182,7 +235,7 @@ export function GeneralScreen({
             {copy.back}
           </KioskButton>
           <KioskButton type="submit" disabled={!ready}>
-            {copy.next}
+            {copy.send}
           </KioskButton>
         </div>
       </form>

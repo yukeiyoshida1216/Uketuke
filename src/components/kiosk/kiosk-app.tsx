@@ -83,7 +83,7 @@ export function KioskApp() {
   }, [state.phase, state.pending, state.sessionId]);
 
   useEffect(() => {
-    if (state.phase !== "destination") return;
+    if (state.phase !== "general" && state.phase !== "destination") return;
     const controller = new AbortController();
     const token = destinationReload;
     void fetch("/api/destinations", { signal: controller.signal })
@@ -107,7 +107,7 @@ export function KioskApp() {
   }, [state.phase, destinationReload]);
 
   const destinations =
-    state.phase === "destination" && destinationResult?.token === destinationReload
+    (state.phase === "general" || state.phase === "destination") && destinationResult?.token === destinationReload
       ? destinationResult
       : { status: "loading" as const, people: [] as DestinationPerson[] };
 
@@ -117,13 +117,20 @@ export function KioskApp() {
   }
 
   function startSend(
-    action: Extract<Parameters<typeof kioskReducer>[1], { type: "openOther" | "chooseDestination" | "submitInterview" }>,
+    action: Extract<
+      Parameters<typeof kioskReducer>[1],
+      { type: "openOther" | "chooseDestination" | "submitInterview" | "submitGeneral" }
+    >,
   ) {
     if (!lockRef.current.tryLock()) return;
     dispatch(action);
   }
 
-  const generalReady = validatedGeneralDraft(state.draft).ok;
+  const selectedDestination = state.draft.destinationId.trim();
+  const generalReady =
+    validatedGeneralDraft(state.draft).ok &&
+    destinations.status === "ready" &&
+    destinations.people.some((person) => person.id === selectedDestination);
   const interviewReady = validatedInterviewDraft(state.draft).ok;
 
   return (
@@ -166,12 +173,18 @@ export function KioskApp() {
           companyName={state.draft.companyName}
           visitorName={state.draft.visitorName}
           visitorCount={state.draft.visitorCount}
+          destinationId={state.draft.destinationId}
+          destinations={destinations}
           ready={generalReady}
           onCompanyName={(value) => dispatch({ type: "editDraft", patch: { companyName: value } })}
           onVisitorName={(value) => dispatch({ type: "editDraft", patch: { visitorName: value } })}
           onVisitorCount={(value) => dispatch({ type: "editDraft", patch: { visitorCount: value } })}
+          onDestination={(destinationId) => dispatch({ type: "editDraft", patch: { destinationId } })}
+          onReloadDestinations={() => setDestinationReload((value) => value + 1)}
           onBack={() => dispatch({ type: "back" })}
-          onNext={() => dispatch({ type: "nextFromGeneral" })}
+          onSubmit={() => {
+            startSend({ type: "submitGeneral", now: Date.now(), key: createIdempotencyKey() });
+          }}
         />
       ) : null}
       {state.phase === "destination" ? (

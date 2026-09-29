@@ -134,6 +134,16 @@ describe("受付画面の状態", () => {
     expect(state.phase).toBe("sending");
   });
 
+  it("メンション先が未選択なら総合受付を送信しない", () => {
+    let state = filledGeneral(kioskReducer(toMenu(), { type: "openGeneral" }));
+    state = kioskReducer(state, { type: "submitGeneral", now: 10, key: "key-visit-0" });
+    expect(state.phase).toBe("general");
+    state = kioskReducer(state, { type: "editDraft", patch: { destinationId: "yanase" } });
+    state = kioskReducer(state, { type: "submitGeneral", now: 20, key: "key-visit-yanase" });
+    expect(state.phase).toBe("sending");
+    expect(state.pending?.payload).toMatchObject({ destinationId: "yanase", visitorCount: 2 });
+  });
+
   it("総合受付の失敗では完了にせず、再試行は同じ訪問先と同じキーで送る", () => {
     let state = filledGeneral(kioskReducer(toMenu(), { type: "openGeneral" }));
     state = kioskReducer(state, { type: "nextFromGeneral" });

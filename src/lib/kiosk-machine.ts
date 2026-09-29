@@ -42,6 +42,7 @@ export type KioskAction =
   | { type: "openOther"; now: number; key: string }
   | { type: "editDraft"; patch: Partial<Draft> }
   | { type: "nextFromGeneral" }
+  | { type: "submitGeneral"; now: number; key: string }
   | { type: "back" }
   | { type: "chooseDestination"; destinationId: string; now: number; key: string }
   | { type: "submitInterview"; now: number; key: string }
@@ -79,6 +80,38 @@ function resetToWelcome(state: KioskState): KioskState {
 function isRecentDuplicate(state: KioskState, fingerprint: string, now: number): boolean {
   if (state.lastSuccessFingerprint !== fingerprint || state.lastSuccessAt === null) return false;
   return now - state.lastSuccessAt < timings.dedupWindowMs;
+}
+
+function sendGeneral(state: KioskState, destinationId: string, now: number, key: string): KioskState {
+  const validated = validatedGeneralDraft(state.draft);
+  const id = destinationId.trim();
+  if (!validated.ok || id.length === 0) return state;
+  const payload: ReceptionPayload = {
+    type: "general",
+    companyName: validated.companyName,
+    visitorName: validated.visitorName,
+    visitorCount: validated.visitorCount,
+    visitorCountOrMore: validated.visitorCountOrMore,
+    destinationId: id,
+  };
+  return beginSend(
+    {
+      ...state,
+      draft: {
+        ...state.draft,
+        companyName: validated.companyName,
+        visitorName: validated.visitorName,
+        destinationId: id,
+      },
+    },
+    {
+      payload,
+      idempotencyKey: key,
+      fingerprint: receptionFingerprint(payload),
+      attempt: (state.pending?.attempt ?? 0) + 1,
+    },
+    now,
+  );
 }
 
 function beginSend(state: KioskState, pending: PendingReception, now: number): KioskState {
@@ -139,29 +172,13 @@ export function kioskReducer(state: KioskState, action: KioskAction): KioskState
       }
       if (state.phase === "destination") return { ...state, phase: "general" };
       return state;
+    case "submitGeneral": {
+      if (state.phase !== "general") return state;
+      return sendGeneral(state, state.draft.destinationId, action.now, action.key);
+    }
     case "chooseDestination": {
       if (state.phase !== "destination") return state;
-      const validated = validatedGeneralDraft(state.draft);
-      const destinationId = action.destinationId.trim();
-      if (!validated.ok || destinationId.length === 0) return state;
-      const payload: ReceptionPayload = {
-        type: "general",
-        companyName: validated.companyName,
-        visitorName: validated.visitorName,
-        visitorCount: validated.visitorCount,
-        visitorCountOrMore: validated.visitorCountOrMore,
-        destinationId,
-      };
-      return beginSend(
-        state,
-        {
-          payload,
-          idempotencyKey: action.key,
-          fingerprint: receptionFingerprint(payload),
-          attempt: (state.pending?.attempt ?? 0) + 1,
-        },
-        action.now,
-      );
+      return sendGeneral(state, action.destinationId, action.now, action.key);
     }
     case "submitInterview": {
       if (state.phase !== "interview") return state;
