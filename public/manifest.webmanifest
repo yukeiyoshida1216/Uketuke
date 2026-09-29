@@ -1,0 +1,9 @@
+{
+  "name": "受付",
+  "short_name": "受付",
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "#FFF4C8",
+  "theme_color": "#F5A524",
+  "lang": "ja"
+}

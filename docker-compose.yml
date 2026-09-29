@@ -1,0 +1,30 @@
+services:
+  reception:
+    build: .
+    ports:
+      - "8787:8787"
+    environment:
+      PORT: "8787"
+      HOSTNAME: "0.0.0.0"
+      DRY_RUN: ${DRY_RUN:-true}
+      DESTINATIONS_FILE: /app/config/destinations.json
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN:-}
+      SLACK_CHANNEL_ID: ${SLACK_CHANNEL_ID:-}
+      SLACK_USER_IDS: ${SLACK_USER_IDS:-}
+      INTERVIEW_MENTION_IDS: ${INTERVIEW_MENTION_IDS:-nosaka,yanase,ito}
+      DELIVERY_MENTION_IDS: ${DELIVERY_MENTION_IDS:-nosaka,yanase,ito}
+    volumes:
+      - ./config/destinations.json:/app/config/destinations.json:ro
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:8787/api/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
