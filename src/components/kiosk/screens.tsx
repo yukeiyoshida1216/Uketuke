@@ -9,11 +9,14 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
       type="button"
       onClick={onEnter}
       className="flex h-full w-full flex-col items-center justify-center overflow-hidden px-6 text-center"
-      style={{ background: theme.background, color: theme.ink }}
+      style={{
+        background: `radial-gradient(circle at 50% 16%, ${theme.white} 0%, ${theme.backgroundDeep} 36%, ${theme.background} 72%)`,
+        color: theme.ink,
+      }}
     >
       <span
         className="font-bold tracking-[0.14em]"
-        style={{ color: theme.amberDeep, fontSize: "clamp(2.05rem, 5.2vh, 3.2rem)" }}
+        style={{ color: theme.amberDeep, fontSize: "clamp(3.6rem, 11vh, 7rem)" }}
       >
         {copy.welcomeTitle}
       </span>
@@ -72,9 +75,9 @@ export function MenuScreen({
       <div className="grid min-h-0 flex-1 grid-rows-[1fr_1fr_1fr_auto] gap-[clamp(0.5rem,1.5vh,1rem)] landscape:grid-cols-3 landscape:grid-rows-[1fr_auto]">
         {choices.map((choice) => (
           <KioskButton key={choice.label} tone="white" onClick={choice.onClick} aria-label={choice.label}>
-            <span className="flex flex-col items-center gap-1">
-              <span>{choice.label}</span>
-              <span className="font-medium" style={{ fontSize: "0.72em", color: theme.inkSoft }}>
+            <span className="flex flex-col items-center gap-2">
+              <span style={{ fontSize: "clamp(2.15rem, 5.8vh, 3.6rem)", lineHeight: 1.2 }}>{choice.label}</span>
+              <span className="font-medium" style={{ fontSize: "clamp(1.05rem, 2.6vh, 1.45rem)", color: theme.inkSoft }}>
                 {choice.hint}
               </span>
             </span>
@@ -255,6 +258,14 @@ export function InterviewScreen({
         }}
       >
         <div className="grid gap-3">
+          <KioskField
+            id="interviewName"
+            label={copy.visitorName}
+            value={visitorName}
+            placeholder={copy.visitorPlaceholder}
+            autoComplete="name"
+            onChange={(event) => onVisitorName(event.target.value)}
+          />
           <div className="grid grid-cols-2 gap-3" role="group" aria-label={copy.interviewTitle}>
             {interviewPurposes.map((item) => (
               <KioskButton
@@ -268,14 +279,6 @@ export function InterviewScreen({
               </KioskButton>
             ))}
           </div>
-          <KioskField
-            id="interviewName"
-            label={copy.visitorName}
-            value={visitorName}
-            placeholder={copy.visitorPlaceholder}
-            autoComplete="name"
-            onChange={(event) => onVisitorName(event.target.value)}
-          />
           <p className="text-center font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(0.95rem, 2vh, 1.15rem)" }}>
             {copy.interviewRequired}
           </p>
@@ -303,10 +306,15 @@ export function SendingScreen() {
   );
 }
 
-export function CompleteScreen() {
+export function CompleteScreen({ onReturn }: { onReturn: () => void }) {
   return (
-    <section className="grid h-full place-items-center px-8 text-center" aria-live="polite">
-      <div className="grid justify-items-center gap-6">
+    <button
+      type="button"
+      className="grid h-full w-full place-items-center px-8 text-center"
+      aria-live="polite"
+      onClick={onReturn}
+    >
+      <span className="grid justify-items-center gap-6">
         <span
           aria-hidden
           className="grid size-24 place-items-center rounded-full text-5xl font-bold"
@@ -320,8 +328,8 @@ export function CompleteScreen() {
         <p className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1.1rem, 2.6vh, 1.5rem)" }}>
           {copy.thanksHint}
         </p>
-      </div>
-    </section>
+      </span>
+    </button>
   );
 }
 

@@ -131,7 +131,7 @@ export function KioskApp() {
       data-phase={state.phase}
       className="kiosk-root h-dvh overflow-hidden"
       style={{
-        background: theme.background,
+        background: `linear-gradient(180deg, ${theme.backgroundDeep} 0%, ${theme.background} 42%, ${theme.white} 100%)`,
         color: theme.ink,
         fontFamily: theme.fontFamily,
       }}
@@ -199,7 +199,7 @@ export function KioskApp() {
         />
       ) : null}
       {state.phase === "sending" ? <SendingScreen /> : null}
-      {state.phase === "complete" ? <CompleteScreen /> : null}
+      {state.phase === "complete" ? <CompleteScreen onReturn={() => dispatch({ type: "goHome" })} /> : null}
       {state.phase === "error" ? (
         <ErrorScreen
           onRetry={() => {

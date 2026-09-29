@@ -187,4 +187,19 @@ describe("受付画面", () => {
     });
     expect(screen.getByRole("button", { name: /WELCOME/ })).toBeTruthy();
   });
+
+  it("完了画面をタッチするとすぐに WELCOME に戻る", async () => {
+    render(<KioskApp />);
+    fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
+    fireEvent.click(screen.getByRole("button", { name: copy.interview }));
+    const name = document.getElementById("interviewName");
+    const choice = screen.getByRole("button", { name: "面接" });
+    expect(name?.compareDocumentPosition(choice) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "佐藤" } });
+    fireEvent.click(screen.getByRole("button", { name: "面接" }));
+    fireEvent.click(screen.getByRole("button", { name: copy.send }));
+    fireEvent.click(await screen.findByText(copy.thanks));
+    expect(screen.getByRole("button", { name: /WELCOME/ })).toBeTruthy();
+    expect(screen.queryByText(copy.thanks)).toBeNull();
+  });
 });
