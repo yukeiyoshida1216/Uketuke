@@ -237,4 +237,9 @@
     outline: none !important;
     box-shadow: none !important;
   }
+
+  .kiosk-root .kiosk-field::placeholder {
+    color: var(--kiosk-field-placeholder) !important;
+    opacity: 1;
+  }
 }

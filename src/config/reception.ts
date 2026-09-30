@@ -26,6 +26,8 @@ export const theme = {
   /** タイトル画面の日付・時刻。ink より少し薄い。 */
   clock: "#6E5B44",
   inkSoft: "#7A6552",
+  /** 会社名・氏名の入力例。本文より少し薄い。 */
+  placeholder: "#A39890",
   line: "#F0D48A",
   danger: "#B85C38",
   fontFamily: '"Noto Sans JP", sans-serif',

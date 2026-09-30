@@ -77,6 +77,7 @@ export function KioskField({
           background: theme.white,
           ["--kiosk-field-border" as string]: theme.line,
           ["--kiosk-field-focus" as string]: theme.fieldFocus,
+          ["--kiosk-field-placeholder" as string]: theme.placeholder,
         }}
         {...props}
       />
