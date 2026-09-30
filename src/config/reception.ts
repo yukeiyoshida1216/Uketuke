@@ -23,8 +23,8 @@ export const theme = {
   fieldFocus: "#E09412",
   white: "#FFFFFF",
   ink: "#4A3728",
-  /** タイトル画面の日付・時刻。ink より少し薄い。 */
-  clock: "#6E5B44",
+  /** タイトル画面の日付・時刻。WELCOME より目立たない薄い色。 */
+  clock: "#C4B6A6",
   inkSoft: "#7A6552",
   /** 会社名・氏名の入力例。本文より少し薄い。 */
   placeholder: "#A39890",
