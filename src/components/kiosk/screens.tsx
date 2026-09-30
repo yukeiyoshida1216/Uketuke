@@ -2,17 +2,17 @@
 
 import { backgroundGradient, copy, interviewPurposes, theme, timings, visitorCountChoices } from "@/config/reception";
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
-import { formatWelcomeClock } from "@/lib/welcome-clock";
+import { welcomeClockParts } from "@/lib/welcome-clock";
 import { useEffect, useState } from "react";
 
 function useWelcomeClock() {
-  const [label, setLabel] = useState(() => formatWelcomeClock(new Date()));
+  const [parts, setParts] = useState(() => welcomeClockParts(new Date()));
   useEffect(() => {
-    const update = () => setLabel(formatWelcomeClock(new Date()));
+    const update = () => setParts(welcomeClockParts(new Date()));
     const timer = window.setInterval(update, 1_000);
     return () => window.clearInterval(timer);
   }, []);
-  return label;
+  return parts;
 }
 
 export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
@@ -28,17 +28,20 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
       }}
     >
       <time
-        className="absolute font-semibold tabular-nums"
+        className="absolute text-left font-semibold tabular-nums"
         style={{
           top: "clamp(1.15rem, 2.8vh, 1.85rem)",
           left: "clamp(1.2rem, 3vw, 1.9rem)",
           color: theme.ink,
           fontSize: "clamp(2.6rem, 6.2vh, 4.2rem)",
-          lineHeight: 1,
+          lineHeight: 1.08,
+          width: "max-content",
+          textAlign: "left",
         }}
         suppressHydrationWarning
       >
-        {clock}
+        <span className="block" suppressHydrationWarning>{`${clock.month}/${clock.day}`}</span>
+        <span className="block" suppressHydrationWarning>{`${clock.hour}:${clock.minute}:${clock.second}`}</span>
       </time>
       <span
         className="font-bold tracking-[0.14em]"
