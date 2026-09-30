@@ -2,18 +2,44 @@
 
 import { backgroundGradient, copy, interviewPurposes, theme, timings, visitorCountChoices } from "@/config/reception";
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
+import { formatWelcomeClock } from "@/lib/welcome-clock";
+import { useEffect, useState } from "react";
+
+function useWelcomeClock() {
+  const [label, setLabel] = useState(() => formatWelcomeClock(new Date()));
+  useEffect(() => {
+    const update = () => setLabel(formatWelcomeClock(new Date()));
+    const timer = window.setInterval(update, 1_000);
+    return () => window.clearInterval(timer);
+  }, []);
+  return label;
+}
 
 export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
+  const clock = useWelcomeClock();
   return (
     <button
       type="button"
       onClick={onEnter}
-      className="flex h-full w-full flex-col items-center justify-center overflow-hidden px-6 text-center"
+      className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden px-6 text-center"
       style={{
         background: backgroundGradient,
         color: theme.ink,
       }}
     >
+      <time
+        className="absolute font-medium tabular-nums"
+        style={{
+          top: "clamp(1.15rem, 2.8vh, 1.85rem)",
+          left: "clamp(1.2rem, 3vw, 1.9rem)",
+          color: theme.ink,
+          fontSize: "clamp(1.45rem, 3.1vh, 2rem)",
+          lineHeight: 1,
+        }}
+        suppressHydrationWarning
+      >
+        {clock}
+      </time>
       <span
         className="font-bold tracking-[0.14em]"
         style={{ color: theme.welcomeSoft, fontSize: "clamp(3.6rem, 11vh, 7rem)" }}
