@@ -91,10 +91,14 @@ export type InterviewPurpose = (typeof interviewPurposes)[number]["id"];
 
 /** 面接・研修と配達のメンションに使える人。この三択以外は設定できない。 */
 export const mentionChoices = [
-  { id: "nosaka", name: "野坂 星司" },
-  { id: "yanase", name: "梁瀬 星太" },
-  { id: "ito", name: "伊藤 功" },
+  { id: "nosaka", name: "野坂 星司", photo: "/staff/nosaka.png" },
+  { id: "yanase", name: "梁瀬 星太", photo: "/staff/yanase.png" },
+  { id: "ito", name: "伊藤 功", photo: "/staff/ito.png" },
 ] as const;
+
+export function staffPhoto(id: string): string | null {
+  return mentionChoices.find((person) => person.id === id)?.photo ?? null;
+}
 
 export type MentionChoiceId = (typeof mentionChoices)[number]["id"];
 

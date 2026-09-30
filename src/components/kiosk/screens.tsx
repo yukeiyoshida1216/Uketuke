@@ -1,6 +1,6 @@
 "use client";
 
-import { backgroundGradient, copy, interviewPurposes, theme, timings, visitorCountChoices } from "@/config/reception";
+import { backgroundGradient, copy, interviewPurposes, staffPhoto, theme, timings, visitorCountChoices } from "@/config/reception";
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
 import { welcomeClockParts } from "@/lib/welcome-clock";
 import { useEffect, useState } from "react";
@@ -165,6 +165,7 @@ export function GeneralScreen({
   onBack: () => void;
   onSubmit: () => void;
 }) {
+  const photo = staffPhoto(destinationId);
   return (
     <KioskFrame title={copy.generalTitle}>
       <form
@@ -259,13 +260,18 @@ export function GeneralScreen({
             {copy.generalRequired}
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-3 landscape:grid-cols-1 landscape:content-end">
-          <KioskButton type="button" tone="ghost" onClick={onBack}>
-            {copy.back}
-          </KioskButton>
-          <KioskButton type="submit" disabled={!ready}>
-            {copy.send}
-          </KioskButton>
+        <div className="grid min-h-0 grid-cols-2 content-end gap-3 landscape:grid-cols-1 landscape:grid-rows-[minmax(0,1fr)_auto] landscape:content-stretch">
+          <div className="col-span-2 hidden h-full min-h-0 items-center justify-center landscape:col-span-1 landscape:flex">
+            {photo ? <img src={photo} alt="" className="h-full w-full object-contain" /> : null}
+          </div>
+          <div className="col-span-2 grid grid-cols-2 gap-3 landscape:col-span-1 landscape:grid-cols-1">
+            <KioskButton type="button" tone="ghost" onClick={onBack}>
+              {copy.back}
+            </KioskButton>
+            <KioskButton type="submit" disabled={!ready}>
+              {copy.send}
+            </KioskButton>
+          </div>
         </div>
       </form>
     </KioskFrame>

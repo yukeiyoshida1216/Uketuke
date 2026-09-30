@@ -82,6 +82,20 @@ describe("受付画面", () => {
     expect(document.querySelector("img[src='/logo-wordmark.svg']")).toBeTruthy();
   });
 
+  it("担当者を選ぶと右側にその人の写真を出す", async () => {
+    render(<KioskApp />);
+    await openGeneral();
+    expect(document.querySelector("img[src='/staff/nosaka.png']")).toBeNull();
+    fireEvent.click(await screen.findByRole("button", { name: "野坂 星司" }));
+    expect(document.querySelector("img[src='/staff/nosaka.png']")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "梁瀬 星太" }));
+    expect(document.querySelector("img[src='/staff/yanase.png']")).toBeTruthy();
+    expect(document.querySelector("img[src='/staff/nosaka.png']")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "伊藤 功" }));
+    expect(document.querySelector("img[src='/staff/ito.png']")).toBeTruthy();
+    expect(document.querySelector("img[src='/staff/yanase.png']")).toBeNull();
+  });
+
   it("渡された担当者名は通信を待たずに出す", () => {
     render(<KioskApp initialDestinations={[{ id: "nosaka", name: "野坂 星司" }]} />);
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
