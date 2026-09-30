@@ -28,12 +28,12 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
       }}
     >
       <time
-        className="absolute font-medium tabular-nums"
+        className="absolute font-semibold tabular-nums"
         style={{
           top: "clamp(1.15rem, 2.8vh, 1.85rem)",
           left: "clamp(1.2rem, 3vw, 1.9rem)",
           color: theme.ink,
-          fontSize: "clamp(1.45rem, 3.1vh, 2rem)",
+          fontSize: "clamp(2.6rem, 6.2vh, 4.2rem)",
           lineHeight: 1,
         }}
         suppressHydrationWarning

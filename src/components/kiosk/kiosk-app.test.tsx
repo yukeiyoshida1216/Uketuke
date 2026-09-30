@@ -49,12 +49,16 @@ describe("受付画面", () => {
     render(<KioskApp />);
     const welcome = screen.getByRole("button", { name: /WELCOME/ });
     const clock = welcome.querySelector("time");
-    expect(clock?.textContent).toBe("09/30 12:00");
+    expect(clock?.textContent).toBe("09/30 12:00:00");
     expect(clock?.className).toContain("absolute");
     act(() => {
-      vi.advanceTimersByTime(60_000);
+      vi.advanceTimersByTime(1_000);
     });
-    expect(clock?.textContent).toBe("09/30 12:01");
+    expect(clock?.textContent).toBe("09/30 12:00:01");
+    act(() => {
+      vi.advanceTimersByTime(59_000);
+    });
+    expect(clock?.textContent).toBe("09/30 12:01:00");
   });
 
   it("ロゴと LIGHT PATH の間に会社名を出す", () => {
