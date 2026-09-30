@@ -32,8 +32,8 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
         style={{
           top: "clamp(1.15rem, 2.8vh, 1.85rem)",
           left: "clamp(1.2rem, 3vw, 1.9rem)",
-          color: theme.ink,
-          fontSize: "clamp(2.6rem, 6.2vh, 4.2rem)",
+          color: theme.clock,
+          fontSize: "clamp(2.35rem, 5.5vh, 3.7rem)",
           lineHeight: 1.08,
           width: "max-content",
           textAlign: "left",
