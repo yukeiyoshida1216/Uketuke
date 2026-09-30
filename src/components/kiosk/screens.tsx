@@ -459,6 +459,16 @@ export function CompleteScreen({ onReturn }: { onReturn: () => void }) {
         <h1 className="font-bold" style={{ color: theme.ink, fontSize: "clamp(2rem, 6vh, 3.5rem)" }}>
           {copy.thanks}
         </h1>
+        <p
+          className="font-medium"
+          style={{ color: theme.ink, fontSize: "clamp(1.25rem, 3.2vh, 1.85rem)", lineHeight: 1.45 }}
+        >
+          {copy.thanksWait.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
+        </p>
         <p className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1.1rem, 2.6vh, 1.5rem)" }}>
           {copy.thanksHint}
         </p>

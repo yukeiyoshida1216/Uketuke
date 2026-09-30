@@ -138,6 +138,7 @@ export const copy = {
   send: "送信する",
   sending: "送信しています",
   thanks: "受付ありがとうございます！",
+  thanksWait: ["只今担当の者が参りますので", "少々お待ちください"],
   thanksHint: "まもなく最初の画面に戻ります",
   errorTitle: "送信できませんでした",
   errorBody: "通信に失敗しました。入力内容は残っています。もう一度送信できます。",

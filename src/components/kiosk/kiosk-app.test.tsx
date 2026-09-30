@@ -267,7 +267,8 @@ describe("受付画面", () => {
     fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "佐藤" } });
     fireEvent.click(screen.getByRole("button", { name: "面接" }));
     fireEvent.click(screen.getByRole("button", { name: copy.send }));
-    fireEvent.click(await screen.findByText(copy.thanks));
+    for (const line of copy.thanksWait) expect(await screen.findByText(line)).toBeTruthy();
+    fireEvent.click(screen.getByText(copy.thanks));
     expect(screen.getByRole("button", { name: /WELCOME/ })).toBeTruthy();
     expect(screen.queryByText(copy.thanks)).toBeNull();
   });
