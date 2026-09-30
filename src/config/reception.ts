@@ -24,7 +24,7 @@ export const theme = {
   white: "#FFFFFF",
   ink: "#4A3728",
   /** タイトル画面の日付・時刻。ink より少し薄い。 */
-  clock: "#5C4936",
+  clock: "#6E5B44",
   inkSoft: "#7A6552",
   line: "#F0D48A",
   danger: "#B85C38",
