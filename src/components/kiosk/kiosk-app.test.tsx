@@ -96,6 +96,21 @@ describe("受付画面", () => {
     expect(selected()).toBe("/staff/ito.png");
   });
 
+  it("面接・研修の選択で写真を出す", () => {
+    render(<KioskApp />);
+    fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
+    fireEvent.click(screen.getByRole("button", { name: copy.interview }));
+    const selected = () => document.querySelector("img[data-selected='true']")?.getAttribute("src") ?? null;
+    expect(document.querySelectorAll("img[src^='/purpose/']")).toHaveLength(3);
+    expect(selected()).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "面接" }));
+    expect(selected()).toBe("/purpose/interview.png");
+    fireEvent.click(screen.getByRole("button", { name: "研修" }));
+    expect(selected()).toBe("/purpose/training.png");
+    fireEvent.click(screen.getByRole("button", { name: "会社説明" }));
+    expect(selected()).toBe("/purpose/briefing.png");
+  });
+
   it("渡された担当者名は通信を待たずに出す", () => {
     render(<KioskApp initialDestinations={[{ id: "nosaka", name: "野坂 星司" }]} />);
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));

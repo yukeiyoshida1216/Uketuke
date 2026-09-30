@@ -82,9 +82,9 @@ export type VisitorCountChoiceId = (typeof visitorCountChoices)[number]["id"];
 
 /** 面接・研修で選ぶ用件。通知見出しは copy.slack 側。 */
 export const interviewPurposes = [
-  { id: "interview", label: "面接" },
-  { id: "training", label: "研修" },
-  { id: "briefing", label: "会社説明" },
+  { id: "interview", label: "面接", photo: "/purpose/interview.png" },
+  { id: "training", label: "研修", photo: "/purpose/training.png" },
+  { id: "briefing", label: "会社説明", photo: "/purpose/briefing.png" },
 ] as const;
 
 export type InterviewPurpose = (typeof interviewPurposes)[number]["id"];
@@ -97,6 +97,12 @@ export const mentionChoices = [
 ] as const;
 
 export type MentionChoiceId = (typeof mentionChoices)[number]["id"];
+
+/** 最初の画面のうちに読み込んでおく写真。選択時の待ちをなくす。 */
+export const preloadedPhotos = [
+  ...mentionChoices.map((person) => person.photo),
+  ...interviewPurposes.map((item) => item.photo),
+] as const;
 
 export const copy = {
   appTitle: "受付",

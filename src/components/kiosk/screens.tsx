@@ -5,6 +5,29 @@ import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls
 import { welcomeClockParts } from "@/lib/welcome-clock";
 import { useEffect, useState } from "react";
 
+function ChoicePhotos({
+  photos,
+  selectedId,
+}: {
+  photos: ReadonlyArray<{ id: string; photo: string }>;
+  selectedId: string;
+}) {
+  return (
+    <div className="relative col-span-2 hidden h-full min-h-0 landscape:col-span-1 landscape:block">
+      {photos.map((item) => (
+        <img
+          key={item.id}
+          src={item.photo}
+          alt=""
+          decoding="sync"
+          data-selected={selectedId === item.id ? "true" : "false"}
+          className={`absolute inset-0 h-full w-full object-contain ${selectedId === item.id ? "opacity-100" : "opacity-0"}`}
+        />
+      ))}
+    </div>
+  );
+}
+
 function useWelcomeClock() {
   const [parts, setParts] = useState(() => welcomeClockParts(new Date()));
   useEffect(() => {
@@ -260,18 +283,7 @@ export function GeneralScreen({
           </p>
         </div>
         <div className="grid min-h-0 grid-cols-2 content-end gap-3 landscape:grid-cols-1 landscape:grid-rows-[minmax(0,1fr)_auto] landscape:content-stretch">
-          <div className="relative col-span-2 hidden h-full min-h-0 landscape:col-span-1 landscape:block">
-            {mentionChoices.map((person) => (
-              <img
-                key={person.id}
-                src={person.photo}
-                alt=""
-                decoding="sync"
-                data-selected={destinationId === person.id ? "true" : "false"}
-                className={`absolute inset-0 h-full w-full object-contain ${destinationId === person.id ? "opacity-100" : "opacity-0"}`}
-              />
-            ))}
-          </div>
+          <ChoicePhotos photos={mentionChoices} selectedId={destinationId} />
           <div className="col-span-2 grid grid-cols-2 gap-3 landscape:col-span-1 landscape:grid-cols-1">
             <KioskButton type="button" tone="ghost" onClick={onBack}>
               {copy.back}
@@ -397,13 +409,16 @@ export function InterviewScreen({
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-3 landscape:grid-cols-1 landscape:content-end">
-          <KioskButton type="button" tone="ghost" onClick={onBack}>
-            {copy.back}
-          </KioskButton>
-          <KioskButton type="submit" disabled={!ready}>
-            {copy.send}
-          </KioskButton>
+        <div className="grid min-h-0 grid-cols-2 content-end gap-3 landscape:grid-cols-1 landscape:grid-rows-[minmax(0,1fr)_auto] landscape:content-stretch">
+          <ChoicePhotos photos={interviewPurposes} selectedId={purpose} />
+          <div className="col-span-2 grid grid-cols-2 gap-3 landscape:col-span-1 landscape:grid-cols-1">
+            <KioskButton type="button" tone="ghost" onClick={onBack}>
+              {copy.back}
+            </KioskButton>
+            <KioskButton type="submit" disabled={!ready}>
+              {copy.send}
+            </KioskButton>
+          </div>
         </div>
       </form>
     </KioskFrame>

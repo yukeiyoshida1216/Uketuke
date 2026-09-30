@@ -1,6 +1,6 @@
 "use client";
 
-import { backgroundGradient, mentionChoices, theme, timings } from "@/config/reception";
+import { backgroundGradient, preloadedPhotos, theme, timings } from "@/config/reception";
 import {
   CompleteScreen,
   DestinationScreen,
@@ -45,9 +45,9 @@ export function KioskApp({
   }, []);
 
   useEffect(() => {
-    const images = mentionChoices.map((person) => {
+    const images = preloadedPhotos.map((src) => {
       const img = new Image();
-      img.src = person.photo;
+      img.src = src;
       return img;
     });
     for (const img of images) {
