@@ -85,15 +85,15 @@ describe("受付画面", () => {
   it("担当者を選ぶと右側にその人の写真を出す", async () => {
     render(<KioskApp />);
     await openGeneral();
-    expect(document.querySelector("img[src='/staff/nosaka.png']")).toBeNull();
+    const selected = () => document.querySelector("img[data-selected='true']")?.getAttribute("src") ?? null;
+    expect(document.querySelectorAll("img[src^='/staff/']")).toHaveLength(3);
+    expect(selected()).toBeNull();
     fireEvent.click(await screen.findByRole("button", { name: "野坂 星司" }));
-    expect(document.querySelector("img[src='/staff/nosaka.png']")).toBeTruthy();
+    expect(selected()).toBe("/staff/nosaka.png");
     fireEvent.click(screen.getByRole("button", { name: "梁瀬 星太" }));
-    expect(document.querySelector("img[src='/staff/yanase.png']")).toBeTruthy();
-    expect(document.querySelector("img[src='/staff/nosaka.png']")).toBeNull();
+    expect(selected()).toBe("/staff/yanase.png");
     fireEvent.click(screen.getByRole("button", { name: "伊藤 功" }));
-    expect(document.querySelector("img[src='/staff/ito.png']")).toBeTruthy();
-    expect(document.querySelector("img[src='/staff/yanase.png']")).toBeNull();
+    expect(selected()).toBe("/staff/ito.png");
   });
 
   it("渡された担当者名は通信を待たずに出す", () => {

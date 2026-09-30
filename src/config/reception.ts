@@ -96,10 +96,6 @@ export const mentionChoices = [
   { id: "ito", name: "伊藤 功", photo: "/staff/ito.png" },
 ] as const;
 
-export function staffPhoto(id: string): string | null {
-  return mentionChoices.find((person) => person.id === id)?.photo ?? null;
-}
-
 export type MentionChoiceId = (typeof mentionChoices)[number]["id"];
 
 export const copy = {

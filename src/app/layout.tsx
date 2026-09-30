@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { copy, theme } from "@/config/reception";
+import { copy, mentionChoices, theme } from "@/config/reception";
 import "./fonts.css";
 import "./globals.css";
 
@@ -30,6 +30,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <link rel="preload" href="/logo-mark.svg" as="image" />
         <link rel="preload" href="/logo-wordmark.svg" as="image" />
+        {mentionChoices.map((person) => (
+          <link key={person.id} rel="preload" href={person.photo} as="image" />
+        ))}
       </head>
       <body
         className="h-dvh overflow-hidden"

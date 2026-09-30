@@ -1,6 +1,6 @@
 "use client";
 
-import { backgroundGradient, copy, interviewPurposes, staffPhoto, theme, timings, visitorCountChoices } from "@/config/reception";
+import { backgroundGradient, copy, interviewPurposes, mentionChoices, theme, timings, visitorCountChoices } from "@/config/reception";
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
 import { welcomeClockParts } from "@/lib/welcome-clock";
 import { useEffect, useState } from "react";
@@ -165,7 +165,6 @@ export function GeneralScreen({
   onBack: () => void;
   onSubmit: () => void;
 }) {
-  const photo = staffPhoto(destinationId);
   return (
     <KioskFrame title={copy.generalTitle}>
       <form
@@ -261,8 +260,17 @@ export function GeneralScreen({
           </p>
         </div>
         <div className="grid min-h-0 grid-cols-2 content-end gap-3 landscape:grid-cols-1 landscape:grid-rows-[minmax(0,1fr)_auto] landscape:content-stretch">
-          <div className="col-span-2 hidden h-full min-h-0 items-center justify-center landscape:col-span-1 landscape:flex">
-            {photo ? <img src={photo} alt="" className="h-full w-full object-contain" /> : null}
+          <div className="relative col-span-2 hidden h-full min-h-0 landscape:col-span-1 landscape:block">
+            {mentionChoices.map((person) => (
+              <img
+                key={person.id}
+                src={person.photo}
+                alt=""
+                decoding="sync"
+                data-selected={destinationId === person.id ? "true" : "false"}
+                className={`absolute inset-0 h-full w-full object-contain ${destinationId === person.id ? "opacity-100" : "opacity-0"}`}
+              />
+            ))}
           </div>
           <div className="col-span-2 grid grid-cols-2 gap-3 landscape:col-span-1 landscape:grid-cols-1">
             <KioskButton type="button" tone="ghost" onClick={onBack}>

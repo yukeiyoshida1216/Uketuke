@@ -1,6 +1,6 @@
 "use client";
 
-import { backgroundGradient, theme, timings } from "@/config/reception";
+import { backgroundGradient, mentionChoices, theme, timings } from "@/config/reception";
 import {
   CompleteScreen,
   DestinationScreen,
@@ -42,6 +42,17 @@ export function KioskApp({
 
   useEffect(() => {
     document.documentElement.dataset.kioskReady = "1";
+  }, []);
+
+  useEffect(() => {
+    const images = mentionChoices.map((person) => {
+      const img = new Image();
+      img.src = person.photo;
+      return img;
+    });
+    for (const img of images) {
+      if (typeof img.decode === "function") void img.decode().catch(() => undefined);
+    }
   }, []);
 
   useEffect(() => {
