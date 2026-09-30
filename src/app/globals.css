@@ -225,3 +225,17 @@
   height: clamp(3.1rem, 8vh, 4.5rem) !important;
   font-size: clamp(1.2rem, 2.6vh, 1.75rem) !important;
 }
+
+@layer theme {
+  .kiosk-root .kiosk-field {
+    border-color: var(--kiosk-field-border) !important;
+  }
+
+  .kiosk-root .kiosk-field:focus,
+  .kiosk-root .kiosk-field:focus-visible {
+    border-color: var(--kiosk-field-focus) !important;
+    outline: 3px solid var(--kiosk-field-focus) !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important;
+  }
+}

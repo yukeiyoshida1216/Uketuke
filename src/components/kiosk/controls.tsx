@@ -69,13 +69,14 @@ export function KioskField({
       </span>
       <Input
         id={id}
-        className="rounded-2xl border-2 bg-white px-4 md:text-[clamp(1.25rem,2.6vh,1.7rem)]"
+        className="kiosk-field rounded-2xl border-2 bg-white px-4 focus-visible:ring-0 md:text-[clamp(1.25rem,2.6vh,1.7rem)]"
         style={{
           height: "clamp(3.25rem, 8vh, 4.5rem)",
           fontSize: "clamp(1.25rem, 2.6vh, 1.7rem)",
-          borderColor: theme.line,
           color: theme.ink,
           background: theme.white,
+          ["--kiosk-field-border" as string]: theme.line,
+          ["--kiosk-field-focus" as string]: theme.yamabuki,
         }}
         {...props}
       />
