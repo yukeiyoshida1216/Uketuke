@@ -47,7 +47,7 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
       <span
         className="kiosk-blink mt-[clamp(0.7rem,2.2vh,1.3rem)] font-medium"
         style={{
-          color: theme.yamabuki,
+          color: theme.hintClear,
           fontSize: "clamp(1.35rem, 3.2vh, 2.15rem)",
           animationDuration: `${timings.hintBlinkMs}ms`,
         }}

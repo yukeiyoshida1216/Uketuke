@@ -52,7 +52,7 @@ describe("受付画面", () => {
     expect(html.indexOf(copy.welcomeCompany)).toBeLessThan(html.indexOf("/logo-wordmark.svg"));
     expect(html.indexOf("/logo-wordmark.svg")).toBeLessThan(html.indexOf(copy.welcomeSubtitle));
     const hint = [...welcome.querySelectorAll("span")].find((node) => node.textContent === copy.welcomeSubtitle);
-    expect(hint?.getAttribute("style")).toContain(theme.yamabuki);
+    expect(hint?.getAttribute("style")).toContain(theme.hintClear);
     expect(hint?.getAttribute("style") ?? "").not.toContain("background");
   });
 

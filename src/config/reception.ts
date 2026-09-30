@@ -11,8 +11,10 @@ export const theme = {
   backgroundDeep: "#FFE08A",
   /** グラデーションの下端。backgroundDeep より少し薄い。 */
   backgroundBottom: "#FFE9A8",
-  /** ロゴ中央の山吹色。案内文の文字色に使う。 */
+  /** ロゴ中央の山吹色。 */
   yamabuki: "#F8B828",
+  /** 「画面をタッチしてください」が表示されているときの色。山吹色より少し濃い。 */
+  hintClear: "#E9A41A",
   amber: "#F5A524",
   amberDeep: "#E09412",
   /** WELCOME の文字色。ロゴと同じ山吹色で、背景の上ではっきり読める。 */
