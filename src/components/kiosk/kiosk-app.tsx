@@ -16,6 +16,7 @@ import { createIdleTimer } from "@/lib/idle-timer";
 import { initialKioskState, kioskReducer } from "@/lib/kiosk-machine";
 import { createIdempotencyKey, requestKeepAwake, requestKioskSurface } from "@/lib/kiosk-surface";
 import { validatedGeneralDraft, validatedInterviewDraft } from "@/lib/reception";
+import { retainKioskPhotos } from "@/lib/preload-photos";
 import { createSubmitLock } from "@/lib/submit-lock";
 import { useEffect, useReducer, useRef, useState } from "react";
 
@@ -44,16 +45,7 @@ export function KioskApp({
     document.documentElement.dataset.kioskReady = "1";
   }, []);
 
-  useEffect(() => {
-    const images = preloadedPhotos.map((src) => {
-      const img = new Image();
-      img.src = src;
-      return img;
-    });
-    for (const img of images) {
-      if (typeof img.decode === "function") void img.decode().catch(() => undefined);
-    }
-  }, []);
+  retainKioskPhotos();
 
   useEffect(() => {
     if (state.phase !== "sending") lockRef.current.release();
@@ -162,6 +154,11 @@ export function KioskApp({
         fontFamily: theme.fontFamily,
       }}
     >
+      <div aria-hidden className="pointer-events-none fixed top-0 left-0 -z-10 h-px w-px overflow-hidden opacity-0">
+        {preloadedPhotos.map((src) => (
+          <img key={src} src={src} alt="" decoding="async" data-photo-cache="" fetchPriority="high" />
+        ))}
+      </div>
       <div className="h-full" hidden={state.phase !== "welcome"}>
         <WelcomeScreen
           onEnter={() => {

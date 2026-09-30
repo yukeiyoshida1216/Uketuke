@@ -19,7 +19,7 @@ function ChoicePhotos({
           key={item.id}
           src={item.photo}
           alt=""
-          decoding="sync"
+          decoding="async"
           data-selected={selectedId === item.id ? "true" : "false"}
           className={`absolute inset-0 h-full w-full object-contain ${selectedId === item.id ? "opacity-100" : "opacity-0"}`}
         />

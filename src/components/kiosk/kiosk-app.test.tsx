@@ -86,7 +86,7 @@ describe("受付画面", () => {
     render(<KioskApp />);
     await openGeneral();
     const selected = () => document.querySelector("img[data-selected='true']")?.getAttribute("src") ?? null;
-    expect(document.querySelectorAll("img[src^='/staff/']")).toHaveLength(3);
+    expect(document.querySelectorAll("img[data-selected][src^='/staff/']")).toHaveLength(3);
     expect(selected()).toBeNull();
     fireEvent.click(await screen.findByRole("button", { name: "野坂 星司" }));
     expect(selected()).toBe("/staff/nosaka.png");
@@ -96,12 +96,19 @@ describe("受付画面", () => {
     expect(selected()).toBe("/staff/ito.png");
   });
 
+  it("面接・研修の写真は最初の画面で読み込む", () => {
+    render(<KioskApp />);
+    for (const src of ["/purpose/interview.png", "/purpose/training.png", "/purpose/briefing.png"]) {
+      expect(document.querySelector(`img[data-photo-cache][src='${src}']`)).toBeTruthy();
+    }
+  });
+
   it("面接・研修の選択で写真を出す", () => {
     render(<KioskApp />);
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
     fireEvent.click(screen.getByRole("button", { name: copy.interview }));
     const selected = () => document.querySelector("img[data-selected='true']")?.getAttribute("src") ?? null;
-    expect(document.querySelectorAll("img[src^='/purpose/']")).toHaveLength(3);
+    expect(document.querySelectorAll("img[data-selected][src^='/purpose/']")).toHaveLength(3);
     expect(selected()).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "面接" }));
     expect(selected()).toBe("/purpose/interview.png");
