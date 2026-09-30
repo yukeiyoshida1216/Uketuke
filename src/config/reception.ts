@@ -19,6 +19,8 @@ export const theme = {
   amberDeep: "#E09412",
   /** WELCOME の文字色。ロゴと同じ山吹色で、背景の上ではっきり読める。 */
   welcomeSoft: "#F8B828",
+  /** 会社名・氏名をタップしたときの枠。山吹色より少し濃い。 */
+  fieldFocus: "#E09412",
   white: "#FFFFFF",
   ink: "#4A3728",
   inkSoft: "#7A6552",

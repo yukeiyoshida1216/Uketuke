@@ -76,7 +76,7 @@ export function KioskField({
           color: theme.ink,
           background: theme.white,
           ["--kiosk-field-border" as string]: theme.line,
-          ["--kiosk-field-focus" as string]: theme.yamabuki,
+          ["--kiosk-field-focus" as string]: theme.fieldFocus,
         }}
         {...props}
       />
