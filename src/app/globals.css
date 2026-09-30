@@ -234,8 +234,7 @@
   .kiosk-root .kiosk-field:focus,
   .kiosk-root .kiosk-field:focus-visible {
     border-color: var(--kiosk-field-focus) !important;
-    outline: 3px solid var(--kiosk-field-focus) !important;
-    outline-offset: 2px !important;
+    outline: none !important;
     box-shadow: none !important;
   }
 }
