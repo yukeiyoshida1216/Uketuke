@@ -1,7 +1,8 @@
 "use client";
 
-import { backgroundGradient, copy, interviewPurposes, mentionChoices, theme, timings, visitorCountChoices } from "@/config/reception";
+import { backgroundGradient, interviewPurposes, mentionChoices, theme, timings, visitorCountChoices } from "@/config/reception";
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
+import { useKioskCopy } from "@/components/kiosk/language";
 import { welcomeClockParts } from "@/lib/welcome-clock";
 import { useEffect, useState } from "react";
 
@@ -39,6 +40,7 @@ function useWelcomeClock() {
 }
 
 export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
+  const copy = useKioskCopy();
   const clock = useWelcomeClock();
   return (
     <button
@@ -121,6 +123,7 @@ export function MenuScreen({
   onOther: () => void;
   onHome: () => void;
 }) {
+  const copy = useKioskCopy();
   const choices = [
     { label: copy.general, hint: copy.generalHint, onClick: onGeneral },
     { label: copy.interview, hint: copy.interviewHint, onClick: onInterview },
@@ -188,6 +191,13 @@ export function GeneralScreen({
   onBack: () => void;
   onSubmit: () => void;
 }) {
+  const copy = useKioskCopy();
+  const countLabel = {
+    "1": copy.count1,
+    "2": copy.count2,
+    "3": copy.count3,
+    "4plus": copy.count4plus,
+  } as const;
   return (
     <KioskFrame title={copy.generalTitle}>
       <form
@@ -228,7 +238,7 @@ export function GeneralScreen({
                   style={{ minHeight: "clamp(3.1rem, 8vh, 4.4rem)" }}
                   onClick={() => onVisitorCount(choice.id)}
                 >
-                  {choice.label}
+                  {countLabel[choice.id]}
                 </KioskButton>
               ))}
             </div>
@@ -311,6 +321,7 @@ export function DestinationScreen({
   onBack: () => void;
   onReload: () => void;
 }) {
+  const copy = useKioskCopy();
   const scroll = people.length > 4;
   return (
     <KioskFrame title={copy.destinationTitle}>
@@ -372,6 +383,12 @@ export function InterviewScreen({
   onBack: () => void;
   onSubmit: () => void;
 }) {
+  const copy = useKioskCopy();
+  const purposeLabel = {
+    interview: copy.purposeInterview,
+    training: copy.purposeTraining,
+    briefing: copy.purposeBriefing,
+  } as const;
   return (
     <KioskFrame title={copy.interviewTitle}>
       <form
@@ -400,7 +417,7 @@ export function InterviewScreen({
                   aria-pressed={purpose === item.id}
                   onClick={() => onPurpose(item.id)}
                 >
-                  {item.label}
+                  {purposeLabel[item.id]}
                 </KioskButton>
               ))}
             </div>
@@ -426,6 +443,7 @@ export function InterviewScreen({
 }
 
 export function SendingScreen() {
+  const copy = useKioskCopy();
   return (
     <section className="grid h-full place-items-center px-8 text-center" aria-live="polite" aria-busy="true">
       <p className="font-bold" style={{ color: theme.ink, fontSize: "clamp(1.8rem, 5vh, 3rem)", whiteSpace: "nowrap" }}>
@@ -441,6 +459,7 @@ export function SendingScreen() {
 }
 
 export function CompleteScreen({ onReturn }: { onReturn: () => void }) {
+  const copy = useKioskCopy();
   return (
     <button
       type="button"
@@ -478,6 +497,7 @@ export function CompleteScreen({ onReturn }: { onReturn: () => void }) {
 }
 
 export function ErrorScreen({ onRetry, onHome }: { onRetry: () => void; onHome: () => void }) {
+  const copy = useKioskCopy();
   return (
     <KioskFrame title={copy.errorTitle}>
       <div className="grid min-h-0 flex-1 grid-rows-[auto_1fr] gap-4 landscape:grid-rows-[auto_1fr]">

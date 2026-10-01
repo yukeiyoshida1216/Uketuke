@@ -62,6 +62,21 @@ describe("受付画面", () => {
     expect(lines()).toEqual(["09/30", "12:01:00"]);
   });
 
+  it("右上で日本語と英語を切り替える", () => {
+    render(<KioskApp />);
+    const toggle = screen.getByRole("group", { name: "言語" });
+    expect(toggle.className).toContain("absolute");
+    fireEvent.click(screen.getByRole("button", { name: "EN" }));
+    expect(screen.getByText("Touch the screen")).toBeTruthy();
+    expect(screen.queryByText(copy.welcomeSubtitle)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "日本語" }));
+    expect(screen.getByText(copy.welcomeSubtitle)).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "EN" }));
+    fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Home" }));
+    expect(screen.getByText(copy.welcomeSubtitle)).toBeTruthy();
+  });
+
   it("ロゴと LIGHT PATH の間に会社名を出す", () => {
     render(<KioskApp />);
     const welcome = screen.getByRole("button", { name: /WELCOME/ });

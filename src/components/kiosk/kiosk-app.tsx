@@ -11,6 +11,7 @@ import {
   SendingScreen,
   WelcomeScreen,
 } from "@/components/kiosk/screens";
+import { LanguageProvider, LanguageToggle, type KioskLanguage } from "@/components/kiosk/language";
 import { postReceptionOnce } from "@/lib/api-client";
 import { createIdleTimer } from "@/lib/idle-timer";
 import { initialKioskState, kioskReducer } from "@/lib/kiosk-machine";
@@ -39,11 +40,18 @@ export function KioskApp({
     initialDestinations.length > 0 ? { token: 0, status: "ready", people: initialDestinations } : null,
   );
   const [destinationReload, setDestinationReload] = useState(0);
+  const [language, setLanguage] = useState<KioskLanguage>("ja");
   const lockRef = useRef(createSubmitLock());
+  const phaseRef = useRef(state.phase);
 
   useEffect(() => {
     document.documentElement.dataset.kioskReady = "1";
   }, []);
+
+  useEffect(() => {
+    if (phaseRef.current !== "welcome" && state.phase === "welcome") setLanguage("ja");
+    phaseRef.current = state.phase;
+  }, [state.phase]);
 
   retainKioskPhotos();
 
@@ -145,9 +153,10 @@ export function KioskApp({
   const interviewReady = validatedInterviewDraft(state.draft).ok;
 
   return (
+    <LanguageProvider language={language} setLanguage={setLanguage}>
     <main
       data-phase={state.phase}
-      className="kiosk-root h-dvh overflow-hidden"
+      className="kiosk-root relative h-dvh overflow-hidden"
       style={{
         background: backgroundGradient,
         color: theme.ink,
@@ -238,6 +247,8 @@ export function KioskApp({
           onHome={() => dispatch({ type: "goHome" })}
         />
       ) : null}
+      <LanguageToggle />
     </main>
+    </LanguageProvider>
   );
 }

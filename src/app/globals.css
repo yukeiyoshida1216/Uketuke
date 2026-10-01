@@ -221,6 +221,16 @@
   font-size: clamp(1.35rem, 3.2vh, 2rem) !important;
 }
 
+.kiosk-root .kiosk-lang button {
+  width: auto !important;
+  height: auto !important;
+  min-height: 2.35rem !important;
+  padding: 0.3rem 0.75rem !important;
+  font-size: clamp(0.85rem, 1.8vh, 1.05rem) !important;
+  line-height: 1.1 !important;
+  box-shadow: none !important;
+}
+
 .kiosk-root input {
   height: clamp(3.1rem, 8vh, 4.5rem) !important;
   font-size: clamp(1.2rem, 2.6vh, 1.75rem) !important;

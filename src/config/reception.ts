@@ -104,7 +104,55 @@ export const preloadedPhotos = [
   ...interviewPurposes.map((item) => item.photo),
 ] as const;
 
-export const copy = {
+export type UiCopy = {
+  appTitle: string;
+  welcomeCompany: string;
+  welcomeTitle: string;
+  welcomeSubtitle: string;
+  menuTitle: string;
+  general: string;
+  generalHint: string;
+  interview: string;
+  interviewHint: string;
+  other: string;
+  otherHint: string;
+  home: string;
+  homeFromError: string;
+  companyName: string;
+  companyPlaceholder: string;
+  visitorName: string;
+  visitorPlaceholder: string;
+  visitorCount: string;
+  count1: string;
+  count2: string;
+  count3: string;
+  count4plus: string;
+  generalTitle: string;
+  generalRequired: string;
+  mentionTarget: string;
+  destinationTitle: string;
+  destinationLoading: string;
+  destinationError: string;
+  destinationEmpty: string;
+  reload: string;
+  interviewTitle: string;
+  purposeInterview: string;
+  purposeTraining: string;
+  purposeBriefing: string;
+  interviewRequired: string;
+  back: string;
+  next: string;
+  send: string;
+  sending: string;
+  thanks: string;
+  thanksWait: readonly string[];
+  thanksHint: string;
+  errorTitle: string;
+  errorBody: string;
+  retry: string;
+};
+
+export const copyJa = {
   appTitle: "受付",
   welcomeCompany: "株式会社ライトパス",
   welcomeTitle: "WELCOME",
@@ -123,6 +171,10 @@ export const copy = {
   visitorName: "氏名",
   visitorPlaceholder: "ライト 一郎",
   visitorCount: "来社人数",
+  count1: "1人",
+  count2: "2人",
+  count3: "3人",
+  count4plus: "4人以上",
   generalTitle: "総合受付",
   generalRequired: "会社名・氏名・人数・担当者名はすべて必須です",
   mentionTarget: "担当者名",
@@ -132,6 +184,9 @@ export const copy = {
   destinationEmpty: "訪問先が登録されていません",
   reload: "再読み込み",
   interviewTitle: "面接・研修",
+  purposeInterview: "面接",
+  purposeTraining: "研修",
+  purposeBriefing: "会社説明",
   interviewRequired: "氏名を入力し、面接・研修・会社説明のいずれかを選択してください",
   back: "戻る",
   next: "次へ",
@@ -143,6 +198,59 @@ export const copy = {
   errorTitle: "送信できませんでした",
   errorBody: "通信に失敗しました。入力内容は残っています。もう一度送信できます。",
   retry: "再試行",
+} as const satisfies UiCopy;
+
+export const copyEn = {
+  appTitle: "Reception",
+  welcomeCompany: "Light Path Co., Ltd.",
+  welcomeTitle: "WELCOME",
+  welcomeSubtitle: "Touch the screen",
+  menuTitle: "Please select your purpose",
+  general: "Reception",
+  generalHint: "Meetings and visits",
+  interview: "Interview & training",
+  interviewHint: "For interviews and training",
+  other: "Other",
+  otherHint: "Deliveries, inspections, and more",
+  home: "Home",
+  homeFromError: "Back to home",
+  companyName: "Company",
+  companyPlaceholder: "Light Path Co., Ltd.",
+  visitorName: "Name",
+  visitorPlaceholder: "Ichiro Light",
+  visitorCount: "Number of visitors",
+  count1: "1",
+  count2: "2",
+  count3: "3",
+  count4plus: "4+",
+  generalTitle: "Reception",
+  generalRequired: "Company, name, number of visitors, and contact are all required",
+  mentionTarget: "Contact",
+  destinationTitle: "Select who you are visiting",
+  destinationLoading: "Loading contacts",
+  destinationError: "Could not load the contact list",
+  destinationEmpty: "No contacts are registered",
+  reload: "Reload",
+  interviewTitle: "Interview & training",
+  purposeInterview: "Interview",
+  purposeTraining: "Training",
+  purposeBriefing: "Briefing",
+  interviewRequired: "Enter your name, then select interview, training, or briefing",
+  back: "Back",
+  next: "Next",
+  send: "Send",
+  sending: "Sending",
+  thanks: "Thank you for checking in!",
+  thanksWait: ["A staff member will be with you shortly.", "Please wait a moment."],
+  thanksHint: "Returning to the home screen soon",
+  errorTitle: "Could not send",
+  errorBody: "The connection failed. Your entries are still here. You can send again.",
+  retry: "Try again",
+} as const satisfies UiCopy;
+
+/** 画面の初期言語。Slack 通知の文言もここを使う。 */
+export const copy = {
+  ...copyJa,
   slack: {
     generalTitle: "【総合受付】来客がありました",
     interviewTitle: "【面接】来客がありました",
