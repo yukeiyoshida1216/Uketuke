@@ -97,6 +97,23 @@ describe("受付画面", () => {
     expect(screen.getByText(copy.welcomeSubtitle)).toBeTruthy();
   });
 
+  it("英語では会社名と担当者名を英語表記にする", async () => {
+    render(<KioskApp />);
+    fireEvent.click(screen.getByRole("button", { name: "EN" }));
+    expect(screen.getByText("Light Path")).toBeTruthy();
+    expect(screen.queryByText("Light Path Co., Ltd.")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Reception" }));
+    expect(await screen.findByRole("button", { name: "Seiji Nosaka" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Shota Yanase" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Kou Ito" })).toBeTruthy();
+    expect((screen.getByLabelText("Company") as HTMLInputElement).placeholder).toBe("Light Path");
+    fireEvent.click(screen.getByRole("button", { name: "日本語" }));
+    expect(screen.getByRole("button", { name: "野坂 星司" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "梁瀬 星太" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "伊藤 功" })).toBeTruthy();
+  });
+
   it("ロゴと LIGHT PATH の間に会社名を出す", () => {
     render(<KioskApp />);
     const welcome = screen.getByRole("button", { name: /WELCOME/ });

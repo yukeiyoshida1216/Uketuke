@@ -1,6 +1,6 @@
 "use client";
 
-import { backgroundGradient, interviewPurposes, mentionChoices, theme, timings, visitorCountChoices } from "@/config/reception";
+import { backgroundGradient, interviewPurposes, mentionChoices, staffDisplayName, theme, timings, visitorCountChoices } from "@/config/reception";
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
 import { useKioskCopy } from "@/components/kiosk/language";
 import { welcomeClockParts } from "@/lib/welcome-clock";
@@ -306,7 +306,9 @@ export function GeneralScreen({
                     style={{ minHeight: "clamp(3rem, 7.5vh, 4.2rem)" }}
                     onClick={() => onDestination(person.id)}
                   >
-                    <span style={{ fontSize: "clamp(1.05rem, 2.5vh, 1.45rem)", lineHeight: 1.25 }}>{person.name}</span>
+                    <span style={{ fontSize: "clamp(1.05rem, 2.5vh, 1.45rem)", lineHeight: 1.25 }}>
+                      {staffDisplayName(person.id, copy, person.name)}
+                    </span>
                   </KioskButton>
                 ))}
               </div>
@@ -377,7 +379,7 @@ export function DestinationScreen({
           >
             {people.map((person) => (
               <KioskButton key={person.id} tone="white" onClick={() => onChoose(person.id)}>
-                {person.name}
+                {staffDisplayName(person.id, copy, person.name)}
               </KioskButton>
             ))}
           </div>

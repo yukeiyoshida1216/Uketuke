@@ -98,6 +98,18 @@ export const mentionChoices = [
 
 export type MentionChoiceId = (typeof mentionChoices)[number]["id"];
 
+const staffCopyKey: Record<MentionChoiceId, "staffNosaka" | "staffYanase" | "staffIto"> = {
+  nosaka: "staffNosaka",
+  yanase: "staffYanase",
+  ito: "staffIto",
+};
+
+/** 画面に出す担当者名。Slack 通知の氏名は mentionChoices の日本語のまま。 */
+export function staffDisplayName(id: string, copy: UiCopy, fallback: string): string {
+  const key = staffCopyKey[id as MentionChoiceId];
+  return key ? copy[key] : fallback;
+}
+
 /** 最初の画面のうちに読み込んでおく写真。選択時の待ちをなくす。 */
 export const preloadedPhotos = [
   ...mentionChoices.map((person) => person.photo),
@@ -151,6 +163,9 @@ export type UiCopy = {
   errorBody: string;
   retry: string;
   delivery: string;
+  staffNosaka: string;
+  staffYanase: string;
+  staffIto: string;
 };
 
 export const copyJa = {
@@ -200,11 +215,14 @@ export const copyJa = {
   errorBody: "通信に失敗しました。入力内容は残っています。もう一度送信できます。",
   retry: "再試行",
   delivery: "宅配/郵便",
+  staffNosaka: "野坂 星司",
+  staffYanase: "梁瀬 星太",
+  staffIto: "伊藤 功",
 } as const satisfies UiCopy;
 
 export const copyEn = {
   appTitle: "Reception",
-  welcomeCompany: "Light Path Co., Ltd.",
+  welcomeCompany: "Light Path",
   welcomeTitle: "WELCOME",
   welcomeSubtitle: "Touch the screen",
   menuTitle: "Please select your purpose",
@@ -217,7 +235,7 @@ export const copyEn = {
   home: "Home",
   homeFromError: "Back to home",
   companyName: "Company",
-  companyPlaceholder: "Light Path Co., Ltd.",
+  companyPlaceholder: "Light Path",
   visitorName: "Name",
   visitorPlaceholder: "Ichiro Light",
   visitorCount: "Number of visitors",
@@ -249,6 +267,9 @@ export const copyEn = {
   errorBody: "The connection failed. Your entries are still here. You can send again.",
   retry: "Try again",
   delivery: "Delivery/Mail",
+  staffNosaka: "Seiji Nosaka",
+  staffYanase: "Shota Yanase",
+  staffIto: "Kou Ito",
 } as const satisfies UiCopy;
 
 /** 画面の初期言語。Slack 通知の文言もここを使う。 */
