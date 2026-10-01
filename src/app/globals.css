@@ -265,7 +265,7 @@
   left: clamp(1rem, 3vw, 2.5rem);
   right: clamp(1rem, 3vw, 2.5rem);
   height: 52.5dvh;
-  transform: translateY(-50%);
+  transform: translateY(calc(-50% + 4dvh));
 }
 
 .kiosk-root .kiosk-menu-choices button {
