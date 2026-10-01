@@ -49,6 +49,7 @@ export type KioskAction =
   | { type: "sendSucceeded"; sessionId: number; now: number }
   | { type: "sendFailed"; sessionId: number }
   | { type: "retry" }
+  | { type: "acknowledgeDelivery" }
   | { type: "goHome" }
   | { type: "inactivityTimeout" }
   | { type: "completeTimeout" };
@@ -225,6 +226,14 @@ export function kioskReducer(state: KioskState, action: KioskAction): KioskState
         ...state,
         phase: "sending",
         pending: { ...state.pending, attempt: state.pending.attempt + 1 },
+      };
+    case "acknowledgeDelivery":
+      if (state.phase === "sending" || state.phase === "complete") return state;
+      return {
+        ...state,
+        phase: "complete",
+        pending: null,
+        draft: emptyDraftState(),
       };
     case "goHome":
     case "inactivityTimeout":

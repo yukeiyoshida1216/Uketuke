@@ -150,6 +150,7 @@ export type UiCopy = {
   errorTitle: string;
   errorBody: string;
   retry: string;
+  delivery: string;
 };
 
 export const copyJa = {
@@ -198,6 +199,7 @@ export const copyJa = {
   errorTitle: "送信できませんでした",
   errorBody: "通信に失敗しました。入力内容は残っています。もう一度送信できます。",
   retry: "再試行",
+  delivery: "宅配/郵便",
 } as const satisfies UiCopy;
 
 export const copyEn = {
@@ -246,6 +248,7 @@ export const copyEn = {
   errorTitle: "Could not send",
   errorBody: "The connection failed. Your entries are still here. You can send again.",
   retry: "Try again",
+  delivery: "Delivery/Mail",
 } as const satisfies UiCopy;
 
 /** 画面の初期言語。Slack 通知の文言もここを使う。 */

@@ -3,6 +3,7 @@
 import { backgroundGradient, preloadedPhotos, theme, timings } from "@/config/reception";
 import {
   CompleteScreen,
+  DeliveryButton,
   DestinationScreen,
   ErrorScreen,
   GeneralScreen,
@@ -16,7 +17,7 @@ import { postReceptionOnce } from "@/lib/api-client";
 import { createIdleTimer } from "@/lib/idle-timer";
 import { initialKioskState, kioskReducer } from "@/lib/kiosk-machine";
 import { createIdempotencyKey, requestKeepAwake, requestKioskSurface } from "@/lib/kiosk-surface";
-import { validatedGeneralDraft, validatedInterviewDraft } from "@/lib/reception";
+import { receptionFingerprint, validatedGeneralDraft, validatedInterviewDraft } from "@/lib/reception";
 import { retainKioskPhotos } from "@/lib/preload-photos";
 import { createSubmitLock } from "@/lib/submit-lock";
 import { useEffect, useReducer, useRef, useState } from "react";
@@ -42,6 +43,7 @@ export function KioskApp({
   const [destinationReload, setDestinationReload] = useState(0);
   const [language, setLanguage] = useState<KioskLanguage>("ja");
   const lockRef = useRef(createSubmitLock());
+  const deliveryGuard = useRef(false);
   const phaseRef = useRef(state.phase);
 
   useEffect(() => {
@@ -50,6 +52,7 @@ export function KioskApp({
 
   useEffect(() => {
     if (phaseRef.current !== "welcome" && state.phase === "welcome") setLanguage("ja");
+    if (state.phase === "welcome") deliveryGuard.current = false;
     phaseRef.current = state.phase;
   }, [state.phase]);
 
@@ -133,6 +136,19 @@ export function KioskApp({
   function engage() {
     requestKioskSurface();
     void requestKeepAwake();
+  }
+
+  function acknowledgeDelivery() {
+    if (deliveryGuard.current || state.phase !== "welcome") return;
+    deliveryGuard.current = true;
+    engage();
+    dispatch({ type: "acknowledgeDelivery" });
+    void postReceptionOnce({
+      payload: { type: "other" },
+      idempotencyKey: createIdempotencyKey(),
+      fingerprint: receptionFingerprint({ type: "other" }),
+      attempt: 1,
+    });
   }
 
   function startSend(
@@ -247,6 +263,7 @@ export function KioskApp({
           onHome={() => dispatch({ type: "goHome" })}
         />
       ) : null}
+      {state.phase === "welcome" ? <DeliveryButton onPress={acknowledgeDelivery} /> : null}
       <LanguageToggle />
     </main>
     </LanguageProvider>

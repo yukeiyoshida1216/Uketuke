@@ -62,12 +62,32 @@ describe("受付画面", () => {
     expect(lines()).toEqual(["09/30", "12:01:00"]);
   });
 
+  it("右上の宅配ボタンは受付完了と同じ画面を出す", async () => {
+    render(<KioskApp />);
+    const button = screen.getByRole("button", { name: "宅配/郵便" });
+    expect(button.className).toContain("kiosk-delivery");
+    expect(button.className).toContain("absolute");
+    expect(button.getAttribute("style")).toContain(theme.amberDeep);
+    fireEvent.click(button);
+    expect(screen.queryByText(copy.sending)).toBeNull();
+    expect(await screen.findByText(copy.thanks)).toBeTruthy();
+    for (const line of copy.thanksWait) expect(screen.getByText(line)).toBeTruthy();
+    expect(screen.getByText(copy.thanksHint)).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "宅配/郵便" })).toBeNull();
+    const bodies = vi.mocked(fetch).mock.calls.flatMap((call) => {
+      const init = call[1] as { body?: unknown } | undefined;
+      return typeof init?.body === "string" ? [init.body] : [];
+    });
+    expect(bodies.filter((body) => body.includes('"type":"other"'))).toHaveLength(1);
+  });
+
   it("右上で日本語と英語を切り替える", () => {
     render(<KioskApp />);
     const toggle = screen.getByRole("group", { name: "言語" });
     expect(toggle.className).toContain("absolute");
     fireEvent.click(screen.getByRole("button", { name: "EN" }));
     expect(screen.getByText("Touch the screen")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Delivery/Mail" })).toBeTruthy();
     expect(screen.queryByText(copy.welcomeSubtitle)).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "日本語" }));
     expect(screen.getByText(copy.welcomeSubtitle)).toBeTruthy();

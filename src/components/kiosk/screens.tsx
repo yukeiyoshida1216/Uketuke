@@ -39,6 +39,30 @@ function useWelcomeClock() {
   return parts;
 }
 
+function DeliveryBell() {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className="h-[46%] w-[46%] shrink-0" fill="currentColor">
+      <path d="M32 6c1.7 0 3 1.3 3 3v1.6C43.8 12.4 50 20.2 50 29.4V40l4.2 6.2c1 1.5-.1 3.5-1.9 3.5H11.7c-1.8 0-2.9-2-1.9-3.5L14 40V29.4c0-9.2 6.2-17 15-18.8V9c0-1.7 1.3-3 3-3z" />
+      <path d="M25.2 52.2a7 7 0 0 0 13.6 0h-13.6z" />
+    </svg>
+  );
+}
+
+export function DeliveryButton({ onPress }: { onPress: () => void }) {
+  const copy = useKioskCopy();
+  return (
+    <button
+      type="button"
+      onClick={onPress}
+      className="kiosk-delivery absolute z-30 flex flex-col items-center justify-center gap-[0.2rem] rounded-2xl border-4 bg-white font-bold"
+      style={{ color: theme.amberDeep, borderColor: theme.amberDeep, background: theme.white }}
+    >
+      <DeliveryBell />
+      <span>{copy.delivery}</span>
+    </button>
+  );
+}
+
 export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
   const copy = useKioskCopy();
   const clock = useWelcomeClock();

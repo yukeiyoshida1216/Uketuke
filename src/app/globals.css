@@ -217,8 +217,37 @@
   }
 }
 
+.kiosk-root {
+  --kiosk-delivery-size: min(22vh, 13.5rem);
+  --kiosk-corner: clamp(0.85rem, 2.2vh, 1.35rem);
+  --kiosk-corner-x: clamp(0.85rem, 2.2vw, 1.35rem);
+}
+
 .kiosk-root button {
   font-size: clamp(1.35rem, 3.2vh, 2rem) !important;
+}
+
+.kiosk-root .kiosk-lang {
+  top: var(--kiosk-corner);
+  right: var(--kiosk-corner-x);
+}
+
+.kiosk-root[data-phase="welcome"] .kiosk-lang {
+  right: calc(var(--kiosk-corner-x) + var(--kiosk-delivery-size) + 0.65rem);
+}
+
+.kiosk-root .kiosk-delivery {
+  top: var(--kiosk-corner);
+  right: var(--kiosk-corner-x);
+  width: var(--kiosk-delivery-size) !important;
+  height: var(--kiosk-delivery-size) !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0.45rem 0.35rem 0.6rem !important;
+  font-size: clamp(1rem, 2.3vh, 1.5rem) !important;
+  line-height: 1.15 !important;
+  box-shadow: none !important;
+  letter-spacing: 0.01em;
 }
 
 .kiosk-root .kiosk-lang button {

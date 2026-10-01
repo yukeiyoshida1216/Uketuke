@@ -47,7 +47,6 @@ export function LanguageToggle() {
   return (
     <div
       className="kiosk-lang absolute z-30 flex gap-1"
-      style={{ top: "clamp(0.85rem, 2.2vh, 1.35rem)", right: "clamp(0.85rem, 2.2vw, 1.35rem)" }}
       role="group"
       aria-label={language === "ja" ? "言語" : "Language"}
     >

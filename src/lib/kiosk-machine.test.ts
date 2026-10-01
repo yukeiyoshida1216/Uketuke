@@ -91,6 +91,15 @@ describe("受付画面の状態", () => {
     expect(state.pending?.attempt).toBe(2);
   });
 
+  it("宅配ボタンは送信中の画面を出さず、受付完了にする", () => {
+    const state = kioskReducer(initialKioskState(), { type: "acknowledgeDelivery" });
+    expect(state.phase).toBe("complete");
+    expect(state.pending).toBeNull();
+    expect(state.draft.companyName).toBe("");
+    const stayed = kioskReducer(state, { type: "acknowledgeDelivery" });
+    expect(stayed.phase).toBe("complete");
+  });
+
   it("その他は追加入力なしで送信し、成功後だけ完了し、時間後に WELCOME へ戻る", () => {
     let state = kioskReducer(toMenu(), { type: "openOther", now: 1_000, key: "key-other-1" });
     expect(state.phase).toBe("sending");
