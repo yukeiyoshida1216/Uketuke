@@ -105,7 +105,7 @@ export function KioskFrame({
         style={{
           color: theme.ink,
           fontSize: prominentTitle
-            ? title.includes("選択")
+            ? /[\u3040-\u30ff\u4e00-\u9faf]/.test(title)
               ? "clamp(2.6rem, min(8vh, 7.15vw), 6.75rem)"
               : "clamp(1.7rem, min(6.2vh, 5.5vw), 4.4rem)"
             : "clamp(1.35rem, min(3.6vh, 4.1vw), 2.35rem)",

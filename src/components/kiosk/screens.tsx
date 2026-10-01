@@ -242,7 +242,7 @@ export function GeneralScreen({
     "4plus": copy.count4plus,
   } as const;
   return (
-    <KioskFrame title={copy.generalTitle}>
+    <KioskFrame title={copy.generalTitle} prominentTitle>
       <CornerArrowButton label={copy.back} onClick={onBack} />
       <form
         className="grid min-h-0 flex-1 grid-rows-[1fr_auto] gap-[clamp(0.45rem,1.5vh,1rem)] landscape:grid-cols-[minmax(0,1.5fr)_minmax(13rem,0.7fr)] landscape:grid-rows-1"
@@ -432,7 +432,7 @@ export function InterviewScreen({
     briefing: copy.purposeBriefing,
   } as const;
   return (
-    <KioskFrame title={copy.interviewTitle}>
+    <KioskFrame title={copy.interviewTitle} prominentTitle>
       <CornerArrowButton label={copy.back} onClick={onBack} />
       <form
         className="grid min-h-0 flex-1 grid-rows-[1fr_auto] gap-[clamp(0.45rem,1.5vh,1rem)] landscape:grid-cols-[minmax(0,1.5fr)_minmax(13rem,0.7fr)] landscape:grid-rows-1"
