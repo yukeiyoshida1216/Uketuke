@@ -251,13 +251,25 @@
 }
 
 .kiosk-root .kiosk-home {
-  width: fit-content !important;
-  max-width: 100%;
-  height: auto !important;
-  min-height: 0 !important;
-  align-self: center;
-  padding: 0.6rem 1.533rem !important;
-  margin-bottom: 6dvh;
+  position: absolute;
+  z-index: 30;
+  top: var(--kiosk-corner);
+  left: var(--kiosk-corner-x);
+  width: 3.8rem !important;
+  height: 3.8rem !important;
+  min-width: 3.8rem !important;
+  min-height: 3.8rem !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.kiosk-root .kiosk-home-arrow {
+  width: 1.85rem;
+  height: 1.85rem;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .kiosk-root .kiosk-menu-choices {

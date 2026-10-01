@@ -190,10 +190,14 @@ export function MenuScreen({
         </div>
         <KioskButton
           tone="white"
-          className="kiosk-home mt-auto shrink-0"
+          className="kiosk-home"
           onClick={onHome}
+          aria-label={copy.home}
         >
-          <span style={{ fontSize: "clamp(1.8rem, 4.267vh, 2.533rem)", lineHeight: 1.15, whiteSpace: "nowrap" }}>{copy.home}</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="kiosk-home-arrow" fill="none">
+            <path d="M19 12H5" />
+            <path d="M11 6 5 12l6 6" />
+          </svg>
         </KioskButton>
       </div>
     </KioskFrame>
