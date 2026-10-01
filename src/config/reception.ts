@@ -80,19 +80,18 @@ export const visitorCountChoices = [
 
 export type VisitorCountChoiceId = (typeof visitorCountChoices)[number]["id"];
 
-/** 面接・研修で選ぶ用件。通知見出しは copy.slack 側。 */
+/** 面接・会社説明で選ぶ用件。通知見出しは copy.slack 側。 */
 export const interviewPurposes = [
   { id: "interview", label: "面接", photo: "/purpose/interview.png" },
-  { id: "training", label: "研修", photo: "/purpose/training.png" },
   { id: "briefing", label: "会社説明", photo: "/purpose/briefing.png" },
 ] as const;
 
 export type InterviewPurpose = (typeof interviewPurposes)[number]["id"];
 
-/** 面接・研修と配達のメンションに使える人。この三択以外は設定できない。 */
+/** 面接・会社説明と配達のメンションに使える人。この三択以外は設定できない。 */
 export const mentionChoices = [
   { id: "nosaka", name: "野坂 星司", photo: "/staff/nosaka.png" },
-  { id: "yanase", name: "梁瀬 星太", photo: "/staff/yanase.png" },
+  { id: "yanase", name: "梁瀬 聖太", photo: "/staff/yanase.png" },
   { id: "ito", name: "伊藤 功", photo: "/staff/ito.png" },
 ] as const;
 
@@ -149,7 +148,6 @@ export type UiCopy = {
   reload: string;
   interviewTitle: string;
   purposeInterview: string;
-  purposeTraining: string;
   purposeBriefing: string;
   interviewRequired: string;
   back: string;
@@ -174,10 +172,10 @@ export const copyJa = {
   welcomeTitle: "WELCOME",
   welcomeSubtitle: "画面をタッチしてください",
   menuTitle: "ご用件を選択してください",
-  general: "総合受付",
+  general: "企業様向け",
   generalHint: "打ち合わせ・ご訪問",
-  interview: "面接・研修",
-  interviewHint: "面接・研修でお越しの方",
+  interview: "面接・会社説明",
+  interviewHint: "面接・会社説明でお越しの方",
   other: "その他",
   otherHint: "配達や点検など",
   home: "最初の画面へ",
@@ -191,7 +189,7 @@ export const copyJa = {
   count2: "2人",
   count3: "3人",
   count4plus: "4人以上",
-  generalTitle: "総合受付",
+  generalTitle: "企業様向け",
   generalRequired: "会社名・氏名・人数・担当者名はすべて必須です",
   mentionTarget: "担当者名",
   destinationTitle: "訪問先を選択してください",
@@ -199,11 +197,10 @@ export const copyJa = {
   destinationError: "訪問先一覧を取得できませんでした",
   destinationEmpty: "訪問先が登録されていません",
   reload: "再読み込み",
-  interviewTitle: "面接・研修",
+  interviewTitle: "面接・会社説明",
   purposeInterview: "面接",
-  purposeTraining: "研修",
   purposeBriefing: "会社説明",
-  interviewRequired: "氏名を入力し、面接・研修・会社説明のいずれかを選択してください",
+  interviewRequired: "氏名を入力し、面接・会社説明のいずれかを選択してください",
   back: "戻る",
   next: "次へ",
   send: "送信する",
@@ -216,7 +213,7 @@ export const copyJa = {
   retry: "再試行",
   delivery: "宅配/郵便",
   staffNosaka: "野坂 星司",
-  staffYanase: "梁瀬 星太",
+  staffYanase: "梁瀬 聖太",
   staffIto: "伊藤 功",
 } as const satisfies UiCopy;
 
@@ -226,10 +223,10 @@ export const copyEn = {
   welcomeTitle: "WELCOME",
   welcomeSubtitle: "Touch the screen",
   menuTitle: "Please select your purpose",
-  general: "Reception",
+  general: "For companies",
   generalHint: "Meetings and visits",
-  interview: "Interview & training",
-  interviewHint: "For interviews and training",
+  interview: "Interview & briefing",
+  interviewHint: "For interviews and company briefings",
   other: "Other",
   otherHint: "Deliveries, inspections, and more",
   home: "Home",
@@ -243,7 +240,7 @@ export const copyEn = {
   count2: "2",
   count3: "3",
   count4plus: "4+",
-  generalTitle: "Reception",
+  generalTitle: "For companies",
   generalRequired: "Company, name, number of visitors, and contact are all required",
   mentionTarget: "Contact",
   destinationTitle: "Select who you are visiting",
@@ -251,11 +248,10 @@ export const copyEn = {
   destinationError: "Could not load the contact list",
   destinationEmpty: "No contacts are registered",
   reload: "Reload",
-  interviewTitle: "Interview & training",
+  interviewTitle: "Interview & briefing",
   purposeInterview: "Interview",
-  purposeTraining: "Training",
   purposeBriefing: "Briefing",
-  interviewRequired: "Enter your name, then select interview, training, or briefing",
+  interviewRequired: "Enter your name, then select interview or briefing",
   back: "Back",
   next: "Next",
   send: "Send",
@@ -278,7 +274,6 @@ export const copy = {
   slack: {
     generalTitle: "【総合受付】来客がありました",
     interviewTitle: "【面接】来客がありました",
-    trainingTitle: "【研修】来客がありました",
     briefingTitle: "【会社説明】来客がありました",
     otherTitle: "【その他】配達の受付がありました",
     companyLabel: "会社名",

@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 
 const staff: StaffRecord[] = [
   { id: "nosaka", name: "野坂 星司", slackUserId: "UNOSAKA" },
-  { id: "yanase", name: "梁瀬 星太", slackUserId: "UYANASE" },
+  { id: "yanase", name: "梁瀬 聖太", slackUserId: "UYANASE" },
   { id: "ito", name: "伊藤 功", slackUserId: "UITO" },
 ];
 
@@ -198,7 +198,7 @@ describe("受付通知", () => {
     expect(posts).toBe(3);
   });
 
-  it("4人以上と研修は見出しを分け、メンション先は設定どおり", async () => {
+  it("4人以上と面接は見出しを分け、メンション先は設定どおり", async () => {
     const { service, posts } = harness();
     const general = await service.submit({
       ...generalBody,
@@ -206,20 +206,20 @@ describe("受付通知", () => {
       visitorCount: 4,
       visitorCountOrMore: true,
     });
-    const training = await service.submit({
-      idempotencyKey: "key-training-1",
+    const interview = await service.submit({
+      idempotencyKey: "key-interview-mention-1",
       type: "interview",
-      purpose: "training",
+      purpose: "interview",
       visitorName: "佐藤",
       destinationId: "ito",
       mentions: ["UHACKER"],
     });
     expect(general.status).toBe(200);
-    expect(training.status).toBe(200);
+    expect(interview.status).toBe(200);
     expect(posts[0]).toContain("人数: 4名以上");
     expect(posts[0]).toContain("<@UITO>");
     expect(posts[0]).not.toContain("UNOSAKA");
-    expect(posts[1]).toContain("【研修】来客がありました");
+    expect(posts[1]).toContain("【面接】来客がありました");
     expect(posts[1]).toContain("<@UNOSAKA>");
     expect(posts[1]).toContain("<@UYANASE>");
     expect(posts[1]).not.toContain("UITO");

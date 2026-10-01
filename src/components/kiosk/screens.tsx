@@ -29,6 +29,17 @@ function ChoicePhotos({
   );
 }
 
+function MenuLabel({ label }: { label: string }) {
+  const dot = label.indexOf("・");
+  if (dot < 0) return label;
+  return (
+    <>
+      <span className="inline-block">{label.slice(0, dot + 1)}</span>
+      <span className="inline-block">{label.slice(dot + 1)}</span>
+    </>
+  );
+}
+
 function useWelcomeClock() {
   const [parts, setParts] = useState(() => welcomeClockParts(new Date()));
   useEffect(() => {
@@ -166,7 +177,9 @@ export function MenuScreen({
             style={{ height: "100%", minHeight: "clamp(5.5rem, 18vh, 11rem)" }}
           >
             <span className="flex flex-col items-center gap-2">
-              <span style={{ fontSize: "clamp(2.35rem, 6.4vh, 3.9rem)", lineHeight: 1.2 }}>{choice.label}</span>
+              <span style={{ fontSize: "clamp(2.35rem, 6.4vh, 3.9rem)", lineHeight: 1.2 }}>
+                <MenuLabel label={choice.label} />
+              </span>
               <span className="font-medium" style={{ fontSize: "clamp(1.1rem, 2.8vh, 1.55rem)", color: theme.inkSoft }}>
                 {choice.hint}
               </span>
@@ -412,7 +425,6 @@ export function InterviewScreen({
   const copy = useKioskCopy();
   const purposeLabel = {
     interview: copy.purposeInterview,
-    training: copy.purposeTraining,
     briefing: copy.purposeBriefing,
   } as const;
   return (
@@ -434,7 +446,7 @@ export function InterviewScreen({
             onChange={(event) => onVisitorName(event.target.value)}
           />
           <div className="grid gap-3">
-            <div className="grid grid-cols-3 gap-3" role="group" aria-label={copy.interviewTitle}>
+            <div className="grid grid-cols-2 gap-3" role="group" aria-label={copy.interviewTitle}>
               {interviewPurposes.map((item) => (
                 <KioskButton
                   key={item.id}

@@ -12,7 +12,7 @@ describe("訪問先一覧", () => {
       file,
       JSON.stringify([
         { id: "nosaka", name: "野坂 星司", slackUserId: "UNOSAKA" },
-        { id: "yanase", name: "梁瀬 星太", slackUserId: "UYANASE" },
+        { id: "yanase", name: "梁瀬 聖太", slackUserId: "UYANASE" },
       ]),
     );
     const staff = loadStaff(file, { nosaka: "UNOSAKA", yanase: "UYANASE" });
@@ -20,7 +20,7 @@ describe("訪問先一覧", () => {
     const encoded = JSON.stringify(published);
     expect(published).toEqual([
       { id: "nosaka", name: "野坂 星司" },
-      { id: "yanase", name: "梁瀬 星太" },
+      { id: "yanase", name: "梁瀬 聖太" },
     ]);
     expect(encoded).not.toContain("slackUserId");
     expect(encoded).not.toContain("UNOSAKA");

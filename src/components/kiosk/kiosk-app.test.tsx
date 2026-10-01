@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const people = {
   destinations: [
     { id: "nosaka", name: "野坂 星司", slackUserId: "UNOSAKA" },
-    { id: "yanase", name: "梁瀬 星太" },
+    { id: "yanase", name: "梁瀬 聖太" },
     { id: "ito", name: "伊藤 功" },
   ],
 };
@@ -103,14 +103,14 @@ describe("受付画面", () => {
     expect(screen.getByText("Light Path")).toBeTruthy();
     expect(screen.queryByText("Light Path Co., Ltd.")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
-    fireEvent.click(screen.getByRole("button", { name: "Reception" }));
+    fireEvent.click(screen.getByRole("button", { name: "For companies" }));
     expect(await screen.findByRole("button", { name: "Seiji Nosaka" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Shota Yanase" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Kou Ito" })).toBeTruthy();
     expect((screen.getByLabelText("Company") as HTMLInputElement).placeholder).toBe("Light Path");
     fireEvent.click(screen.getByRole("button", { name: "日本語" }));
     expect(screen.getByRole("button", { name: "野坂 星司" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "梁瀬 星太" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "梁瀬 聖太" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "伊藤 功" })).toBeTruthy();
   });
 
@@ -142,30 +142,30 @@ describe("受付画面", () => {
     expect(selected()).toBeNull();
     fireEvent.click(await screen.findByRole("button", { name: "野坂 星司" }));
     expect(selected()).toBe("/staff/nosaka.png");
-    fireEvent.click(screen.getByRole("button", { name: "梁瀬 星太" }));
+    fireEvent.click(screen.getByRole("button", { name: "梁瀬 聖太" }));
     expect(selected()).toBe("/staff/yanase.png");
     fireEvent.click(screen.getByRole("button", { name: "伊藤 功" }));
     expect(selected()).toBe("/staff/ito.png");
   });
 
-  it("面接・研修の写真は最初の画面で読み込む", () => {
+  it("面接・会社説明の写真は最初の画面で読み込む", () => {
     render(<KioskApp />);
-    for (const src of ["/purpose/interview.png", "/purpose/training.png", "/purpose/briefing.png"]) {
+    for (const src of ["/purpose/interview.png", "/purpose/briefing.png"]) {
       expect(document.querySelector(`img[data-photo-cache][src='${src}']`)).toBeTruthy();
     }
+    expect(document.querySelector("img[src='/purpose/training.png']")).toBeNull();
   });
 
-  it("面接・研修の選択で写真を出す", () => {
+  it("面接・会社説明の選択で写真を出す", () => {
     render(<KioskApp />);
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
     fireEvent.click(screen.getByRole("button", { name: copy.interview }));
     const selected = () => document.querySelector("img[data-selected='true']")?.getAttribute("src") ?? null;
-    expect(document.querySelectorAll("img[data-selected][src^='/purpose/']")).toHaveLength(3);
+    expect(document.querySelectorAll("img[data-selected][src^='/purpose/']")).toHaveLength(2);
+    expect(screen.queryByRole("button", { name: "研修" })).toBeNull();
     expect(selected()).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "面接" }));
     expect(selected()).toBe("/purpose/interview.png");
-    fireEvent.click(screen.getByRole("button", { name: "研修" }));
-    expect(selected()).toBe("/purpose/training.png");
     fireEvent.click(screen.getByRole("button", { name: "会社説明" }));
     expect(selected()).toBe("/purpose/briefing.png");
   });

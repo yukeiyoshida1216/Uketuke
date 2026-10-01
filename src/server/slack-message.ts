@@ -40,7 +40,6 @@ export function buildSlackText(input: {
   if (input.kind === "interview") {
     const titles: Record<InterviewPurpose, string> = {
       interview: copy.slack.interviewTitle,
-      training: copy.slack.trainingTitle,
       briefing: copy.slack.briefingTitle,
     };
     const title = input.purpose ? titles[input.purpose] : copy.slack.interviewTitle;
