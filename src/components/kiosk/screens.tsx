@@ -193,7 +193,7 @@ export function MenuScreen({
           className="kiosk-home mt-auto shrink-0"
           onClick={onHome}
         >
-          <span style={{ fontSize: "clamp(1.35rem, 3.2vh, 1.9rem)", lineHeight: 1.15, whiteSpace: "nowrap" }}>{copy.home}</span>
+          <span style={{ fontSize: "clamp(2.7rem, 6.4vh, 3.8rem)", lineHeight: 1.15, whiteSpace: "nowrap" }}>{copy.home}</span>
         </KioskButton>
       </div>
     </KioskFrame>

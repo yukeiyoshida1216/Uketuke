@@ -256,7 +256,8 @@
   height: auto !important;
   min-height: 0 !important;
   align-self: center;
-  padding: 0.45rem 1.15rem !important;
+  padding: 0.9rem 2.3rem !important;
+  margin-bottom: 6dvh;
 }
 
 .kiosk-root .kiosk-menu-choices {
