@@ -253,9 +253,9 @@
 .kiosk-root .kiosk-lang button {
   width: auto !important;
   height: auto !important;
-  min-height: 2.85rem !important;
-  padding: 0.42rem 1rem !important;
-  font-size: clamp(1.02rem, 2.15vh, 1.28rem) !important;
+  min-height: 3.3rem !important;
+  padding: 0.5rem 1.15rem !important;
+  font-size: clamp(1.16rem, 2.45vh, 1.48rem) !important;
   line-height: 1.1 !important;
   box-shadow: none !important;
 }

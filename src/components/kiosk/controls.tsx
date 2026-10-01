@@ -85,20 +85,39 @@ export function KioskField({
   );
 }
 
+function ProminentTitle({ title }: { title: string }) {
+  const splitAt = title.indexOf("選択");
+  if (splitAt <= 0) return title;
+  return (
+    <>
+      <span className="inline-block">{title.slice(0, splitAt)}</span>
+      <span className="inline-block">{title.slice(splitAt)}</span>
+    </>
+  );
+}
+
 export function KioskFrame({
   title,
   children,
+  prominentTitle = false,
 }: {
   title: string;
   children: ReactNode;
+  prominentTitle?: boolean;
 }) {
   return (
     <section className="flex h-full min-h-0 w-full flex-col overflow-hidden px-[clamp(1rem,3vw,2.5rem)] py-[clamp(0.6rem,2vh,1.35rem)]">
       <h1
         className="shrink-0 px-[clamp(10.5rem,22vw,12rem)] text-center font-bold"
-        style={{ color: theme.ink, fontSize: "clamp(1.35rem, min(3.6vh, 4.1vw), 2.35rem)", lineHeight: 1.25 }}
+        style={{
+          color: theme.ink,
+          fontSize: prominentTitle
+            ? "clamp(1.55rem, min(4.3vh, 4.7vw), 2.7rem)"
+            : "clamp(1.35rem, min(3.6vh, 4.1vw), 2.35rem)",
+          lineHeight: 1.25,
+        }}
       >
-        {title}
+        {prominentTitle ? <ProminentTitle title={title} /> : title}
       </h1>
       <div className="mt-[clamp(0.45rem,1.6vh,1rem)] flex min-h-0 flex-1 flex-col">{children}</div>
     </section>
