@@ -85,34 +85,6 @@ export function KioskField({
   );
 }
 
-function ProminentTitle({ title }: { title: string }) {
-  const splitAt = title.indexOf("選択");
-  if (splitAt <= 0) {
-    const words = title.split(" ");
-    const midpoint = Math.ceil(words.length / 2);
-    return (
-      <>
-        <span className="landscape:hidden">{title}</span>
-        <span className="hidden landscape:block">
-          <span className="block">{words.slice(0, midpoint).join(" ")}</span>
-          <span className="block">{words.slice(midpoint).join(" ")}</span>
-        </span>
-      </>
-    );
-  }
-  const head = title.slice(0, splitAt);
-  const rest = title.slice(splitAt);
-  const mid = rest.length > 4 ? rest.slice(0, 4) : rest;
-  const tail = rest.length > 4 ? rest.slice(4) : "";
-  return (
-    <>
-      <span className="block">{head}</span>
-      <span className="block">{mid}</span>
-      {tail ? <span className="block">{tail}</span> : null}
-    </>
-  );
-}
-
 export function KioskFrame({
   title,
   children,
@@ -130,19 +102,18 @@ export function KioskFrame({
             ? "kiosk-menu-title shrink-0 text-center font-bold"
             : "shrink-0 px-[clamp(10.5rem,22vw,12rem)] text-center font-bold"
         }
-        data-script={prominentTitle ? (title.includes("選択") ? "ja" : "en") : undefined}
         style={{
           color: theme.ink,
           fontSize: prominentTitle
             ? title.includes("選択")
-              ? "clamp(7rem, min(20vh, 21.4vw), 12.6rem)"
-              : "clamp(4.5rem, min(15.5vh, 16vw), 8.25rem)"
+              ? "clamp(2.6rem, min(8vh, 7.15vw), 6.75rem)"
+              : "clamp(1.7rem, min(6.2vh, 5.5vw), 4.4rem)"
             : "clamp(1.35rem, min(3.6vh, 4.1vw), 2.35rem)",
           lineHeight: prominentTitle ? 1.15 : 1.25,
-          paddingBottom: prominentTitle ? "0.12em" : undefined,
+          whiteSpace: prominentTitle ? "nowrap" : undefined,
         }}
       >
-        {prominentTitle ? <ProminentTitle title={title} /> : title}
+        {title}
       </h1>
       <div className="mt-[clamp(0.45rem,1.6vh,1rem)] flex min-h-0 flex-1 flex-col">{children}</div>
     </section>
