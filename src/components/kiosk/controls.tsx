@@ -88,10 +88,15 @@ export function KioskField({
 function ProminentTitle({ title }: { title: string }) {
   const splitAt = title.indexOf("選択");
   if (splitAt <= 0) return title;
+  const head = title.slice(0, splitAt);
+  const rest = title.slice(splitAt);
+  const mid = rest.length > 4 ? rest.slice(0, 4) : rest;
+  const tail = rest.length > 4 ? rest.slice(4) : "";
   return (
     <>
-      <span className="inline-block">{title.slice(0, splitAt)}</span>
-      <span className="inline-block">{title.slice(splitAt)}</span>
+      <span className="block">{head}</span>
+      <span className="block">{mid}</span>
+      {tail ? <span className="block">{tail}</span> : null}
     </>
   );
 }
@@ -116,7 +121,7 @@ export function KioskFrame({
         style={{
           color: theme.ink,
           fontSize: prominentTitle
-            ? "clamp(1.75rem, min(5vh, 5.35vw), 3.15rem)"
+            ? "clamp(3.5rem, min(10vh, 10.7vw), 6.3rem)"
             : "clamp(1.35rem, min(3.6vh, 4.1vw), 2.35rem)",
           lineHeight: 1.25,
         }}

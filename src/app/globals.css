@@ -250,6 +250,20 @@
   letter-spacing: 0.01em;
 }
 
+.kiosk-root .kiosk-home {
+  height: 6.9vh !important;
+  min-height: 6.9vh !important;
+  padding-top: 0.35rem !important;
+  padding-bottom: 0.35rem !important;
+}
+
+@media (orientation: landscape) {
+  .kiosk-root .kiosk-home {
+    height: 14.4vh !important;
+    min-height: 14.4vh !important;
+  }
+}
+
 .kiosk-root .kiosk-menu-title {
   padding-left: clamp(10.5rem, 22vw, 12rem);
   padding-right: clamp(10.5rem, 22vw, 12rem);
