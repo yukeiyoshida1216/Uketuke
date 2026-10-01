@@ -147,6 +147,17 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
   );
 }
 
+function CornerArrowButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <KioskButton tone="white" className="kiosk-home" onClick={onClick} aria-label={label}>
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="kiosk-home-arrow" fill="none">
+        <path d="M19 12H5" />
+        <path d="M11 6 5 12l6 6" />
+      </svg>
+    </KioskButton>
+  );
+}
+
 export function MenuScreen({
   onGeneral,
   onInterview,
@@ -188,17 +199,7 @@ export function MenuScreen({
           </KioskButton>
         ))}
         </div>
-        <KioskButton
-          tone="white"
-          className="kiosk-home"
-          onClick={onHome}
-          aria-label={copy.home}
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="kiosk-home-arrow" fill="none">
-            <path d="M19 12H5" />
-            <path d="M11 6 5 12l6 6" />
-          </svg>
-        </KioskButton>
+        <CornerArrowButton label={copy.home} onClick={onHome} />
       </div>
     </KioskFrame>
   );
@@ -242,6 +243,7 @@ export function GeneralScreen({
   } as const;
   return (
     <KioskFrame title={copy.generalTitle}>
+      <CornerArrowButton label={copy.back} onClick={onBack} />
       <form
         className="grid min-h-0 flex-1 grid-rows-[1fr_auto] gap-[clamp(0.45rem,1.5vh,1rem)] landscape:grid-cols-[minmax(0,1.5fr)_minmax(13rem,0.7fr)] landscape:grid-rows-1"
         onSubmit={(event) => {
@@ -338,10 +340,7 @@ export function GeneralScreen({
         </div>
         <div className="grid min-h-0 grid-cols-2 content-end gap-3 landscape:grid-cols-1 landscape:grid-rows-[minmax(0,1fr)_auto] landscape:content-stretch">
           <ChoicePhotos photos={mentionChoices} selectedId={destinationId} />
-          <div className="col-span-2 grid grid-cols-2 gap-3 landscape:col-span-1 landscape:grid-cols-1">
-            <KioskButton type="button" tone="ghost" onClick={onBack}>
-              {copy.back}
-            </KioskButton>
+          <div className="col-span-2 landscape:col-span-1">
             <KioskButton type="submit" disabled={!ready}>
               {copy.send}
             </KioskButton>
@@ -434,6 +433,7 @@ export function InterviewScreen({
   } as const;
   return (
     <KioskFrame title={copy.interviewTitle}>
+      <CornerArrowButton label={copy.back} onClick={onBack} />
       <form
         className="grid min-h-0 flex-1 grid-rows-[1fr_auto] gap-[clamp(0.45rem,1.5vh,1rem)] landscape:grid-cols-[minmax(0,1.5fr)_minmax(13rem,0.7fr)] landscape:grid-rows-1"
         onSubmit={(event) => {
@@ -471,10 +471,7 @@ export function InterviewScreen({
         </div>
         <div className="grid min-h-0 grid-cols-2 content-end gap-3 landscape:grid-cols-1 landscape:grid-rows-[minmax(0,1fr)_auto] landscape:content-stretch">
           <ChoicePhotos photos={interviewPurposes} selectedId={purpose} />
-          <div className="col-span-2 grid grid-cols-2 gap-3 landscape:col-span-1 landscape:grid-cols-1">
-            <KioskButton type="button" tone="ghost" onClick={onBack}>
-              {copy.back}
-            </KioskButton>
+          <div className="col-span-2 landscape:col-span-1">
             <KioskButton type="submit" disabled={!ready}>
               {copy.send}
             </KioskButton>
