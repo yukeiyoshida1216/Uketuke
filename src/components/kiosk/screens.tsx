@@ -167,7 +167,8 @@ export function MenuScreen({
   return (
     <KioskFrame title={copy.menuTitle} prominentTitle>
       <div className="flex h-full min-h-0 flex-col gap-[clamp(0.55rem,1.4vh,0.9rem)]">
-        <div className="kiosk-menu-choices grid min-h-0 flex-1 grid-rows-3 gap-[clamp(0.55rem,1.4vh,0.9rem)] landscape:grid-cols-3 landscape:grid-rows-1">
+        <div className="flex min-h-0 flex-1 flex-col">
+        <div className="kiosk-menu-choices grid h-2/3 min-h-0 grid-rows-3 gap-[clamp(0.55rem,1.4vh,0.9rem)] landscape:grid-cols-3 landscape:grid-rows-1">
         {choices.map((choice) => (
           <KioskButton
             key={choice.label}
@@ -187,6 +188,7 @@ export function MenuScreen({
             </span>
           </KioskButton>
         ))}
+        </div>
         </div>
         <KioskButton
           tone="white"
