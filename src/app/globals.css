@@ -250,12 +250,23 @@
   letter-spacing: 0.01em;
 }
 
+.kiosk-root .kiosk-menu-title {
+  padding-left: clamp(10.5rem, 22vw, 12rem);
+  padding-right: clamp(10.5rem, 22vw, 12rem);
+}
+
+@media (orientation: portrait) {
+  .kiosk-root .kiosk-menu-title {
+    padding-right: max(22vw, calc(var(--kiosk-corner-x) + 13.15rem));
+  }
+}
+
 .kiosk-root .kiosk-lang button {
   width: auto !important;
   height: auto !important;
-  min-height: 3.3rem !important;
-  padding: 0.5rem 1.15rem !important;
-  font-size: clamp(1.16rem, 2.45vh, 1.48rem) !important;
+  min-height: 3.8rem !important;
+  padding: 0.58rem 1.2rem !important;
+  font-size: clamp(1.32rem, 2.8vh, 1.7rem) !important;
   line-height: 1.1 !important;
   box-shadow: none !important;
 }

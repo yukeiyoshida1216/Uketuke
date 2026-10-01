@@ -108,11 +108,15 @@ export function KioskFrame({
   return (
     <section className="flex h-full min-h-0 w-full flex-col overflow-hidden px-[clamp(1rem,3vw,2.5rem)] py-[clamp(0.6rem,2vh,1.35rem)]">
       <h1
-        className="shrink-0 px-[clamp(10.5rem,22vw,12rem)] text-center font-bold"
+        className={
+          prominentTitle
+            ? "kiosk-menu-title shrink-0 text-center font-bold"
+            : "shrink-0 px-[clamp(10.5rem,22vw,12rem)] text-center font-bold"
+        }
         style={{
           color: theme.ink,
           fontSize: prominentTitle
-            ? "clamp(1.55rem, min(4.3vh, 4.7vw), 2.7rem)"
+            ? "clamp(1.75rem, min(5vh, 5.35vw), 3.15rem)"
             : "clamp(1.35rem, min(3.6vh, 4.1vw), 2.35rem)",
           lineHeight: 1.25,
         }}
