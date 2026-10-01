@@ -167,7 +167,7 @@ export function MenuScreen({
   return (
     <KioskFrame title={copy.menuTitle} prominentTitle>
       <div className="flex h-full min-h-0 flex-col gap-[clamp(0.55rem,1.4vh,0.9rem)]">
-        <div className="grid min-h-0 flex-1 grid-rows-3 gap-[clamp(0.55rem,1.4vh,0.9rem)] landscape:grid-cols-3 landscape:grid-rows-1">
+        <div className="kiosk-menu-choices grid min-h-0 flex-1 grid-rows-3 gap-[clamp(0.55rem,1.4vh,0.9rem)] landscape:grid-cols-3 landscape:grid-rows-1">
         {choices.map((choice) => (
           <KioskButton
             key={choice.label}
@@ -178,10 +178,10 @@ export function MenuScreen({
             style={{ height: "100%", minHeight: "clamp(3rem, 7vh, 5.5rem)" }}
           >
             <span className="flex flex-col items-center gap-2">
-              <span style={{ fontSize: "clamp(2.05rem, 5.5vh, 3.35rem)", lineHeight: 1.2 }}>
+              <span className="kiosk-choice-label" style={{ fontSize: "clamp(2.05rem, 5.5vh, 3.35rem)", lineHeight: 1.2 }}>
                 <MenuLabel label={choice.label} />
               </span>
-              <span className="font-medium" style={{ fontSize: "clamp(1rem, 2.45vh, 1.38rem)", color: theme.inkSoft }}>
+              <span className="kiosk-choice-hint font-medium" style={{ fontSize: "clamp(1rem, 2.45vh, 1.38rem)", color: theme.inkSoft }}>
                 {choice.hint}
               </span>
             </span>
@@ -193,7 +193,7 @@ export function MenuScreen({
           className="kiosk-home shrink-0"
           onClick={onHome}
         >
-          <span style={{ fontSize: "clamp(1.15rem, 2.2vh, 1.55rem)", lineHeight: 1.2 }}>{copy.home}</span>
+          <span style={{ fontSize: "clamp(1.65rem, 4vh, 2.4rem)", lineHeight: 1.15 }}>{copy.home}</span>
         </KioskButton>
       </div>
     </KioskFrame>

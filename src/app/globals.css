@@ -251,28 +251,56 @@
 }
 
 .kiosk-root .kiosk-home {
+  width: 100% !important;
   height: 6.9vh !important;
   min-height: 6.9vh !important;
-  padding-top: 0.35rem !important;
-  padding-bottom: 0.35rem !important;
+  padding-top: 0.2rem !important;
+  padding-bottom: 0.2rem !important;
+}
+
+.kiosk-root .kiosk-menu-choices button {
+  min-height: 0 !important;
+  height: 100% !important;
+  overflow: hidden;
 }
 
 @media (orientation: landscape) {
+  .kiosk-root .kiosk-menu-title[data-script="ja"] {
+    line-height: 1.05 !important;
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.15em !important;
+  }
+
+  .kiosk-root .kiosk-menu-title[data-script="en"] {
+    line-height: 1.12 !important;
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.12em !important;
+  }
+
   .kiosk-root .kiosk-home {
     height: 14.4vh !important;
     min-height: 14.4vh !important;
   }
+
+  .kiosk-root .kiosk-menu-choices button {
+    padding-top: 0.4rem !important;
+    padding-bottom: 0.4rem !important;
+  }
+
+  .kiosk-root .kiosk-choice-label {
+    font-size: clamp(1.15rem, 2.8vh, 1.75rem) !important;
+  }
+
+  .kiosk-root .kiosk-choice-hint {
+    font-size: clamp(0.75rem, 1.6vh, 1rem) !important;
+  }
 }
 
 .kiosk-root .kiosk-menu-title {
-  padding-left: clamp(10.5rem, 22vw, 12rem);
-  padding-right: clamp(10.5rem, 22vw, 12rem);
-}
-
-@media (orientation: portrait) {
-  .kiosk-root .kiosk-menu-title {
-    padding-right: max(22vw, calc(var(--kiosk-corner-x) + 13.15rem));
-  }
+  padding-top: calc(var(--kiosk-corner) + 3.6rem);
+  padding-left: clamp(0.35rem, 1.2vw, 0.8rem);
+  padding-right: clamp(0.35rem, 1.2vw, 0.8rem);
+  line-height: 1.12;
 }
 
 .kiosk-root .kiosk-lang button {

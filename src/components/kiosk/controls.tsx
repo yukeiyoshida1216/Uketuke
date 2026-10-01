@@ -87,7 +87,19 @@ export function KioskField({
 
 function ProminentTitle({ title }: { title: string }) {
   const splitAt = title.indexOf("選択");
-  if (splitAt <= 0) return title;
+  if (splitAt <= 0) {
+    const words = title.split(" ");
+    const midpoint = Math.ceil(words.length / 2);
+    return (
+      <>
+        <span className="landscape:hidden">{title}</span>
+        <span className="hidden landscape:block">
+          <span className="block">{words.slice(0, midpoint).join(" ")}</span>
+          <span className="block">{words.slice(midpoint).join(" ")}</span>
+        </span>
+      </>
+    );
+  }
   const head = title.slice(0, splitAt);
   const rest = title.slice(splitAt);
   const mid = rest.length > 4 ? rest.slice(0, 4) : rest;
@@ -118,12 +130,16 @@ export function KioskFrame({
             ? "kiosk-menu-title shrink-0 text-center font-bold"
             : "shrink-0 px-[clamp(10.5rem,22vw,12rem)] text-center font-bold"
         }
+        data-script={prominentTitle ? (title.includes("選択") ? "ja" : "en") : undefined}
         style={{
           color: theme.ink,
           fontSize: prominentTitle
-            ? "clamp(3.5rem, min(10vh, 10.7vw), 6.3rem)"
+            ? title.includes("選択")
+              ? "clamp(7rem, min(20vh, 21.4vw), 12.6rem)"
+              : "clamp(4.5rem, min(15.5vh, 16vw), 8.25rem)"
             : "clamp(1.35rem, min(3.6vh, 4.1vw), 2.35rem)",
-          lineHeight: 1.25,
+          lineHeight: prominentTitle ? 1.15 : 1.25,
+          paddingBottom: prominentTitle ? "0.12em" : undefined,
         }}
       >
         {prominentTitle ? <ProminentTitle title={title} /> : title}
