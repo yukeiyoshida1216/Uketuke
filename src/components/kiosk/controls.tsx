@@ -95,7 +95,7 @@ export function KioskFrame({
   prominentTitle?: boolean;
 }) {
   return (
-    <section className="flex h-full min-h-0 w-full flex-col overflow-hidden px-[clamp(1rem,3vw,2.5rem)] py-[clamp(0.6rem,2vh,1.35rem)]">
+    <section className="relative flex h-full min-h-0 w-full flex-col overflow-hidden px-[clamp(1rem,3vw,2.5rem)] py-[clamp(0.6rem,2vh,1.35rem)]">
       <h1
         className={
           prominentTitle

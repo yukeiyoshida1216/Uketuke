@@ -259,10 +259,25 @@
   padding: 0.45rem 1.15rem !important;
 }
 
+.kiosk-root .kiosk-menu-choices {
+  position: absolute;
+  top: 50%;
+  left: clamp(1rem, 3vw, 2.5rem);
+  right: clamp(1rem, 3vw, 2.5rem);
+  height: 52.5dvh;
+  transform: translateY(-50%);
+}
+
 .kiosk-root .kiosk-menu-choices button {
   min-height: 0 !important;
   height: 100% !important;
   overflow: hidden;
+}
+
+@media (orientation: landscape) {
+  .kiosk-root .kiosk-menu-choices {
+    height: 45.625dvh;
+  }
 }
 
 .kiosk-root .kiosk-menu-title {
