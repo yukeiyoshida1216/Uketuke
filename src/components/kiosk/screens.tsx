@@ -150,7 +150,7 @@ export function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
 function CornerArrowButton({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <KioskButton tone="white" className="kiosk-home" onClick={onClick} aria-label={label}>
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="kiosk-home-arrow" fill="none">
+      <svg viewBox="3.5 4.5 17 15" aria-hidden="true" className="kiosk-home-arrow" fill="none">
         <path d="M19 12H5" />
         <path d="M11 6 5 12l6 6" />
       </svg>
