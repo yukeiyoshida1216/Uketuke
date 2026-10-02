@@ -265,6 +265,54 @@
   line-height: 1.1 !important;
 }
 
+.kiosk-root .kiosk-menu-title + div:has(.kiosk-entry) {
+  margin-top: 0;
+}
+
+.kiosk-entry {
+  position: relative;
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.kiosk-entry-gap {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.kiosk-entry-fields {
+  width: 100%;
+  margin-inline: auto;
+  flex: 0 0 auto;
+}
+
+.kiosk-send-row {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: center;
+}
+
+.kiosk-choice-photos {
+  top: 0;
+  bottom: calc(7rem + 0.35rem);
+}
+
+@media (orientation: landscape) {
+  .kiosk-entry-fields {
+    width: calc((100% - 0.75rem) * 1.5 / 2.2);
+  }
+
+  .kiosk-root .kiosk-send {
+    width: calc((100% - 0.75rem) * 0.7 / 2.2) !important;
+  }
+
+  .kiosk-choice-photos {
+    width: calc((100% - (100% - 0.75rem) * 1.5 / 2.2) / 2 - 0.6rem) !important;
+  }
+}
+
 .kiosk-root .kiosk-menu-choices {
   position: absolute;
   top: 50%;

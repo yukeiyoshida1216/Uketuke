@@ -14,7 +14,7 @@ function ChoicePhotos({
   selectedId: string;
 }) {
   return (
-    <div className="relative col-span-2 hidden h-full min-h-0 landscape:col-span-1 landscape:block">
+    <div className="kiosk-choice-photos pointer-events-none absolute right-0 hidden w-[min(20vw,16rem)] landscape:block">
       {photos.map((item) => (
         <img
           key={item.id}
@@ -242,13 +242,14 @@ export function GeneralScreen({
     <KioskFrame title={copy.generalTitle} prominentTitle>
       <CornerArrowButton label={copy.back} onClick={onBack} />
       <form
-        className="grid min-h-0 flex-1 grid-rows-[1fr_auto] gap-[clamp(0.45rem,1.5vh,1rem)] landscape:grid-cols-[minmax(0,1.5fr)_minmax(13rem,0.7fr)] landscape:grid-rows-1"
+        className="kiosk-entry"
         onSubmit={(event) => {
           event.preventDefault();
           if (ready) onSubmit();
         }}
       >
-        <div className="grid min-h-0 content-center gap-[clamp(0.35rem,1.1vh,0.7rem)]">
+        <div className="kiosk-entry-gap" />
+        <div className="kiosk-entry-fields grid gap-[clamp(0.35rem,1.1vh,0.7rem)]">
           <KioskField
             id="companyName"
             label={copy.companyName}
@@ -335,13 +336,12 @@ export function GeneralScreen({
             {copy.generalRequired}
           </p>
         </div>
-        <div className="grid min-h-0 grid-cols-2 content-end gap-3 landscape:grid-cols-1 landscape:grid-rows-[minmax(0,1fr)_auto] landscape:content-stretch">
-          <ChoicePhotos photos={mentionChoices} selectedId={destinationId} />
-          <div className="col-span-2 landscape:col-span-1">
-            <KioskButton type="submit" disabled={!ready}>
-              {copy.send}
-            </KioskButton>
-          </div>
+        <div className="kiosk-entry-gap" />
+        <ChoicePhotos photos={mentionChoices} selectedId={destinationId} />
+        <div className="kiosk-send-row">
+          <KioskButton type="submit" className="kiosk-send" disabled={!ready}>
+            {copy.send}
+          </KioskButton>
         </div>
       </form>
     </KioskFrame>
@@ -432,13 +432,14 @@ export function InterviewScreen({
     <KioskFrame title={copy.interviewTitle} prominentTitle>
       <CornerArrowButton label={copy.back} onClick={onBack} />
       <form
-        className="grid min-h-0 flex-1 grid-rows-[1fr_auto] gap-[clamp(0.45rem,1.5vh,1rem)] landscape:grid-cols-[minmax(0,1.5fr)_minmax(13rem,0.7fr)] landscape:grid-rows-1"
+        className="kiosk-entry"
         onSubmit={(event) => {
           event.preventDefault();
           if (ready) onSubmit();
         }}
       >
-        <div className="grid min-h-0 content-center gap-[clamp(1.35rem,3.6vh,2.15rem)]">
+        <div className="kiosk-entry-gap" />
+        <div className="kiosk-entry-fields grid gap-[clamp(1.35rem,3.6vh,2.15rem)]">
           <KioskField
             id="interviewName"
             label={copy.visitorName}
@@ -466,13 +467,12 @@ export function InterviewScreen({
             </p>
           </div>
         </div>
-        <div className="grid min-h-0 grid-cols-2 content-end gap-3 landscape:grid-cols-1 landscape:grid-rows-[minmax(0,1fr)_auto] landscape:content-stretch">
-          <ChoicePhotos photos={interviewPurposes} selectedId={purpose} />
-          <div className="col-span-2 landscape:col-span-1">
-            <KioskButton type="submit" disabled={!ready}>
-              {copy.send}
-            </KioskButton>
-          </div>
+        <div className="kiosk-entry-gap" />
+        <ChoicePhotos photos={interviewPurposes} selectedId={purpose} />
+        <div className="kiosk-send-row">
+          <KioskButton type="submit" className="kiosk-send" disabled={!ready}>
+            {copy.send}
+          </KioskButton>
         </div>
       </form>
     </KioskFrame>
