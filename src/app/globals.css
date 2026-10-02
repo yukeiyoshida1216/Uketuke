@@ -232,12 +232,8 @@
   right: var(--kiosk-corner-x);
 }
 
-.kiosk-root[data-phase="welcome"] .kiosk-lang {
-  right: calc(var(--kiosk-corner-x) + var(--kiosk-delivery-size) + 0.65rem);
-}
-
 .kiosk-root .kiosk-delivery {
-  top: var(--kiosk-corner);
+  top: calc(var(--kiosk-corner) + 3.8rem + 0.65rem);
   right: var(--kiosk-corner-x);
   width: var(--kiosk-delivery-size) !important;
   height: var(--kiosk-delivery-size) !important;
