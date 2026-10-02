@@ -186,7 +186,7 @@ export function MenuScreen({
             style={{ height: "100%", minHeight: "clamp(3rem, 7vh, 5.5rem)" }}
           >
             <span className="flex flex-col items-center gap-2">
-              <span className="kiosk-choice-label" style={{ fontSize: "clamp(2.05rem, 5.5vh, 3.35rem)", lineHeight: 1.2 }}>
+              <span className="kiosk-choice-label" style={{ fontSize: "var(--kiosk-choice-label)", lineHeight: 1.2 }}>
                 <MenuLabel label={choice.label} />
               </span>
               <span className="kiosk-choice-hint font-medium" style={{ fontSize: "clamp(1rem, 2.45vh, 1.38rem)", color: theme.inkSoft }}>
