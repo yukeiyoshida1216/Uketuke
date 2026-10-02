@@ -221,9 +221,6 @@
   --kiosk-delivery-size: min(22vh, 13.5rem);
   --kiosk-corner: clamp(0.85rem, 2.2vh, 1.35rem);
   --kiosk-corner-x: clamp(0.85rem, 2.2vw, 1.35rem);
-  --kiosk-title-size: clamp(2.6rem, min(8vh, 7.15vw), 6.75rem);
-  --kiosk-arrow-pad: 0.975rem;
-  --kiosk-home-size: calc(var(--kiosk-title-size) * 17 / 15 + 2 * var(--kiosk-arrow-pad));
 }
 
 .kiosk-root button {
@@ -258,21 +255,14 @@
   z-index: 30;
   top: var(--kiosk-corner);
   left: var(--kiosk-corner-x);
-  width: var(--kiosk-home-size) !important;
-  height: var(--kiosk-home-size) !important;
-  min-width: var(--kiosk-home-size) !important;
-  min-height: var(--kiosk-home-size) !important;
-  padding: 0 !important;
+  width: auto !important;
+  height: 3.8rem !important;
+  min-width: 0 !important;
+  min-height: 3.8rem !important;
+  padding: 0.4rem 1rem !important;
   margin: 0 !important;
-}
-
-.kiosk-root .kiosk-home-arrow {
-  width: calc(var(--kiosk-title-size) * 17 / 15);
-  height: var(--kiosk-title-size);
-  stroke: currentColor;
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  font-size: clamp(1.32rem, 2.8vh, 1.7rem) !important;
+  line-height: 1.1 !important;
 }
 
 .kiosk-root .kiosk-menu-choices {
@@ -297,7 +287,7 @@
 }
 
 .kiosk-root .kiosk-menu-title {
-  padding-top: calc(var(--kiosk-home-size) + 0.85rem);
+  padding-top: calc(var(--kiosk-corner) + 3.6rem);
   padding-left: 0.15rem;
   padding-right: 0.15rem;
   line-height: 1.15;

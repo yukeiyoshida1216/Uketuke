@@ -93,7 +93,7 @@ describe("受付画面", () => {
     expect(screen.getByText(copy.welcomeSubtitle)).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "EN" }));
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
-    fireEvent.click(screen.getByRole("button", { name: "Home" }));
+    fireEvent.click(screen.getByRole("button", { name: "←Back" }));
     expect(screen.getByText(copy.welcomeSubtitle)).toBeTruthy();
   });
 
@@ -195,7 +195,7 @@ describe("受付画面", () => {
     expect(send().disabled).toBe(true);
     fireEvent.click(mention);
     expect(send().disabled).toBe(false);
-    fireEvent.click(screen.getByRole("button", { name: copy.back }));
+    fireEvent.click(screen.getByRole("button", { name: `←${copy.back}` }));
     fireEvent.click(screen.getByRole("button", { name: copy.general }));
     expect((screen.getByLabelText(copy.companyName) as HTMLInputElement).value).toBe("  株式会社あおぞら  ");
     expect((screen.getByLabelText(copy.visitorName) as HTMLInputElement).value).toBe("山田 花");
