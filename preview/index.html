@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>オフィス受付プレビュー</title>
+  <style>
+    :root {
+      --yellow: #ffe566;
+      --yamabuki: #f8b500;
+      --white: #ffffff;
+      --ink: #3b2a00;
+      --error: #b3261e;
+      --bg: #f2efe8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      gap: 12px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .hint {
+      margin: 0;
+      font-size: 13px;
+      opacity: 0.75;
+      text-align: center;
+      max-width: 720px;
+    }
+    .device {
+      width: min(100%, 900px);
+      aspect-ratio: 16 / 10;
+      background: #222;
+      border-radius: 22px;
+      padding: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.18);
+    }
+    .screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--white);
+      position: relative;
+    }
+    .panel {
+      position: absolute;
+      inset: 0;
+      padding: 32px;
+      display: none;
+      flex-direction: column;
+      background: var(--white);
+      color: var(--ink);
+    }
+    .panel.active { display: flex; }
+    #welcome {
+      background: var(--yamabuki);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-align: center;
+    }
+    #welcome .title { font-size: clamp(40px, 6vw, 56px); font-weight: 700; margin: 0; }
+    #welcome .sub { font-size: clamp(18px, 2.5vw, 26px); margin: 20px 0 0; }
+    .heading { font-size: clamp(22px, 3vw, 30px); font-weight: 600; margin: 0 0 20px; }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      flex: 1;
+      align-content: start;
+    }
+    .btn {
+      border: 0;
+      border-radius: 18px;
+      min-height: 84px;
+      padding: 16px 18px;
+      font-size: clamp(18px, 2.4vw, 24px);
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--yamabuki);
+      cursor: pointer;
+      width: 100%;
+    }
+    .btn:disabled { opacity: .4; cursor: not-allowed; }
+    .btn.outline {
+      background: transparent;
+      border: 2px solid rgba(59,42,0,.35);
+    }
+    .form { display: flex; flex-direction: column; gap: 14px; flex: 1; }
+    label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+    input {
+      min-height: 52px;
+      border: 1.5px solid rgba(59,42,0,.28);
+      border-radius: 12px;
+      padding: 0 14px;
+      font-size: 22px;
+      color: var(--ink);
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 14px;
+      margin-top: auto;
+    }
+    .dest-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      flex: 1;
+      align-content: start;
+    }
+    .status {
+      background: var(--yellow);
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .status p {
+      margin: 0;
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 650;
+    }
+    .error-title { color: var(--error); font-size: clamp(24px, 3.5vw, 32px); font-weight: 700; margin: 0; }
+    .error-body { font-size: 18px; margin: 14px 0 0; }
+    .fail-toggle {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 13px;
+    }
+    @media (max-width: 700px) {
+      .device { aspect-ratio: 10 / 14; }
+      .menu-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <h1>オフィス受付アプリ 操作プレビュー</h1>
+  <p class="hint">実際のタブレットUIと同じ流れです。画面をタップして操作してください。送信はデモ用で、失敗を再現する場合は下のスイッチをオンにしてください。</p>
+  <label class="fail-toggle">
+    <input type="checkbox" id="forceFail" />
+    次の送信を失敗させる
+  </label>
+  <div class="device" aria-label="タブレットプレビュー">
+    <div class="screen" id="app">
+      <section class="panel active" id="welcome" data-panel="welcome">
+        <p class="title">ようこそ</p>
+        <p class="sub">画面をタップしてください</p>
+      </section>
+
+      <section class="panel" id="menu" data-panel="menu">
+        <p class="heading">ご用件を選んでください</p>
+        <div class="menu-grid">
+          <button type="button" class="btn" data-go="general">総合受付</button>
+          <button type="button" class="btn" data-go="interview">面接・研修</button>
+          <button type="button" class="btn" id="deliveryBtn">配達員</button>
+        </div>
+      </section>
+
+      <section class="panel" id="general" data-panel="general">
+        <div class="form">
+          <label>会社名<input id="company" autocomplete="organization" /></label>
+          <label>お名前<input id="visitorName" autocomplete="name" /></label>
+          <label>来社人数<input id="partySize" inputmode="numeric" autocomplete="off" /></label>
+          <label>訪問先（どなた宛）
+            <select id="destination" style="min-height:52px;font-size:20px;border-radius:12px;padding:0 12px;">
+              <option value="">選択してください</option>
+              <option value="yamada">山田 太郎</option>
+              <option value="sato">佐藤 花子</option>
+            </select>
+          </label>
+          <div class="actions">
+            <button type="button" class="btn outline" data-go="menu">戻る</button>
+            <button type="button" class="btn" id="generalNext" disabled>呼び出す</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="interview" data-panel="interview">
+        <div class="form">
+          <p class="heading">用件を選び、お名前を入力してください</p>
+          <div class="actions" style="margin-top:0">
+            <button type="button" class="btn outline" id="purposeInterview">面接</button>
+            <button type="button" class="btn outline" id="purposeTraining">研修</button>
+          </div>
+          <label>お名前<input id="interviewName" autocomplete="name" /></label>
+          <div class="actions">
+            <button type="button" class="btn outline" data-go="menu">戻る</button>
+            <button type="button" class="btn" id="interviewSubmit" disabled>呼び出す</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel status" id="sending" data-panel="sending">
+        <p id="sendingMsg">送信しています…</p>
+      </section>
+
+      <section class="panel status" id="success" data-panel="success">
+        <p>入力ありがとうございます！</p>
+      </section>
+
+      <section class="panel" id="error" data-panel="error">
+        <p class="error-title">送信できませんでした</p>
+        <p class="error-body" id="errorBody">通信に失敗しました。もう一度お試しください。</p>
+        <div class="actions" style="margin-top:28px">
+          <button type="button" class="btn outline" id="goHome">最初の画面へ戻る</button>
+          <button type="button" class="btn" id="retry">再試行</button>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const panels = [...document.querySelectorAll(".panel")];
+      const forceFail = document.getElementById("forceFail");
+      const company = document.getElementById("company");
+      const visitorName = document.getElementById("visitorName");
+      const partySize = document.getElementById("partySize");
+      const destination = document.getElementById("destination");
+      const interviewName = document.getElementById("interviewName");
+      const purposeInterview = document.getElementById("purposeInterview");
+      const purposeTraining = document.getElementById("purposeTraining");
+      const generalNext = document.getElementById("generalNext");
+      const interviewSubmit = document.getElementById("interviewSubmit");
+      let interviewPurpose = null;
+      let pending = null;
+      let busy = false;
+      let idleTimer = null;
+      let completeTimer = null;
+
+      function show(id) {
+        panels.forEach((p) => p.classList.toggle("active", p.id === id));
+        resetIdle();
+      }
+
+      function clearTimers() {
+        if (idleTimer) clearTimeout(idleTimer);
+        if (completeTimer) clearTimeout(completeTimer);
+        idleTimer = null;
+        completeTimer = null;
+      }
+
+      function resetToWelcome() {
+        clearTimers();
+        busy = false;
+        pending = null;
+        company.value = "";
+        visitorName.value = "";
+        partySize.value = "";
+        destination.value = "";
+        interviewName.value = "";
+        interviewPurpose = null;
+        purposeInterview.classList.add("outline");
+        purposeTraining.classList.add("outline");
+        updateGeneral();
+        updateInterview();
+        show("welcome");
+      }
+
+      function resetIdle() {
+        if (idleTimer) clearTimeout(idleTimer);
+        const id = document.querySelector(".panel.active")?.id;
+        if (id === "sending" || id === "success") return;
+        idleTimer = setTimeout(resetToWelcome, 30000);
+      }
+
+      function updateGeneral() {
+        const ok =
+          company.value.trim() &&
+          visitorName.value.trim() &&
+          /^([1-9]|[1-9]\d)$/.test(partySize.value.trim()) &&
+          destination.value;
+        generalNext.disabled = !ok;
+      }
+
+      function updateInterview() {
+        interviewSubmit.disabled = !(interviewPurpose && interviewName.value.trim());
+      }
+
+      function selectPurpose(purpose) {
+        interviewPurpose = purpose;
+        purposeInterview.classList.toggle("outline", purpose !== "interview");
+        purposeTraining.classList.toggle("outline", purpose !== "training");
+        updateInterview();
+        resetIdle();
+      }
+
+      function send(payload) {
+        if (busy) return;
+        busy = true;
+        pending = payload;
+        document.getElementById("sendingMsg").textContent = "送信しています…";
+        show("sending");
+        clearTimers();
+        setTimeout(() => {
+          if (forceFail.checked) {
+            forceFail.checked = false;
+            busy = false;
+            document.getElementById("errorBody").textContent =
+              "通信に失敗しました。もう一度お試しください。";
+            show("error");
+            return;
+          }
+          busy = false;
+          show("success");
+          completeTimer = setTimeout(resetToWelcome, 5000);
+        }, 800);
+      }
+
+      document.getElementById("welcome").addEventListener("click", () => show("menu"));
+
+      document.querySelectorAll("[data-go]").forEach((el) => {
+        el.addEventListener("click", () => {
+          if (busy) return;
+          show(el.getAttribute("data-go"));
+        });
+      });
+
+      document.getElementById("deliveryBtn").addEventListener("click", () => {
+        send({ kind: "delivery" });
+      });
+
+      generalNext.addEventListener("click", () => {
+        if (generalNext.disabled) return;
+        send({
+          kind: "general",
+          company: company.value.trim(),
+          visitorName: visitorName.value.trim(),
+          partySize: Number(partySize.value.trim()),
+          destinationId: destination.value
+        });
+      });
+
+      purposeInterview.addEventListener("click", () => selectPurpose("interview"));
+      purposeTraining.addEventListener("click", () => selectPurpose("training"));
+
+      interviewSubmit.addEventListener("click", () => {
+        if (interviewSubmit.disabled) return;
+        send({
+          kind: "interview",
+          purpose: interviewPurpose,
+          visitorName: interviewName.value.trim()
+        });
+      });
+
+      document.getElementById("goHome").addEventListener("click", resetToWelcome);
+      document.getElementById("retry").addEventListener("click", () => {
+        if (!pending) {
+          resetToWelcome();
+          return;
+        }
+        send(pending);
+      });
+
+      company.addEventListener("input", () => { updateGeneral(); resetIdle(); });
+      visitorName.addEventListener("input", () => { updateGeneral(); resetIdle(); });
+      destination.addEventListener("change", () => { updateGeneral(); resetIdle(); });
+      partySize.addEventListener("input", () => {
+        partySize.value = partySize.value.replace(/\D/g, "").slice(0, 2);
+        updateGeneral();
+        resetIdle();
+      });
+      interviewName.addEventListener("input", () => { updateInterview(); resetIdle(); });
+
+      document.getElementById("app").addEventListener("pointerdown", resetIdle);
+      resetIdle();
+    })();
+  </script>
+</body>
+</html>

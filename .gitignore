@@ -1,0 +1,34 @@
+# secrets and machine-specific config
+.env
+destinations.json
+local.properties
+*.jks
+*.keystore
+
+# node
+api/node_modules/
+api/dist/
+api/coverage/
+
+# android / gradle
+.gradle/
+**/build/
+android/.idea/
+android/captures/
+android/*.iml
+android/app/*.iml
+android/local.properties
+*.apk
+*.aab
+*.ap_
+
+# os / editor
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+
+# local scratch
+.tmp/
+uidump.xml

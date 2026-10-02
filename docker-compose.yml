@@ -1,0 +1,27 @@
+services:
+  api:
+    build: ./api
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      DRY_RUN: "${DRY_RUN:-true}"
+      SLACK_WEBHOOK_URL: "${SLACK_WEBHOOK_URL:-}"
+      SLACK_MENTION_INTERVIEW: "${SLACK_MENTION_INTERVIEW:-U012INTERVIEW}"
+      SLACK_MENTION_DELIVERY: "${SLACK_MENTION_DELIVERY:-U012DELIVERY}"
+      DESTINATIONS_PATH: /app/destinations.json
+      DUPLICATE_WINDOW_MS: "10000"
+    # 実運用時は api/destinations.json を用意してマウントする
+    # volumes:
+    #   - ./api/destinations.json:/app/destinations.json:ro
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5

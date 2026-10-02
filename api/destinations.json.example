@@ -1,0 +1,12 @@
+[
+  {
+    "id": "yamada",
+    "displayName": "山田 太郎",
+    "slackUserId": "U011YAMADA"
+  },
+  {
+    "id": "sato",
+    "displayName": "佐藤 花子",
+    "slackUserId": "U011SATO"
+  }
+]
