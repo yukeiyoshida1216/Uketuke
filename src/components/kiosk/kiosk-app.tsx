@@ -194,7 +194,7 @@ export function KioskApp({
         <DeliveryButton onPress={acknowledgeDelivery} />
       </div>
       {state.phase !== "welcome" ? (
-      <div key={state.phase} className="kiosk-pop h-full min-h-0">
+      <div key={state.phase} className={state.phase === "complete" ? "h-full min-h-0" : "kiosk-pop h-full min-h-0"}>
       {state.phase === "menu" ? (
         <MenuScreen
           onGeneral={() => {
