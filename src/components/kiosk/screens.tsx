@@ -170,7 +170,7 @@ export function MenuScreen({
   const choices = [
     { label: copy.general, hint: copy.generalHint, onClick: onGeneral, icon: "/menu/general.png" },
     { label: copy.interview, hint: copy.interviewHint, onClick: onInterview, icon: "/menu/interview.png" },
-    { label: copy.other, hint: copy.otherHint, onClick: onOther, icon: "" },
+    { label: copy.other, hint: copy.otherHint, onClick: onOther, icon: "/menu/other.png" },
   ];
   return (
     <KioskFrame title={copy.menuTitle} prominentTitle>
