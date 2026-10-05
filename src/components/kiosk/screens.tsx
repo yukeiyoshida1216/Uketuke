@@ -1,6 +1,6 @@
 "use client";
 
-import { backgroundGradient, interviewPurposes, mentionChoices, staffDisplayName, theme, timings, visitorCountChoices } from "@/config/reception";
+import { backgroundGradient, interviewPurposes, menuIcons, mentionChoices, staffDisplayName, theme, timings, visitorCountChoices } from "@/config/reception";
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
 import { useKioskCopy } from "@/components/kiosk/language";
 import { welcomeClockParts } from "@/lib/welcome-clock";
@@ -168,9 +168,9 @@ export function MenuScreen({
 }) {
   const copy = useKioskCopy();
   const choices = [
-    { label: copy.general, hint: copy.generalHint, onClick: onGeneral, icon: "/menu/general.png" },
-    { label: copy.interview, hint: copy.interviewHint, onClick: onInterview, icon: "/menu/interview.png" },
-    { label: copy.other, hint: copy.otherHint, onClick: onOther, icon: "/menu/other.png" },
+    { label: copy.general, hint: copy.generalHint, onClick: onGeneral, icon: menuIcons.general },
+    { label: copy.interview, hint: copy.interviewHint, onClick: onInterview, icon: menuIcons.interview },
+    { label: copy.other, hint: copy.otherHint, onClick: onOther, icon: menuIcons.other },
   ];
   return (
     <KioskFrame title={copy.menuTitle} prominentTitle>
@@ -186,7 +186,9 @@ export function MenuScreen({
             style={{ height: "100%", minHeight: "clamp(3rem, 7vh, 5.5rem)" }}
           >
             <span className="flex flex-col items-center gap-2">
-              {choice.icon ? <img src={choice.icon} alt="" className="kiosk-choice-icon" /> : null}
+              {choice.icon ? (
+                <img src={choice.icon} alt="" decoding="sync" fetchPriority="high" className="kiosk-choice-icon" />
+              ) : null}
               <span className="kiosk-choice-label" style={{ fontSize: "var(--kiosk-choice-label)", lineHeight: 1.2 }}>
                 <MenuLabel label={choice.label} />
               </span>

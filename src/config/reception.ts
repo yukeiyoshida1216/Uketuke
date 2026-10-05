@@ -109,10 +109,18 @@ export function staffDisplayName(id: string, copy: UiCopy, fallback: string): st
   return key ? copy[key] : fallback;
 }
 
-/** 最初の画面のうちに読み込んでおく写真。選択時の待ちをなくす。 */
+/** 用件選択のアイコン。最初の画面のうちに読み終えて、切り替わり時の待ちをなくす。 */
+export const menuIcons = {
+  general: "/menu/general.png",
+  interview: "/menu/interview.png",
+  other: "/menu/other.png",
+} as const;
+
+/** 最初の画面のうちに読み込んでおく写真とアイコン。選択時の待ちをなくす。 */
 export const preloadedPhotos = [
   ...mentionChoices.map((person) => person.photo),
   ...interviewPurposes.map((item) => item.photo),
+  ...Object.values(menuIcons),
 ] as const;
 
 export type UiCopy = {

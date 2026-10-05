@@ -181,7 +181,14 @@ export function KioskApp({
     >
       <div aria-hidden className="pointer-events-none fixed top-0 left-0 -z-10 h-px w-px overflow-hidden opacity-0">
         {preloadedPhotos.map((src) => (
-          <img key={src} src={src} alt="" decoding="async" data-photo-cache="" fetchPriority="high" />
+          <img
+            key={src}
+            src={src}
+            alt=""
+            decoding={src.startsWith("/menu/") ? "sync" : "async"}
+            data-photo-cache=""
+            fetchPriority="high"
+          />
         ))}
       </div>
       <div className="kiosk-welcome-pop h-full" hidden={state.phase !== "welcome"}>

@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 
-import { copy, theme, timings } from "@/config/reception";
+import { copy, menuIcons, theme, timings } from "@/config/reception";
 import { KioskApp } from "@/components/kiosk/kiosk-app";
 import { resetInFlightForTests } from "@/lib/share-in-flight";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
@@ -155,6 +155,13 @@ describe("受付画面", () => {
       expect(document.querySelector(`img[data-photo-cache][src='${src}']`)).toBeTruthy();
     }
     expect(document.querySelector("img[src='/purpose/training.png']")).toBeNull();
+  });
+
+  it("用件のアイコンは最初の画面で読み込む", () => {
+    render(<KioskApp />);
+    for (const src of Object.values(menuIcons)) {
+      expect(document.querySelector(`img[data-photo-cache][src='${src}']`)).toBeTruthy();
+    }
   });
 
   it("面接・会社説明の選択で写真を出す", () => {
