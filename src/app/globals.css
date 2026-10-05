@@ -311,11 +311,6 @@
   justify-content: center;
 }
 
-.kiosk-choice-photos {
-  top: 0;
-  bottom: calc(7rem + 0.35rem);
-}
-
 @media (orientation: landscape) {
   .kiosk-entry-fields {
     width: calc((100% - 0.75rem) * 1.5 / 2.2);
@@ -323,10 +318,6 @@
 
   .kiosk-root .kiosk-send {
     width: calc((100% - 0.75rem) * 0.7 / 2.2) !important;
-  }
-
-  .kiosk-choice-photos {
-    width: calc((100% - (100% - 0.75rem) * 1.5 / 2.2) / 2 - 0.6rem) !important;
   }
 }
 

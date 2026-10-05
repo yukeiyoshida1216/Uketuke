@@ -134,27 +134,11 @@ describe("受付画面", () => {
     expect(document.querySelector("img[src='/logo-wordmark.svg']")).toBeTruthy();
   });
 
-  it("担当者を選ぶと右側にその人の写真を出す", async () => {
+  it("担当者を選んでも写真は出さない", async () => {
     render(<KioskApp />);
     await openGeneral();
-    const selected = () => document.querySelector("img[data-selected='true']")?.getAttribute("src") ?? null;
-    expect(document.querySelectorAll("img[data-selected][src^='/staff/']")).toHaveLength(3);
-    expect(selected()).toBeNull();
-    const mention = () => screen.getByLabelText(copy.mentionTarget) as HTMLSelectElement;
     fireEvent.change(await screen.findByLabelText(copy.mentionTarget), { target: { value: "nosaka" } });
-    expect(selected()).toBe("/staff/nosaka.png");
-    fireEvent.change(mention(), { target: { value: "yanase" } });
-    expect(selected()).toBe("/staff/yanase.png");
-    fireEvent.change(mention(), { target: { value: "ito" } });
-    expect(selected()).toBe("/staff/ito.png");
-  });
-
-  it("面接・会社説明の写真は最初の画面で読み込む", () => {
-    render(<KioskApp />);
-    for (const src of ["/purpose/interview.png", "/purpose/briefing.png"]) {
-      expect(document.querySelector(`img[data-photo-cache][src='${src}']`)).toBeTruthy();
-    }
-    expect(document.querySelector("img[src='/purpose/training.png']")).toBeNull();
+    expect(document.querySelector("img[src^='/staff/']")).toBeNull();
   });
 
   it("用件のアイコンは最初の画面で読み込む", () => {
@@ -164,18 +148,14 @@ describe("受付画面", () => {
     }
   });
 
-  it("面接・会社説明の選択で写真を出す", () => {
+  it("面接・会社説明を選んでも写真は出さない", () => {
     render(<KioskApp />);
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
     fireEvent.click(screen.getByRole("button", { name: copy.interview }));
-    const selected = () => document.querySelector("img[data-selected='true']")?.getAttribute("src") ?? null;
-    expect(document.querySelectorAll("img[data-selected][src^='/purpose/']")).toHaveLength(2);
     expect(screen.queryByRole("button", { name: "研修" })).toBeNull();
-    expect(selected()).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "面接" }));
-    expect(selected()).toBe("/purpose/interview.png");
     fireEvent.click(screen.getByRole("button", { name: "会社説明" }));
-    expect(selected()).toBe("/purpose/briefing.png");
+    expect(document.querySelector("img[src^='/purpose/']")).toBeNull();
   });
 
   it("渡された担当者名は通信を待たずに出す", () => {

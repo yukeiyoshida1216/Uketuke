@@ -1,33 +1,10 @@
 "use client";
 
-import { backgroundGradient, interviewPurposes, menuIcons, mentionChoices, staffDisplayName, theme, timings, visitorCountChoices } from "@/config/reception";
+import { backgroundGradient, interviewPurposes, menuIcons, staffDisplayName, theme, timings, visitorCountChoices } from "@/config/reception";
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
 import { useKioskCopy } from "@/components/kiosk/language";
 import { welcomeClockParts } from "@/lib/welcome-clock";
 import { useEffect, useState } from "react";
-
-function ChoicePhotos({
-  photos,
-  selectedId,
-}: {
-  photos: ReadonlyArray<{ id: string; photo: string }>;
-  selectedId: string;
-}) {
-  return (
-    <div className="kiosk-choice-photos pointer-events-none absolute right-0 hidden w-[min(20vw,16rem)] landscape:block">
-      {photos.map((item) => (
-        <img
-          key={item.id}
-          src={item.photo}
-          alt=""
-          decoding="async"
-          data-selected={selectedId === item.id ? "true" : "false"}
-          className={`absolute inset-0 h-full w-full object-contain ${selectedId === item.id ? "opacity-100" : "opacity-0"}`}
-        />
-      ))}
-    </div>
-  );
-}
 
 function MenuLabel({ label }: { label: string }) {
   const dot = label.indexOf("・");
@@ -343,7 +320,6 @@ export function GeneralScreen({
           </p>
         </div>
         <div className="kiosk-entry-gap" />
-        <ChoicePhotos photos={mentionChoices} selectedId={destinationId} />
         <div className="kiosk-send-row">
           <KioskButton type="submit" className="kiosk-send" disabled={!ready}>
             {copy.send}
@@ -474,7 +450,6 @@ export function InterviewScreen({
           </div>
         </div>
         <div className="kiosk-entry-gap" />
-        <ChoicePhotos photos={interviewPurposes} selectedId={purpose} />
         <div className="kiosk-send-row">
           <KioskButton type="submit" className="kiosk-send" disabled={!ready}>
             {copy.send}

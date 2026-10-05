@@ -82,17 +82,17 @@ export type VisitorCountChoiceId = (typeof visitorCountChoices)[number]["id"];
 
 /** 面接・会社説明で選ぶ用件。通知見出しは copy.slack 側。 */
 export const interviewPurposes = [
-  { id: "interview", label: "面接", photo: "/purpose/interview.png" },
-  { id: "briefing", label: "会社説明", photo: "/purpose/briefing.png" },
+  { id: "interview", label: "面接" },
+  { id: "briefing", label: "会社説明" },
 ] as const;
 
 export type InterviewPurpose = (typeof interviewPurposes)[number]["id"];
 
 /** 面接・会社説明と配達のメンションに使える人。この三択以外は設定できない。 */
 export const mentionChoices = [
-  { id: "nosaka", name: "野坂 星司", photo: "/staff/nosaka.png" },
-  { id: "yanase", name: "梁瀬 聖太", photo: "/staff/yanase.png" },
-  { id: "ito", name: "伊藤 功", photo: "/staff/ito.png" },
+  { id: "nosaka", name: "野坂 星司" },
+  { id: "yanase", name: "梁瀬 聖太" },
+  { id: "ito", name: "伊藤 功" },
 ] as const;
 
 export type MentionChoiceId = (typeof mentionChoices)[number]["id"];
@@ -116,12 +116,8 @@ export const menuIcons = {
   other: "/menu/other.png",
 } as const;
 
-/** 最初の画面のうちに読み込んでおく写真とアイコン。選択時の待ちをなくす。 */
-export const preloadedPhotos = [
-  ...mentionChoices.map((person) => person.photo),
-  ...interviewPurposes.map((item) => item.photo),
-  ...Object.values(menuIcons),
-] as const;
+/** 最初の画面のうちに読み込んでおくアイコン。用件画面を開いたときの待ちをなくす。 */
+export const preloadedPhotos = [...Object.values(menuIcons)] as const;
 
 export type UiCopy = {
   appTitle: string;
