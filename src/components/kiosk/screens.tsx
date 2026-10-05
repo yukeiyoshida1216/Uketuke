@@ -169,7 +169,7 @@ export function MenuScreen({
   const copy = useKioskCopy();
   const choices = [
     { label: copy.general, hint: copy.generalHint, onClick: onGeneral, icon: "/menu/general.png" },
-    { label: copy.interview, hint: copy.interviewHint, onClick: onInterview, icon: "" },
+    { label: copy.interview, hint: copy.interviewHint, onClick: onInterview, icon: "/menu/interview.png" },
     { label: copy.other, hint: copy.otherHint, onClick: onOther, icon: "" },
   ];
   return (
