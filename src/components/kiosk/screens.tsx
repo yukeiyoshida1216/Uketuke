@@ -287,9 +287,9 @@ export function GeneralScreen({
             </div>
           </div>
           <div className="grid gap-2">
-            <span className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1rem, 2.2vh, 1.3rem)" }}>
+            <label htmlFor="destinationId" className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1rem, 2.2vh, 1.3rem)" }}>
               {copy.mentionTarget}
-            </span>
+            </label>
             {destinations.status === "loading" ? (
               <p className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1rem, 2.2vh, 1.3rem)" }}>
                 {copy.destinationLoading}
@@ -311,26 +311,29 @@ export function GeneralScreen({
               </p>
             ) : null}
             {destinations.status === "ready" && destinations.people.length > 0 ? (
-              <div
-                className="grid grid-cols-3 gap-2"
-                role="group"
-                aria-label={copy.mentionTarget}
+              <select
+                id="destinationId"
+                className="kiosk-field kiosk-select w-full rounded-2xl border-2 bg-white px-4 font-bold"
+                value={destinationId}
+                onChange={(event) => onDestination(event.target.value)}
+                style={{
+                  height: "clamp(3.25rem, 8vh, 4.5rem)",
+                  fontSize: "clamp(1.25rem, 2.6vh, 1.7rem)",
+                  color: destinationId ? theme.ink : theme.placeholder,
+                  backgroundColor: theme.white,
+                  ["--kiosk-field-border" as string]: theme.line,
+                  ["--kiosk-field-focus" as string]: theme.fieldFocus,
+                }}
               >
+                <option value="" disabled>
+                  {copy.mentionPlaceholder}
+                </option>
                 {destinations.people.map((person) => (
-                  <KioskButton
-                    key={person.id}
-                    type="button"
-                    tone={destinationId === person.id ? "primary" : "white"}
-                    aria-pressed={destinationId === person.id}
-                    style={{ minHeight: "clamp(3rem, 7.5vh, 4.2rem)" }}
-                    onClick={() => onDestination(person.id)}
-                  >
-                    <span style={{ fontSize: "clamp(1.05rem, 2.5vh, 1.45rem)", lineHeight: 1.25 }}>
-                      {staffDisplayName(person.id, copy, person.name)}
-                    </span>
-                  </KioskButton>
+                  <option key={person.id} value={person.id}>
+                    {staffDisplayName(person.id, copy, person.name)}
+                  </option>
                 ))}
-              </div>
+              </select>
             ) : null}
           </div>
           <p className="text-center font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(0.95rem, 2vh, 1.15rem)" }}>

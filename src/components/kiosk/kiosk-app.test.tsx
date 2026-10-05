@@ -104,14 +104,14 @@ describe("受付画面", () => {
     expect(screen.queryByText("Light Path Co., Ltd.")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
     fireEvent.click(screen.getByRole("button", { name: "For companies" }));
-    expect(await screen.findByRole("button", { name: "Seiji Nosaka" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Shota Yanase" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Kou Ito" })).toBeTruthy();
+    expect(await screen.findByRole("option", { name: "Seiji Nosaka" })).toBeTruthy();
+    expect(screen.getByRole("option", { name: "Shota Yanase" })).toBeTruthy();
+    expect(screen.getByRole("option", { name: "Kou Ito" })).toBeTruthy();
     expect((screen.getByLabelText("Company") as HTMLInputElement).placeholder).toBe("Light Path");
     fireEvent.click(screen.getByRole("button", { name: "日本語" }));
-    expect(screen.getByRole("button", { name: "野坂 星司" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "梁瀬 聖太" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "伊藤 功" })).toBeTruthy();
+    expect(screen.getByRole("option", { name: "野坂 星司" })).toBeTruthy();
+    expect(screen.getByRole("option", { name: "梁瀬 聖太" })).toBeTruthy();
+    expect(screen.getByRole("option", { name: "伊藤 功" })).toBeTruthy();
   });
 
   it("ロゴと LIGHT PATH の間に会社名を出す", () => {
@@ -140,11 +140,12 @@ describe("受付画面", () => {
     const selected = () => document.querySelector("img[data-selected='true']")?.getAttribute("src") ?? null;
     expect(document.querySelectorAll("img[data-selected][src^='/staff/']")).toHaveLength(3);
     expect(selected()).toBeNull();
-    fireEvent.click(await screen.findByRole("button", { name: "野坂 星司" }));
+    const mention = () => screen.getByLabelText(copy.mentionTarget) as HTMLSelectElement;
+    fireEvent.change(await screen.findByLabelText(copy.mentionTarget), { target: { value: "nosaka" } });
     expect(selected()).toBe("/staff/nosaka.png");
-    fireEvent.click(screen.getByRole("button", { name: "梁瀬 聖太" }));
+    fireEvent.change(mention(), { target: { value: "yanase" } });
     expect(selected()).toBe("/staff/yanase.png");
-    fireEvent.click(screen.getByRole("button", { name: "伊藤 功" }));
+    fireEvent.change(mention(), { target: { value: "ito" } });
     expect(selected()).toBe("/staff/ito.png");
   });
 
@@ -174,7 +175,7 @@ describe("受付画面", () => {
     render(<KioskApp initialDestinations={[{ id: "nosaka", name: "野坂 星司" }]} />);
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
     fireEvent.click(screen.getByRole("button", { name: copy.general }));
-    expect(screen.getByRole("button", { name: "野坂 星司" })).toBeTruthy();
+    expect(screen.getByRole("option", { name: "野坂 星司" })).toBeTruthy();
     expect(screen.queryByText(copy.destinationLoading)).toBeNull();
   });
 
@@ -186,20 +187,20 @@ describe("受付画面", () => {
     fireEvent.change(screen.getByLabelText(copy.companyName), { target: { value: "  株式会社あおぞら  " } });
     fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "   " } });
     fireEvent.click(screen.getByRole("button", { name: "2人" }));
-    const mention = await screen.findByRole("button", { name: "野坂 星司" });
+    const mention = (await screen.findByLabelText(copy.mentionTarget)) as HTMLSelectElement;
     expect(screen.queryByText("UNOSAKA")).toBeNull();
     const count = screen.getByRole("button", { name: "2人" });
     expect(count.compareDocumentPosition(mention) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(send().disabled).toBe(true);
     fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "山田 花" } });
     expect(send().disabled).toBe(true);
-    fireEvent.click(mention);
+    fireEvent.change(mention, { target: { value: "nosaka" } });
     expect(send().disabled).toBe(false);
     fireEvent.click(screen.getByRole("button", { name: `←${copy.back}` }));
     fireEvent.click(screen.getByRole("button", { name: copy.general }));
     expect((screen.getByLabelText(copy.companyName) as HTMLInputElement).value).toBe("  株式会社あおぞら  ");
     expect((screen.getByLabelText(copy.visitorName) as HTMLInputElement).value).toBe("山田 花");
-    expect((screen.getByRole("button", { name: "野坂 星司" }) as HTMLButtonElement).getAttribute("aria-pressed")).toBe("true");
+    expect((screen.getByLabelText(copy.mentionTarget) as HTMLSelectElement).value).toBe("nosaka");
   });
 
   it("送信に失敗すると完了画面を出さず、再試行は同じ内容を送る", async () => {
@@ -218,7 +219,7 @@ describe("受付画面", () => {
     fireEvent.change(screen.getByLabelText(copy.companyName), { target: { value: "株式会社あおぞら" } });
     fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "山田 花" } });
     fireEvent.click(screen.getByRole("button", { name: "3人" }));
-    fireEvent.click(await screen.findByRole("button", { name: "伊藤 功" }));
+    fireEvent.change(await screen.findByLabelText(copy.mentionTarget), { target: { value: "ito" } });
     fireEvent.click(screen.getByRole("button", { name: copy.send }));
     expect(await screen.findByRole("button", { name: copy.retry })).toBeTruthy();
     expect(screen.queryByText(copy.thanks)).toBeNull();

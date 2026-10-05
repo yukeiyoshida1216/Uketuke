@@ -362,9 +362,23 @@
   box-shadow: none !important;
 }
 
-.kiosk-root input {
+.kiosk-root input,
+.kiosk-root select.kiosk-select {
   height: clamp(3.1rem, 8vh, 4.5rem) !important;
   font-size: clamp(1.2rem, 2.6vh, 1.75rem) !important;
+}
+
+.kiosk-root select.kiosk-select {
+  appearance: none;
+  padding-right: 2.8rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E09412' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.35rem;
+}
+
+.kiosk-root select.kiosk-select option {
+  color: #4a3728;
 }
 
 @layer theme {
