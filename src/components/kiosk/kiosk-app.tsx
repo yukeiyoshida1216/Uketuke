@@ -184,14 +184,17 @@ export function KioskApp({
           <img key={src} src={src} alt="" decoding="async" data-photo-cache="" fetchPriority="high" />
         ))}
       </div>
-      <div className="h-full" hidden={state.phase !== "welcome"}>
+      <div className="kiosk-welcome-pop h-full" hidden={state.phase !== "welcome"}>
         <WelcomeScreen
           onEnter={() => {
             engage();
             dispatch({ type: "tapWelcome" });
           }}
         />
+        <DeliveryButton onPress={acknowledgeDelivery} />
       </div>
+      {state.phase !== "welcome" ? (
+      <div key={state.phase} className="kiosk-pop h-full min-h-0">
       {state.phase === "menu" ? (
         <MenuScreen
           onGeneral={() => {
@@ -263,7 +266,8 @@ export function KioskApp({
           onHome={() => dispatch({ type: "goHome" })}
         />
       ) : null}
-      {state.phase === "welcome" ? <DeliveryButton onPress={acknowledgeDelivery} /> : null}
+      </div>
+      ) : null}
       <LanguageToggle />
     </main>
     </LanguageProvider>

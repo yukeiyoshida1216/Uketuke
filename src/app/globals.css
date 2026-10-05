@@ -207,10 +207,36 @@
   }
 }
 
+@keyframes kiosk-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.84);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  80% {
+    transform: scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.kiosk-pop,
+.kiosk-root[data-phase="welcome"] .kiosk-welcome-pop {
+  transform-origin: center center;
+  animation: kiosk-pop 0.5s cubic-bezier(0.2, 0.85, 0.2, 1) backwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kiosk-pulse,
   .kiosk-blink,
-  .kiosk-loading-dots span {
+  .kiosk-loading-dots span,
+  .kiosk-pop,
+  .kiosk-root[data-phase="welcome"] .kiosk-welcome-pop {
     animation: none;
     opacity: 1;
     transform: none;
