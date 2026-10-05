@@ -168,9 +168,9 @@ export function MenuScreen({
 }) {
   const copy = useKioskCopy();
   const choices = [
-    { label: copy.general, hint: copy.generalHint, onClick: onGeneral },
-    { label: copy.interview, hint: copy.interviewHint, onClick: onInterview },
-    { label: copy.other, hint: copy.otherHint, onClick: onOther },
+    { label: copy.general, hint: copy.generalHint, onClick: onGeneral, icon: "/menu/general.png" },
+    { label: copy.interview, hint: copy.interviewHint, onClick: onInterview, icon: "" },
+    { label: copy.other, hint: copy.otherHint, onClick: onOther, icon: "" },
   ];
   return (
     <KioskFrame title={copy.menuTitle} prominentTitle>
@@ -186,6 +186,7 @@ export function MenuScreen({
             style={{ height: "100%", minHeight: "clamp(3rem, 7vh, 5.5rem)" }}
           >
             <span className="flex flex-col items-center gap-2">
+              {choice.icon ? <img src={choice.icon} alt="" className="kiosk-choice-icon" /> : null}
               <span className="kiosk-choice-label" style={{ fontSize: "var(--kiosk-choice-label)", lineHeight: 1.2 }}>
                 <MenuLabel label={choice.label} />
               </span>
