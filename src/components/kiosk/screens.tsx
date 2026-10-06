@@ -60,6 +60,8 @@ function StaffDropdown({
           fontWeight: 400,
           color: selected ? theme.ink : theme.placeholder,
           backgroundColor: theme.white,
+          borderTopLeftRadius: open ? 0 : undefined,
+          borderTopRightRadius: open ? 0 : undefined,
           ["--kiosk-field-border" as string]: theme.line,
           ["--kiosk-field-focus" as string]: theme.fieldFocus,
         }}
@@ -73,10 +75,10 @@ function StaffDropdown({
         <ul
           id={`${id}-list`}
           role="listbox"
-          className="absolute right-0 bottom-full left-0 z-20 mb-2 overflow-hidden rounded-2xl border-2 bg-white"
+          className="absolute right-0 bottom-full left-0 z-20 overflow-hidden rounded-t-2xl border-2 border-b-0 bg-white"
           style={{
             borderColor: theme.line,
-            boxShadow: "0 10px 28px rgba(224, 148, 18, 0.16)",
+            boxShadow: "0 -8px 24px rgba(224, 148, 18, 0.12)",
           }}
         >
           {people.map((person, index) => {
