@@ -4,7 +4,7 @@ import { backgroundGradient, interviewPurposes, menuIcons, staffDisplayName, the
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
 import { useKioskCopy } from "@/components/kiosk/language";
 import { welcomeClockParts } from "@/lib/welcome-clock";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 function MenuLabel({ label }: { label: string }) {
   const dot = label.indexOf("・");
@@ -14,6 +14,106 @@ function MenuLabel({ label }: { label: string }) {
       <span className="inline-block">{label.slice(0, dot + 1)}</span>
       <span className="inline-block">{label.slice(dot + 1)}</span>
     </>
+  );
+}
+
+function StaffDropdown({
+  id,
+  value,
+  people,
+  placeholder,
+  onChange,
+}: {
+  id: string;
+  value: string;
+  people: Array<{ id: string; name: string }>;
+  placeholder: string;
+  onChange: (id: string) => void;
+}) {
+  const copy = useKioskCopy();
+  const [open, setOpen] = useState(false);
+  const [dropUp, setDropUp] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const selected = people.find((person) => person.id === value);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    const button = rootRef.current?.querySelector("button");
+    if (!button) return;
+    const rect = button.getBoundingClientRect();
+    setDropUp(window.innerHeight - rect.bottom < 240);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, [open]);
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        id={id}
+        className="kiosk-field kiosk-select flex w-full items-center justify-between gap-3 rounded-2xl border-2 bg-white px-4 text-left"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={`${id}-list`}
+        onClick={() => setOpen((current) => !current)}
+        style={{
+          height: "clamp(3.25rem, 8vh, 4.5rem)",
+          fontSize: "clamp(1.25rem, 2.6vh, 1.7rem)",
+          fontWeight: 400,
+          color: selected ? theme.ink : theme.placeholder,
+          backgroundColor: theme.white,
+          ["--kiosk-field-border" as string]: theme.line,
+          ["--kiosk-field-focus" as string]: theme.fieldFocus,
+        }}
+      >
+        <span className="min-w-0 truncate">{selected ? staffDisplayName(selected.id, copy, selected.name) : placeholder}</span>
+        <svg viewBox="0 0 24 24" aria-hidden className="h-[1.35rem] w-[1.35rem] shrink-0" fill="none" stroke={theme.amberDeep} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+      {open ? (
+        <ul
+          id={`${id}-list`}
+          role="listbox"
+          className={`absolute right-0 left-0 z-20 overflow-hidden rounded-2xl border-2 bg-white ${dropUp ? "bottom-full mb-2" : "top-full mt-2"}`}
+          style={{
+            borderColor: theme.line,
+            boxShadow: "0 10px 28px rgba(224, 148, 18, 0.16)",
+          }}
+        >
+          {people.map((person) => {
+            const active = person.id === value;
+            return (
+              <li key={person.id}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={active}
+                  className="kiosk-select-option w-full px-4 text-left"
+                  style={{
+                    color: active ? theme.white : theme.ink,
+                    background: active ? theme.amber : theme.white,
+                  }}
+                  onClick={() => {
+                    onChange(person.id);
+                    setOpen(false);
+                  }}
+                >
+                  {staffDisplayName(person.id, copy, person.name)}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
+    </div>
   );
 }
 
@@ -265,10 +365,10 @@ export function GeneralScreen({
               ))}
             </div>
           </div>
-          <label htmlFor="destinationId" className="flex min-h-0 flex-col justify-center gap-1">
-            <span className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1rem, 2.2vh, 1.3rem)" }}>
+          <div className="flex min-h-0 flex-col justify-center gap-1">
+            <label htmlFor="destinationId" className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1rem, 2.2vh, 1.3rem)" }}>
               {copy.mentionTarget}
-            </span>
+            </label>
             {destinations.status === "loading" ? (
               <p className="font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(1rem, 2.2vh, 1.3rem)" }}>
                 {copy.destinationLoading}
@@ -290,31 +390,15 @@ export function GeneralScreen({
               </p>
             ) : null}
             {destinations.status === "ready" && destinations.people.length > 0 ? (
-              <select
+              <StaffDropdown
                 id="destinationId"
-                className="kiosk-field kiosk-select w-full rounded-2xl border-2 bg-white px-4"
                 value={destinationId}
-                onChange={(event) => onDestination(event.target.value)}
-                style={{
-                  height: "clamp(3.25rem, 8vh, 4.5rem)",
-                  fontSize: "clamp(1.25rem, 2.6vh, 1.7rem)",
-                  color: destinationId ? theme.ink : theme.placeholder,
-                  backgroundColor: theme.white,
-                  ["--kiosk-field-border" as string]: theme.line,
-                  ["--kiosk-field-focus" as string]: theme.fieldFocus,
-                }}
-              >
-                <option value="" disabled>
-                  {copy.mentionPlaceholder}
-                </option>
-                {destinations.people.map((person) => (
-                  <option key={person.id} value={person.id}>
-                    {staffDisplayName(person.id, copy, person.name)}
-                  </option>
-                ))}
-              </select>
+                people={destinations.people}
+                placeholder={copy.mentionPlaceholder}
+                onChange={onDestination}
+              />
             ) : null}
-          </label>
+          </div>
           <p className="text-center font-medium" style={{ color: theme.inkSoft, fontSize: "clamp(0.95rem, 2vh, 1.15rem)" }}>
             {copy.generalRequired}
           </p>

@@ -43,6 +43,11 @@ describe("受付画面", () => {
     fireEvent.click(screen.getByRole("button", { name: copy.general }));
   }
 
+  async function chooseStaff(name: string) {
+    fireEvent.click(await screen.findByLabelText(copy.mentionTarget));
+    fireEvent.click(await screen.findByRole("option", { name }));
+  }
+
   it("タイトル画面の左上に日付と現在時刻を出す", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-09-30T03:00:00Z"));
@@ -104,13 +109,15 @@ describe("受付画面", () => {
     expect(screen.queryByText("Light Path Co., Ltd.")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
     fireEvent.click(screen.getByRole("button", { name: "For companies" }));
+    fireEvent.click(await screen.findByLabelText("Contact"));
     expect(await screen.findByRole("option", { name: "Seiji Nosaka" })).toBeTruthy();
     expect(screen.getByRole("option", { name: "Shota Yanase" })).toBeTruthy();
     expect(screen.getByRole("option", { name: "Kou Ito" })).toBeTruthy();
-    expect(screen.getByRole("option", { name: "Select" })).toBeTruthy();
-    expect((screen.getByLabelText("Contact") as HTMLSelectElement).value).toBe("");
+    expect(screen.getByLabelText("Contact").textContent).toContain("Select");
     expect((screen.getByLabelText("Company") as HTMLInputElement).placeholder).toBe("Light Path");
     fireEvent.click(screen.getByRole("button", { name: "日本語" }));
+    const staff = screen.getByLabelText("担当者名");
+    if (staff.getAttribute("aria-expanded") !== "true") fireEvent.click(staff);
     expect(screen.getByRole("option", { name: "野坂 星司" })).toBeTruthy();
     expect(screen.getByRole("option", { name: "梁瀬 聖太" })).toBeTruthy();
     expect(screen.getByRole("option", { name: "伊藤 功" })).toBeTruthy();
@@ -139,7 +146,7 @@ describe("受付画面", () => {
   it("担当者を選んでも写真は出さない", async () => {
     render(<KioskApp />);
     await openGeneral();
-    fireEvent.change(await screen.findByLabelText(copy.mentionTarget), { target: { value: "nosaka" } });
+    await chooseStaff("野坂 星司");
     expect(document.querySelector("img[src^='/staff/']")).toBeNull();
   });
 
@@ -164,9 +171,9 @@ describe("受付画面", () => {
     render(<KioskApp initialDestinations={[{ id: "nosaka", name: "野坂 星司" }]} />);
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
     fireEvent.click(screen.getByRole("button", { name: copy.general }));
+    fireEvent.click(screen.getByLabelText(copy.mentionTarget));
     expect(screen.getByRole("option", { name: "野坂 星司" })).toBeTruthy();
-    expect(screen.getByRole("option", { name: copy.mentionPlaceholder })).toBeTruthy();
-    expect((screen.getByLabelText(copy.mentionTarget) as HTMLSelectElement).value).toBe("");
+    expect(screen.getByLabelText(copy.mentionTarget).textContent).toContain(copy.mentionPlaceholder);
     expect(screen.queryByText(copy.destinationLoading)).toBeNull();
   });
 
@@ -178,20 +185,20 @@ describe("受付画面", () => {
     fireEvent.change(screen.getByLabelText(copy.companyName), { target: { value: "  株式会社あおぞら  " } });
     fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "   " } });
     fireEvent.click(screen.getByRole("button", { name: "2人" }));
-    const mention = (await screen.findByLabelText(copy.mentionTarget)) as HTMLSelectElement;
+    const mention = await screen.findByLabelText(copy.mentionTarget);
     expect(screen.queryByText("UNOSAKA")).toBeNull();
     const count = screen.getByRole("button", { name: "2人" });
     expect(count.compareDocumentPosition(mention) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(send().disabled).toBe(true);
     fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "山田 花" } });
     expect(send().disabled).toBe(true);
-    fireEvent.change(mention, { target: { value: "nosaka" } });
+    await chooseStaff("野坂 星司");
     expect(send().disabled).toBe(false);
     fireEvent.click(screen.getByRole("button", { name: `←${copy.back}` }));
     fireEvent.click(screen.getByRole("button", { name: copy.general }));
     expect((screen.getByLabelText(copy.companyName) as HTMLInputElement).value).toBe("  株式会社あおぞら  ");
     expect((screen.getByLabelText(copy.visitorName) as HTMLInputElement).value).toBe("山田 花");
-    expect((screen.getByLabelText(copy.mentionTarget) as HTMLSelectElement).value).toBe("nosaka");
+    expect(screen.getByLabelText(copy.mentionTarget).textContent).toContain("野坂 星司");
   });
 
   it("送信に失敗すると完了画面を出さず、再試行は同じ内容を送る", async () => {
@@ -210,7 +217,7 @@ describe("受付画面", () => {
     fireEvent.change(screen.getByLabelText(copy.companyName), { target: { value: "株式会社あおぞら" } });
     fireEvent.change(screen.getByLabelText(copy.visitorName), { target: { value: "山田 花" } });
     fireEvent.click(screen.getByRole("button", { name: "3人" }));
-    fireEvent.change(await screen.findByLabelText(copy.mentionTarget), { target: { value: "ito" } });
+    await chooseStaff("伊藤 功");
     fireEvent.click(screen.getByRole("button", { name: copy.send }));
     expect(await screen.findByRole("button", { name: copy.retry })).toBeTruthy();
     expect(screen.queryByText(copy.thanks)).toBeNull();
