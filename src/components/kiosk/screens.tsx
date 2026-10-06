@@ -4,7 +4,7 @@ import { backgroundGradient, interviewPurposes, menuIcons, staffDisplayName, the
 import { KioskButton, KioskField, KioskFrame } from "@/components/kiosk/controls";
 import { useKioskCopy } from "@/components/kiosk/language";
 import { welcomeClockParts } from "@/lib/welcome-clock";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function MenuLabel({ label }: { label: string }) {
   const dot = label.indexOf("・");
@@ -32,17 +32,8 @@ function StaffDropdown({
 }) {
   const copy = useKioskCopy();
   const [open, setOpen] = useState(false);
-  const [dropUp, setDropUp] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const selected = people.find((person) => person.id === value);
-
-  useLayoutEffect(() => {
-    if (!open) return;
-    const button = rootRef.current?.querySelector("button");
-    if (!button) return;
-    const rect = button.getBoundingClientRect();
-    setDropUp(window.innerHeight - rect.bottom < 240);
-  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -82,7 +73,7 @@ function StaffDropdown({
         <ul
           id={`${id}-list`}
           role="listbox"
-          className={`absolute right-0 left-0 z-20 overflow-hidden rounded-2xl border-2 bg-white ${dropUp ? "bottom-full mb-2" : "top-full mt-2"}`}
+          className="absolute right-0 bottom-full left-0 z-20 mb-2 overflow-hidden rounded-2xl border-2 bg-white"
           style={{
             borderColor: theme.line,
             boxShadow: "0 10px 28px rgba(224, 148, 18, 0.16)",
