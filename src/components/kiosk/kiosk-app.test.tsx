@@ -107,6 +107,8 @@ describe("受付画面", () => {
     expect(await screen.findByRole("option", { name: "Seiji Nosaka" })).toBeTruthy();
     expect(screen.getByRole("option", { name: "Shota Yanase" })).toBeTruthy();
     expect(screen.getByRole("option", { name: "Kou Ito" })).toBeTruthy();
+    expect(screen.queryByRole("option", { name: "Select" })).toBeNull();
+    expect((screen.getByLabelText("Contact") as HTMLSelectElement).value).toBe("");
     expect((screen.getByLabelText("Company") as HTMLInputElement).placeholder).toBe("Light Path");
     fireEvent.click(screen.getByRole("button", { name: "日本語" }));
     expect(screen.getByRole("option", { name: "野坂 星司" })).toBeTruthy();
@@ -163,6 +165,8 @@ describe("受付画面", () => {
     fireEvent.click(screen.getByRole("button", { name: /WELCOME/ }));
     fireEvent.click(screen.getByRole("button", { name: copy.general }));
     expect(screen.getByRole("option", { name: "野坂 星司" })).toBeTruthy();
+    expect(screen.queryByRole("option", { name: "選択してください" })).toBeNull();
+    expect((screen.getByLabelText(copy.mentionTarget) as HTMLSelectElement).value).toBe("");
     expect(screen.queryByText(copy.destinationLoading)).toBeNull();
   });
 

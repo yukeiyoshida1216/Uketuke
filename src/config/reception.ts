@@ -145,7 +145,6 @@ export type UiCopy = {
   generalTitle: string;
   generalRequired: string;
   mentionTarget: string;
-  mentionPlaceholder: string;
   destinationTitle: string;
   destinationLoading: string;
   destinationError: string;
@@ -197,7 +196,6 @@ export const copyJa = {
   generalTitle: "企業様向け",
   generalRequired: "会社名・氏名・人数・担当者名はすべて必須です",
   mentionTarget: "担当者名",
-  mentionPlaceholder: "選択してください",
   destinationTitle: "訪問先を選択してください",
   destinationLoading: "訪問先を読み込んでいます",
   destinationError: "訪問先一覧を取得できませんでした",
@@ -249,7 +247,6 @@ export const copyEn = {
   generalTitle: "For companies",
   generalRequired: "Company, name, number of visitors, and contact are all required",
   mentionTarget: "Contact",
-  mentionPlaceholder: "Select",
   destinationTitle: "Select who you are visiting",
   destinationLoading: "Loading contacts",
   destinationError: "Could not load the contact list",
