@@ -298,13 +298,15 @@ export function GeneralScreen({
                 style={{
                   height: "clamp(3.25rem, 8vh, 4.5rem)",
                   fontSize: "clamp(1.25rem, 2.6vh, 1.7rem)",
-                  color: theme.ink,
+                  color: destinationId ? theme.ink : theme.placeholder,
                   backgroundColor: theme.white,
                   ["--kiosk-field-border" as string]: theme.line,
                   ["--kiosk-field-focus" as string]: theme.fieldFocus,
                 }}
               >
-                <option value="" hidden />
+                <option value="" disabled>
+                  {copy.mentionPlaceholder}
+                </option>
                 {destinations.people.map((person) => (
                   <option key={person.id} value={person.id}>
                     {staffDisplayName(person.id, copy, person.name)}
