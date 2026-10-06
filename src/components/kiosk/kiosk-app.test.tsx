@@ -114,6 +114,7 @@ describe("受付画面", () => {
     const names = screen.getAllByRole("option");
     expect(names.map((option) => option.textContent)).toEqual(["Seiji Nosaka", "Shota Yanase", "Kou Ito"]);
     expect(names[0].style.borderBottomWidth).toBe("2px");
+    expect(names[0].style.borderBottomColor).toBe(theme.divider);
     expect(names[1].style.borderBottomWidth).toBe("2px");
     expect(names[2].style.borderBottomWidth).toBe("");
     expect(screen.getByLabelText("Contact").textContent).toContain("Select");

@@ -29,6 +29,8 @@ export const theme = {
   /** 会社名・氏名の入力例。本文より少し薄い。 */
   placeholder: "#A39890",
   line: "#F0D48A",
+  /** 担当者名の一覧で、名前のあいだに引く薄い灰色。 */
+  divider: "#E0E0E0",
   danger: "#B85C38",
   fontFamily: '"Noto Sans JP", sans-serif',
 } as const;

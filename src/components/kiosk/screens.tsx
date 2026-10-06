@@ -100,7 +100,7 @@ function StaffDropdown({
                   style={{
                     color: active ? theme.white : theme.ink,
                     background: active ? theme.amber : theme.white,
-                    borderBottom: index < people.length - 1 ? `2px solid ${theme.line}` : undefined,
+                    borderBottom: index < people.length - 1 ? `2px solid ${theme.divider}` : undefined,
                   }}
                   onClick={() => {
                     onChange(person.id);
