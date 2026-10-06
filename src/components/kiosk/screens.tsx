@@ -88,7 +88,7 @@ function StaffDropdown({
             boxShadow: "0 10px 28px rgba(224, 148, 18, 0.16)",
           }}
         >
-          {people.map((person) => {
+          {people.map((person, index) => {
             const active = person.id === value;
             return (
               <li key={person.id}>
@@ -100,6 +100,7 @@ function StaffDropdown({
                   style={{
                     color: active ? theme.white : theme.ink,
                     background: active ? theme.amber : theme.white,
+                    borderBottom: index < people.length - 1 ? `2px solid ${theme.line}` : undefined,
                   }}
                   onClick={() => {
                     onChange(person.id);

@@ -111,8 +111,11 @@ describe("受付画面", () => {
     fireEvent.click(screen.getByRole("button", { name: "For companies" }));
     fireEvent.click(await screen.findByLabelText("Contact"));
     expect(await screen.findByRole("option", { name: "Seiji Nosaka" })).toBeTruthy();
-    expect(screen.getByRole("option", { name: "Shota Yanase" })).toBeTruthy();
-    expect(screen.getByRole("option", { name: "Kou Ito" })).toBeTruthy();
+    const names = screen.getAllByRole("option");
+    expect(names.map((option) => option.textContent)).toEqual(["Seiji Nosaka", "Shota Yanase", "Kou Ito"]);
+    expect(names[0].style.borderBottomWidth).toBe("2px");
+    expect(names[1].style.borderBottomWidth).toBe("2px");
+    expect(names[2].style.borderBottomWidth).toBe("");
     expect(screen.getByLabelText("Contact").textContent).toContain("Select");
     expect((screen.getByLabelText("Company") as HTMLInputElement).placeholder).toBe("Light Path");
     fireEvent.click(screen.getByRole("button", { name: "日本語" }));
