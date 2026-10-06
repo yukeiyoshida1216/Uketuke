@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { parseNotifyRequest } from "../src/validation.js";
 
+const key = "test-key-abcdefgh";
+
 describe("parseNotifyRequest", () => {
   it("accepts a trimmed general request", () => {
     const parsed = parseNotifyRequest({
@@ -8,14 +10,16 @@ describe("parseNotifyRequest", () => {
       companyName: " 株式会社テスト ",
       visitorName: " 来訪 太郎 ",
       partySize: 2,
-      destinationId: " yamada "
+      destinationId: " yamada ",
+      idempotencyKey: `  ${key}  `
     });
     expect(parsed).toEqual({
       type: "general",
       companyName: "株式会社テスト",
       visitorName: "来訪 太郎",
       partySize: 2,
-      destinationId: "yamada"
+      destinationId: "yamada",
+      idempotencyKey: key
     });
   });
 
@@ -26,7 +30,8 @@ describe("parseNotifyRequest", () => {
         companyName: " ",
         visitorName: "来訪",
         partySize: 1,
-        destinationId: "yamada"
+        destinationId: "yamada",
+        idempotencyKey: key
       })
     ).toThrow(/required/);
   });
@@ -38,7 +43,8 @@ describe("parseNotifyRequest", () => {
         companyName: "A",
         visitorName: "B",
         partySize: 0,
-        destinationId: "yamada"
+        destinationId: "yamada",
+        idempotencyKey: key
       })
     ).toThrow(/partySize/);
     expect(() =>
@@ -47,32 +53,44 @@ describe("parseNotifyRequest", () => {
         companyName: "A",
         visitorName: "B",
         partySize: 1.5,
-        destinationId: "yamada"
+        destinationId: "yamada",
+        idempotencyKey: key
       })
     ).toThrow(/integer/);
   });
 
   it("requires purpose and visitor name for interview", () => {
     expect(() =>
-      parseNotifyRequest({ type: "interview", purpose: "interview", visitorName: "   " })
+      parseNotifyRequest({
+        type: "interview",
+        purpose: "interview",
+        visitorName: "   ",
+        idempotencyKey: key
+      })
     ).toThrow(/required/);
     expect(() =>
-      parseNotifyRequest({ type: "interview", visitorName: "候補者" })
+      parseNotifyRequest({ type: "interview", visitorName: "候補者", idempotencyKey: key })
     ).toThrow(/purpose/);
     expect(
       parseNotifyRequest({
         type: "interview",
         purpose: "training",
-        visitorName: " 候補者 "
+        visitorName: " 候補者 ",
+        idempotencyKey: key
       })
     ).toEqual({
       type: "interview",
       purpose: "training",
-      visitorName: "候補者"
+      visitorName: "候補者",
+      idempotencyKey: key
     });
   });
 
-  it("accepts delivery without extra fields", () => {
-    expect(parseNotifyRequest({ type: "delivery" })).toEqual({ type: "delivery" });
+  it("requires idempotencyKey for delivery", () => {
+    expect(() => parseNotifyRequest({ type: "delivery" })).toThrow(/Required|idempotencyKey/);
+    expect(parseNotifyRequest({ type: "delivery", idempotencyKey: key })).toEqual({
+      type: "delivery",
+      idempotencyKey: key
+    });
   });
 });

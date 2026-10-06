@@ -35,10 +35,25 @@ export function testConfig(overrides: Partial<AppConfig> = {}): AppConfig {
       DESTINATIONS_PATH: writeDestinationsFile(),
       SLACK_MENTION_INTERVIEW: "U012INTERVIEW",
       SLACK_MENTION_DELIVERY: "U012DELIVERY",
-      DUPLICATE_WINDOW_MS: "10000"
+      DUPLICATE_WINDOW_MS: "10000",
+      SLACK_TIMEOUT_MS: "8000",
+      IDEMPOTENCY_WINDOW_MS: "10000"
     }),
     ...overrides
   };
+}
+
+let keySeq = 0;
+export function nextKey(prefix = "test-key"): string {
+  keySeq += 1;
+  return `${prefix}-${String(keySeq).padStart(4, "0")}-xxxxxxxx`;
+}
+
+export function withKey<T extends Record<string, unknown>>(
+  body: T,
+  key: string = nextKey()
+): T & { idempotencyKey: string } {
+  return { ...body, idempotencyKey: key };
 }
 
 export function testApp(options?: {

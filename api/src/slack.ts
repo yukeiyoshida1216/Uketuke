@@ -77,17 +77,29 @@ export function toPlainTextSlackPayload(text: string): {
   };
 }
 
-export function createWebhookSlackClient(webhookUrl: string) {
+export function createWebhookSlackClient(webhookUrl: string, timeoutMs = 8_000) {
   return {
     async send(text: string): Promise<void> {
-      const response = await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(toPlainTextSlackPayload(text))
-      });
-      if (!response.ok) {
-        const detail = await response.text().catch(() => "");
-        throw new Error(`Slack webhook failed: ${response.status} ${detail}`.trim());
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(toPlainTextSlackPayload(text)),
+          signal: controller.signal
+        });
+        if (!response.ok) {
+          const detail = await response.text().catch(() => "");
+          throw new Error(`Slack webhook failed: ${response.status} ${detail}`.trim());
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") {
+          throw new Error(`Slack webhook timed out after ${timeoutMs}ms`);
+        }
+        throw error;
+      } finally {
+        clearTimeout(timer);
       }
     }
   };

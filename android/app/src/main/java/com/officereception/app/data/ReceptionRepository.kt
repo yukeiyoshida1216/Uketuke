@@ -30,10 +30,10 @@ class ReceptionRepository(
         }
     }
 
-    fun notify(payload: NotifyPayload) {
+    fun notify(payload: NotifyPayload, idempotencyKey: String) {
         val request = Request.Builder()
             .url(join(baseUrl, "notify"))
-            .post(payload.toJson().toRequestBody(JSON))
+            .post(payload.toJson(idempotencyKey).toRequestBody(JSON))
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) {

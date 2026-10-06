@@ -21,6 +21,7 @@ export type GeneralNotifyRequest = {
   visitorName: string;
   partySize: number;
   destinationId: string;
+  idempotencyKey: string;
 };
 
 export type InterviewNotifyRequest = {
@@ -28,10 +29,12 @@ export type InterviewNotifyRequest = {
   /** 面接か研修か。Slack 本文でも区別する */
   purpose: InterviewPurpose;
   visitorName: string;
+  idempotencyKey: string;
 };
 
 export type DeliveryNotifyRequest = {
   type: "delivery";
+  idempotencyKey: string;
 };
 
 export type NotifyRequest =
@@ -59,6 +62,10 @@ export type AppConfig = {
   slackWebhookUrl: string;
   destinationsPath: string;
   duplicateWindowMs: number;
+  /** API→Slack の HTTP タイムアウト（アプリの 10s より短くする） */
+  slackTimeoutMs: number;
+  /** 冪等キー成功キャッシュの保持時間 */
+  idempotencyWindowMs: number;
   interviewMentionUserIds: string[];
   deliveryMentionUserIds: string[];
 };

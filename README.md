@@ -68,9 +68,11 @@ SLACK_MENTION_INTERVIEW=U012INTERVIEW
 SLACK_MENTION_DELIVERY=U012DELIVERY
 DESTINATIONS_PATH=./destinations.json
 DUPLICATE_WINDOW_MS=10000
+SLACK_TIMEOUT_MS=8000
+IDEMPOTENCY_WINDOW_MS=10000
 ```
 
-本番では `DRY_RUN=false` にし、`SLACK_WEBHOOK_URL` を必須にします。DRY RUN では Slack へ実送信しません。
+本番では `DRY_RUN=false` にし、`SLACK_WEBHOOK_URL` を必須にします。DRY RUN では Slack へ実送信しません。`SLACK_TIMEOUT_MS` は API→Slack の待ち上限（既定 8 秒。アプリの 10 秒より短くする想定）です。`POST /notify` には `idempotencyKey`（8〜128文字）が必須で、同一キーの再送・並列要求は Slack を二重送信しません。
 
 `destinations.json` に訪問先を追加・変更すると、総合受付のプルダウン一覧がアプリ改修なしで変わります。アプリは起動時に `GET /destinations` で取得し、完了するまで操作できません（取得中画面を表示）。`slackUserId` は API 応答には含まれません。
 
@@ -138,27 +140,38 @@ volumes:
   "companyName": "株式会社テスト",
   "visitorName": "来訪太郎",
   "partySize": 2,
-  "destinationId": "yamada"
+  "destinationId": "yamada",
+  "idempotencyKey": "550e8400-e29b-41d4-a716-446655440000"
 }
 ```
 
 面接・研修（`purpose` は `interview` または `training`）:
 
 ```json
-{ "type": "interview", "purpose": "interview", "visitorName": "候補者" }
+{
+  "type": "interview",
+  "purpose": "interview",
+  "visitorName": "候補者",
+  "idempotencyKey": "550e8400-e29b-41d4-a716-446655440001"
+}
 ```
 
 ```json
-{ "type": "interview", "purpose": "training", "visitorName": "受講者" }
+{
+  "type": "interview",
+  "purpose": "training",
+  "visitorName": "受講者",
+  "idempotencyKey": "550e8400-e29b-41d4-a716-446655440002"
+}
 ```
 
 配達員:
 
 ```json
-{ "type": "delivery" }
+{ "type": "delivery", "idempotencyKey": "550e8400-e29b-41d4-a716-446655440003" }
 ```
 
-不正な必須欠落・型・人数（1〜99 の整数以外）・未登録の訪問先 ID は `400` です。直近で成功した同一内容は `409` です。Slack 本文とメンション先はサーバーだけが生成し、アプリからは指定できません。
+不正な必須欠落・型・人数（1〜99 の整数以外）・未登録の訪問先 ID・`idempotencyKey` 欠落は `400` です。直近で成功した同一内容（別キー）は `409` です。同一 `idempotencyKey` の再送は成功結果を再利用し Slack を再送しません。Slack 本文とメンション先はサーバーだけが生成し、アプリからは指定できません。
 
 ログは日時・受付種別・訪問先 ID・成否のみです。氏名や会社名は出しません。
 
