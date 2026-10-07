@@ -58,6 +58,15 @@ describe("buildSlackMessage", () => {
     expect(delivery.mentionedUserIds).toEqual(["U012DELIVERY"]);
     expect(delivery.text).toContain("【配達員】");
     expect(delivery.text).not.toContain("U012INTERVIEW");
+
+    const other = buildSlackMessage({
+      request: { type: "other" },
+      interviewMentionUserIds: ["U012INTERVIEW"],
+      deliveryMentionUserIds: ["U012DELIVERY"]
+    });
+    expect(other.mentionedUserIds).toEqual(["U012DELIVERY"]);
+    expect(other.text).toContain("【その他】");
+    expect(other.text).not.toContain("U012INTERVIEW");
   });
 });
 

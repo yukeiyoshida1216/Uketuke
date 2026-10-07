@@ -1,12 +1,17 @@
 [
   {
-    "id": "yamada",
-    "displayName": "山田 太郎",
-    "slackUserId": "U011YAMADA"
+    "id": "nosaka",
+    "displayName": "野坂 星司",
+    "slackUserId": "U011NOSAKA"
   },
   {
-    "id": "sato",
-    "displayName": "佐藤 花子",
-    "slackUserId": "U011SATO"
+    "id": "yanase",
+    "displayName": "梁瀬 聖太",
+    "slackUserId": "U011YANASE"
+  },
+  {
+    "id": "ito",
+    "displayName": "伊藤 功",
+    "slackUserId": "U011ITO"
   }
 ]

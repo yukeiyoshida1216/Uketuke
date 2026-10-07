@@ -1,6 +1,5 @@
 package com.officereception.app.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -24,11 +23,11 @@ fun ReceptionApp(viewModel: ReceptionViewModel = viewModel()) {
     val interactionLocked = state.screen == Screen.Loading ||
         state.screen == Screen.Sending ||
         state.screen == Screen.Success
+    val copy = AppConfig.copy(state.language)
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppConfig.Colors.White)
             .then(
                 if (interactionLocked) {
                     Modifier
@@ -45,14 +44,27 @@ fun ReceptionApp(viewModel: ReceptionViewModel = viewModel()) {
             )
     ) {
         when (state.screen) {
-            Screen.Loading -> StatusScreen(message = state.statusMessage.ifEmpty { AppConfig.Text.loading })
-            Screen.Welcome -> WelcomeScreen(onTap = viewModel::onWelcomeTapped)
-            Screen.Menu -> MenuScreen(
-                onGeneral = viewModel::onSelectGeneral,
-                onInterview = viewModel::onSelectInterview,
+            Screen.Loading -> StatusScreen(
+                message = state.statusMessage.ifEmpty { copy.loading },
+                showProgress = true
+            )
+            Screen.Welcome -> WelcomeScreen(
+                language = state.language,
+                onLanguageChange = viewModel::onLanguageChange,
+                onTap = viewModel::onWelcomeTapped,
                 onDelivery = viewModel::onSelectDelivery
             )
+            Screen.Menu -> MenuScreen(
+                language = state.language,
+                onLanguageChange = viewModel::onLanguageChange,
+                onGeneral = viewModel::onSelectGeneral,
+                onInterview = viewModel::onSelectInterview,
+                onOther = viewModel::onSelectOther,
+                onBack = viewModel::onBack
+            )
             Screen.GeneralForm -> GeneralFormScreen(
+                language = state.language,
+                onLanguageChange = viewModel::onLanguageChange,
                 companyName = state.companyName,
                 visitorName = state.visitorName,
                 partySize = state.partySize,
@@ -60,12 +72,14 @@ fun ReceptionApp(viewModel: ReceptionViewModel = viewModel()) {
                 selectedDestinationId = state.selectedDestinationId,
                 onCompanyNameChange = viewModel::onCompanyNameChange,
                 onVisitorNameChange = viewModel::onVisitorNameChange,
-                onPartySizeChange = viewModel::onPartySizeChange,
+                onPartySizeSelected = viewModel::onPartySizeSelected,
                 onDestinationSelected = viewModel::onDestinationPicked,
                 onSubmit = viewModel::onGeneralSubmit,
                 onBack = viewModel::onBack
             )
             Screen.InterviewForm -> InterviewFormScreen(
+                language = state.language,
+                onLanguageChange = viewModel::onLanguageChange,
                 purpose = state.interviewPurpose,
                 visitorName = state.visitorName,
                 onPurposeSelected = viewModel::onInterviewPurposeSelected,
@@ -73,9 +87,13 @@ fun ReceptionApp(viewModel: ReceptionViewModel = viewModel()) {
                 onSubmit = viewModel::onInterviewSubmit,
                 onBack = viewModel::onBack
             )
-            Screen.Sending -> StatusScreen(message = state.statusMessage)
-            Screen.Success -> StatusScreen(message = AppConfig.Text.success)
+            Screen.Sending -> StatusScreen(
+                message = state.statusMessage.ifEmpty { copy.sending },
+                showProgress = true
+            )
+            Screen.Success -> StatusScreen(message = copy.success, showProgress = false)
             Screen.Error -> ErrorScreen(
+                language = state.language,
                 title = state.errorTitle,
                 body = state.errorBody,
                 onRetry = viewModel::onRetry,

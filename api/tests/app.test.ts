@@ -20,7 +20,7 @@ describe("HTTP API", () => {
     expect(JSON.stringify(response.body)).not.toContain("U011YAMADA");
   });
 
-  it("notifies general, interview, and delivery in dry run without calling Slack", async () => {
+  it("notifies general, interview, delivery, and other in dry run without calling Slack", async () => {
     const { request, sent } = testApp({ config: testConfig({ dryRun: true }) });
 
     const general = await request.post("/notify").send(
@@ -40,10 +40,12 @@ describe("HTTP API", () => {
       })
     );
     const delivery = await request.post("/notify").send(withKey({ type: "delivery" }));
+    const other = await request.post("/notify").send(withKey({ type: "other" }));
 
     expect(general.status).toBe(200);
     expect(interview.status).toBe(200);
     expect(delivery.status).toBe(200);
+    expect(other.status).toBe(200);
     expect(general.body).toEqual({ ok: true, dryRun: true });
     expect(sent).toEqual([]);
   });

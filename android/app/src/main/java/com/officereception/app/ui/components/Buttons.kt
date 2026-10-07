@@ -33,10 +33,10 @@ fun PrimaryButton(
             .heightIn(min = 88.dp),
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = AppConfig.Colors.Yamabuki,
-            contentColor = AppConfig.Colors.Ink,
-            disabledContainerColor = AppConfig.Colors.Yellow.copy(alpha = 0.5f),
-            disabledContentColor = AppConfig.Colors.Ink.copy(alpha = 0.4f)
+            containerColor = AppConfig.Colors.Accent,
+            contentColor = AppConfig.Colors.White,
+            disabledContainerColor = AppConfig.Colors.Accent.copy(alpha = 0.45f),
+            disabledContentColor = AppConfig.Colors.White.copy(alpha = 0.7f)
         ),
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 16.dp)
     ) {
@@ -78,8 +78,8 @@ fun SelectableButton(
             .heightIn(min = 80.dp),
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (selected) AppConfig.Colors.Yamabuki else AppConfig.Colors.Yellow,
-            contentColor = AppConfig.Colors.Ink
+            containerColor = if (selected) AppConfig.Colors.Accent else AppConfig.Colors.Card,
+            contentColor = if (selected) AppConfig.Colors.White else AppConfig.Colors.Ink
         ),
         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp)
     ) {

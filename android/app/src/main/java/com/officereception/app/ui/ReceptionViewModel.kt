@@ -3,6 +3,7 @@ package com.officereception.app.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.officereception.app.config.AppConfig
+import com.officereception.app.config.AppLanguage
 import com.officereception.app.data.ReceptionRepository
 import com.officereception.app.domain.FormValidator
 import com.officereception.app.domain.InterviewPurpose
@@ -49,6 +50,12 @@ class ReceptionViewModel(
         restartIdleTimer()
     }
 
+    fun onLanguageChange(language: AppLanguage) {
+        if (!isInteractionEnabled()) return
+        onUserActivity()
+        _state.update { it.copy(language = language) }
+    }
+
     fun onWelcomeTapped() {
         if (!isInteractionEnabled()) return
         onUserActivity()
@@ -73,6 +80,12 @@ class ReceptionViewModel(
         _state.update { it.copy(screen = Screen.InterviewForm) }
     }
 
+    fun onSelectOther() {
+        if (!isInteractionEnabled()) return
+        onUserActivity()
+        submit(NotifyPayload.Other)
+    }
+
     fun onSelectDelivery() {
         if (!isInteractionEnabled()) return
         onUserActivity()
@@ -91,11 +104,14 @@ class ReceptionViewModel(
         _state.update { it.copy(visitorName = value) }
     }
 
-    fun onPartySizeChange(value: String) {
+    fun onPartySizeSelected(value: String) {
         if (!isInteractionEnabled()) return
         onUserActivity()
-        val filtered = value.filter { it.isDigit() }.take(2)
-        _state.update { it.copy(partySize = filtered) }
+        _state.update { it.copy(partySize = value) }
+    }
+
+    fun onPartySizeChange(value: String) {
+        onPartySizeSelected(value.filter { it.isDigit() }.take(2))
     }
 
     fun onDestinationPicked(id: String) {
@@ -150,6 +166,7 @@ class ReceptionViewModel(
         onUserActivity()
         _state.update { current ->
             when (current.screen) {
+                Screen.Menu -> current.copy(screen = Screen.Welcome)
                 Screen.GeneralForm, Screen.InterviewForm -> current.copy(screen = Screen.Menu)
                 else -> current
             }
@@ -176,6 +193,8 @@ class ReceptionViewModel(
         }
     }
 
+    private fun copy(): AppConfig.Copy = AppConfig.copy(_state.value.language)
+
     private fun isInteractionEnabled(): Boolean {
         val screen = _state.value.screen
         return screen != Screen.Loading &&
@@ -190,7 +209,7 @@ class ReceptionViewModel(
         _state.update {
             it.copy(
                 screen = Screen.Loading,
-                statusMessage = AppConfig.Text.loading,
+                statusMessage = AppConfig.copy(it.language).loading,
                 canRetry = false
             )
         }
@@ -223,6 +242,7 @@ class ReceptionViewModel(
                 restartIdleTimer()
             } catch (_: Exception) {
                 pendingAction = PendingAction.LoadDestinations
+                val messages = copy()
                 _state.update {
                     it.copy(
                         destinations = emptyList(),
@@ -230,8 +250,8 @@ class ReceptionViewModel(
                         screen = Screen.Error,
                         canRetry = true,
                         showErrorHome = false,
-                        errorTitle = AppConfig.Text.errorTitle,
-                        errorBody = AppConfig.Text.destinationsError
+                        errorTitle = messages.errorTitle,
+                        errorBody = messages.destinationsError
                     )
                 }
             }
@@ -248,7 +268,12 @@ class ReceptionViewModel(
         pendingAction = PendingAction.Notify(payload, key)
         idleJob?.cancel()
         completeJob?.cancel()
-        _state.update { it.copy(screen = Screen.Sending, statusMessage = AppConfig.Text.sending) }
+        _state.update {
+            it.copy(
+                screen = Screen.Sending,
+                statusMessage = AppConfig.copy(it.language).sending
+            )
+        }
         viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) { repository.notify(payload, key) }
@@ -257,13 +282,14 @@ class ReceptionViewModel(
                 startCompleteTimer()
             } catch (_: Exception) {
                 submitGuard.endFailure()
+                val messages = copy()
                 _state.update {
                     it.copy(
                         screen = Screen.Error,
                         canRetry = true,
                         showErrorHome = true,
-                        errorTitle = AppConfig.Text.errorTitle,
-                        errorBody = AppConfig.Text.errorBody
+                        errorTitle = messages.errorTitle,
+                        errorBody = messages.errorBody
                     )
                 }
                 restartIdleTimer()
@@ -308,6 +334,7 @@ class ReceptionViewModel(
         }
         _state.value = ReceptionUiState(
             screen = Screen.Welcome,
+            language = cached.language,
             destinations = cached.destinations,
             destinationsReady = true
         )

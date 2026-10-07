@@ -1,4 +1,4 @@
-export const RECEPTION_TYPES = ["general", "interview", "delivery"] as const;
+export const RECEPTION_TYPES = ["general", "interview", "delivery", "other"] as const;
 export type ReceptionType = (typeof RECEPTION_TYPES)[number];
 
 export const INTERVIEW_PURPOSES = ["interview", "training"] as const;
@@ -37,10 +37,16 @@ export type DeliveryNotifyRequest = {
   idempotencyKey: string;
 };
 
+export type OtherNotifyRequest = {
+  type: "other";
+  idempotencyKey: string;
+};
+
 export type NotifyRequest =
   | GeneralNotifyRequest
   | InterviewNotifyRequest
-  | DeliveryNotifyRequest;
+  | DeliveryNotifyRequest
+  | OtherNotifyRequest;
 
 export type NotifySuccess = {
   ok: true;

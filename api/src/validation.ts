@@ -39,10 +39,16 @@ const deliverySchema = z.object({
   idempotencyKey
 });
 
+const otherSchema = z.object({
+  type: z.literal("other"),
+  idempotencyKey
+});
+
 const notifySchema = z.discriminatedUnion("type", [
   generalSchema,
   interviewSchema,
-  deliverySchema
+  deliverySchema,
+  otherSchema
 ]);
 
 export class HttpError extends Error {

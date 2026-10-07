@@ -1,6 +1,7 @@
 package com.officereception.app.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,22 +9,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.officereception.app.config.AppConfig
+import com.officereception.app.config.AppLanguage
 import com.officereception.app.domain.FormValidator
 import com.officereception.app.domain.InterviewPurpose
-import com.officereception.app.ui.components.PrimaryButton
-import com.officereception.app.ui.components.ReceptionField
-import com.officereception.app.ui.components.SecondaryButton
-import com.officereception.app.ui.components.SelectableButton
+import com.officereception.app.ui.components.BackChip
+import com.officereception.app.ui.components.ChoiceChip
+import com.officereception.app.ui.components.CornerMark
+import com.officereception.app.ui.components.LanguageToggle
+import com.officereception.app.ui.components.SoftBackground
+import com.officereception.app.ui.components.SoftTextField
+import com.officereception.app.ui.components.SubmitButton
 
 @Composable
 fun InterviewFormScreen(
+    language: AppLanguage,
+    onLanguageChange: (AppLanguage) -> Unit,
     purpose: InterviewPurpose?,
     visitorName: String,
     onPurposeSelected: (InterviewPurpose) -> Unit,
@@ -31,53 +40,80 @@ fun InterviewFormScreen(
     onSubmit: () -> Unit,
     onBack: () -> Unit
 ) {
+    val copy = AppConfig.copy(language)
     val canSubmit = FormValidator.canSubmitInterview(purpose, visitorName)
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            text = AppConfig.Text.interviewTitle,
-            fontSize = 32.sp,
-            color = AppConfig.Colors.Ink
-        )
-        Text(
-            text = AppConfig.Text.purposeTitle,
-            fontSize = 22.sp,
-            color = AppConfig.Colors.Ink
-        )
-        Row(modifier = Modifier.fillMaxWidth()) {
-            SelectableButton(
-                text = AppConfig.Text.purposeInterview,
-                selected = purpose == InterviewPurpose.Interview,
-                onClick = { onPurposeSelected(InterviewPurpose.Interview) },
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            SelectableButton(
-                text = AppConfig.Text.purposeTraining,
-                selected = purpose == InterviewPurpose.Training,
-                onClick = { onPurposeSelected(InterviewPurpose.Training) },
-                modifier = Modifier.weight(1f)
-            )
-        }
-        ReceptionField(AppConfig.Text.visitorName, visitorName, onVisitorNameChange)
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(modifier = Modifier.fillMaxWidth()) {
-            SecondaryButton(
-                text = AppConfig.Text.back,
+
+    SoftBackground {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(28.dp)
+        ) {
+            BackChip(
+                text = copy.back,
                 onClick = onBack,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.align(Alignment.TopStart)
             )
-            Spacer(modifier = Modifier.width(16.dp))
-            PrimaryButton(
-                text = AppConfig.Text.call,
-                onClick = onSubmit,
-                enabled = canSubmit,
-                modifier = Modifier.weight(1.4f)
+            LanguageToggle(
+                language = language,
+                onLanguageChange = onLanguageChange,
+                copy = copy,
+                modifier = Modifier.align(Alignment.TopEnd)
             )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 64.dp, bottom = 48.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(18.dp)
+            ) {
+                Text(
+                    text = copy.interviewTitle,
+                    color = AppConfig.Colors.Ink,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                SoftTextField(
+                    label = copy.visitorName,
+                    value = visitorName,
+                    onValueChange = onVisitorNameChange,
+                    placeholder = copy.namePlaceholder
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    ChoiceChip(
+                        text = copy.purposeInterview,
+                        selected = purpose == InterviewPurpose.Interview,
+                        onClick = { onPurposeSelected(InterviewPurpose.Interview) },
+                        modifier = Modifier.weight(1f)
+                    )
+                    ChoiceChip(
+                        text = copy.purposeBriefing,
+                        selected = purpose == InterviewPurpose.Training,
+                        onClick = { onPurposeSelected(InterviewPurpose.Training) },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Text(
+                    text = copy.interviewFormHint,
+                    color = AppConfig.Colors.InkMuted,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                SubmitButton(
+                    text = copy.submit,
+                    onClick = onSubmit,
+                    enabled = canSubmit,
+                    modifier = Modifier.fillMaxWidth(0.55f)
+                )
+            }
+
+            CornerMark(modifier = Modifier.align(Alignment.BottomStart))
         }
     }
 }

@@ -45,6 +45,14 @@ export function buildSlackMessage(input: {
     return { text, mentionedUserIds };
   }
 
+  if (request.type === "other") {
+    const mentionedUserIds = input.deliveryMentionUserIds;
+    const text = ["【その他】来訪がありました", mentionLine(mentionedUserIds)]
+      .filter((line) => line.length > 0)
+      .join("\n");
+    return { text, mentionedUserIds };
+  }
+
   const mentionedUserIds = input.deliveryMentionUserIds;
   const text = ["【配達員】来訪がありました", mentionLine(mentionedUserIds)]
     .filter((line) => line.length > 0)

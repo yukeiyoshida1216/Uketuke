@@ -51,6 +51,13 @@ sealed class NotifyPayload {
         override fun toJson(idempotencyKey: String): String =
             """{"type":"delivery","idempotencyKey":${jsonString(idempotencyKey)}}"""
     }
+
+    data object Other : NotifyPayload() {
+        override val type: String = "other"
+        override fun fingerprint(): String = "other"
+        override fun toJson(idempotencyKey: String): String =
+            """{"type":"other","idempotencyKey":${jsonString(idempotencyKey)}}"""
+    }
 }
 
 fun jsonString(value: String): String {
