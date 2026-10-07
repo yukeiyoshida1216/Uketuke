@@ -240,7 +240,8 @@
   --kiosk-delivery-size: min(22vh, 13.5rem);
   --kiosk-corner: clamp(0.85rem, 2.2vh, 1.35rem);
   --kiosk-corner-x: clamp(0.85rem, 2.2vw, 1.35rem);
-  --kiosk-choice-label: clamp(2.05rem, 5.5vh, 3.35rem);
+  --kiosk-choice-label: clamp(2.05rem, 5.5vh, 3.8rem);
+  --kiosk-lang-block: clamp(3.8rem, 8.3vh, 5.7rem);
   --kiosk-home-block: calc(var(--kiosk-choice-label) * 2.3 + 4px);
 }
 
@@ -254,7 +255,7 @@
 }
 
 .kiosk-root .kiosk-delivery {
-  top: calc(var(--kiosk-corner) + 3.8rem + 0.65rem);
+  top: calc(var(--kiosk-corner) + var(--kiosk-lang-block) + 0.65rem);
   right: var(--kiosk-corner-x);
   width: var(--kiosk-delivery-size) !important;
   height: var(--kiosk-delivery-size) !important;
@@ -316,6 +317,11 @@
     width: calc((100% - 0.75rem) * 1.5 / 2.2);
   }
 
+  .kiosk-root .kiosk-send,
+  .kiosk-root .kiosk-purpose {
+    min-height: clamp(4.25rem, 14vh, 9.5rem) !important;
+  }
+
   .kiosk-root .kiosk-send {
     width: calc((100% - 0.75rem) * 0.7 / 2.2) !important;
   }
@@ -365,9 +371,9 @@
 .kiosk-root .kiosk-lang button {
   width: auto !important;
   height: auto !important;
-  min-height: 3.8rem !important;
-  padding: 0.58rem 1.2rem !important;
-  font-size: clamp(1.32rem, 2.8vh, 1.7rem) !important;
+  min-height: var(--kiosk-lang-block) !important;
+  padding: 0.7rem 1.45rem !important;
+  font-size: clamp(1.32rem, 2.8vh, 2.05rem) !important;
   line-height: 1.1 !important;
   box-shadow: none !important;
 }
@@ -375,7 +381,7 @@
 .kiosk-root input,
 .kiosk-root button.kiosk-select,
 .kiosk-root button.kiosk-select-option {
-  height: clamp(3.1rem, 8vh, 4.5rem) !important;
+  height: clamp(3.1rem, 8vh, 5.5rem) !important;
   font-size: clamp(1.2rem, 2.6vh, 1.75rem) !important;
   font-weight: 400 !important;
 }

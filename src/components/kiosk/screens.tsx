@@ -351,7 +351,7 @@ export function GeneralScreen({
                   type="button"
                   tone={visitorCount === choice.id ? "primary" : "white"}
                   aria-pressed={visitorCount === choice.id}
-                  style={{ minHeight: "clamp(3.1rem, 8vh, 4.4rem)" }}
+                  style={{ minHeight: "clamp(3.1rem, 8vh, 5.6rem)" }}
                   onClick={() => onVisitorCount(choice.id)}
                 >
                   {countLabel[choice.id]}
@@ -516,6 +516,7 @@ export function InterviewScreen({
                   type="button"
                   tone={purpose === item.id ? "primary" : "white"}
                   aria-pressed={purpose === item.id}
+                  className="kiosk-purpose"
                   onClick={() => onPurpose(item.id)}
                 >
                   {purposeLabel[item.id]}
