@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -89,6 +90,7 @@ fun GeneralFormScreen(
                 Column(
                     modifier = Modifier
                         .weight(1f)
+                        .widthIn(max = 720.dp)
                         .fillMaxWidth()
                         .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -156,6 +158,7 @@ fun GeneralFormScreen(
                     onClick = onSubmit,
                     enabled = canProceed,
                     modifier = Modifier
+                        .widthIn(max = 400.dp)
                         .fillMaxWidth(0.55f)
                         .padding(bottom = 28.dp)
                 )

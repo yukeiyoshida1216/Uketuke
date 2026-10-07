@@ -17,12 +17,10 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,18 +41,13 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import com.officereception.app.config.AppConfig
 import com.officereception.app.config.AppLanguage
 import com.officereception.app.domain.Destination
@@ -93,7 +86,7 @@ fun LanguageToggle(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         PillButton(
             text = copy.langJa,
@@ -576,9 +569,6 @@ fun SoftDropdown(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var fieldWidthPx by remember { mutableStateOf(0) }
-    var fieldHeightPx by remember { mutableStateOf(0) }
-    val density = LocalDensity.current
     val selectedLabel = destinations
         .firstOrNull { it.id == selectedDestinationId }
         ?.displayName
@@ -594,104 +584,83 @@ fun SoftDropdown(
             fontWeight = FontWeight.Medium
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Row(
+
+        // Expanded list sits above the closed field (matches mockup).
+        if (expanded) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .onGloballyPositioned { coords ->
-                        fieldWidthPx = coords.size.width
-                        fieldHeightPx = coords.size.height
-                    }
-                    .shadow(4.dp, shape, spotColor = Color(0x22000000), ambientColor = Color(0x12000000))
-                    .clip(shape)
+                    .shadow(
+                        8.dp,
+                        listShape,
+                        spotColor = Color(0x28000000),
+                        ambientColor = Color(0x14000000)
+                    )
+                    .clip(listShape)
                     .background(AppConfig.Colors.Card)
-                    .border(1.5.dp, AppConfig.Colors.AccentBorder, shape)
-                    .clickable { expanded = !expanded }
-                    .padding(horizontal = 18.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .border(1.5.dp, AppConfig.Colors.AccentBorder, listShape)
             ) {
-                Text(
-                    text = selectedLabel.ifEmpty { placeholder },
-                    color = if (selectedLabel.isEmpty()) {
-                        AppConfig.Colors.InkMuted.copy(alpha = 0.65f)
-                    } else {
-                        AppConfig.Colors.Ink
-                    },
-                    fontSize = 20.sp,
-                    modifier = Modifier.weight(1f)
-                )
-                ChevronDown(modifier = Modifier.size(20.dp))
-            }
-
-            if (expanded && fieldWidthPx > 0) {
-                val gapPx = with(density) { 6.dp.roundToPx() }
-                val listWidth = with(density) { fieldWidthPx.toDp() }
-                // Match mock: options panel floats above the closed field.
-                val itemHeight = 56.dp
-                val estimatedListHeight = with(density) {
-                    (itemHeight * destinations.size.coerceAtLeast(1) + 4.dp)
-                        .coerceAtMost(280.dp)
-                        .roundToPx()
-                }
-                Popup(
-                    alignment = Alignment.TopStart,
-                    offset = IntOffset(0, -(estimatedListHeight + gapPx)),
-                    onDismissRequest = { expanded = false },
-                    properties = PopupProperties(focusable = true)
-                ) {
-                    Column(
+                destinations.forEachIndexed { index, destination ->
+                    val selected = destination.id == selectedDestinationId
+                    Box(
                         modifier = Modifier
-                            .width(listWidth)
-                            .shadow(
-                                10.dp,
-                                listShape,
-                                spotColor = Color(0x33000000),
-                                ambientColor = Color(0x18000000)
+                            .fillMaxWidth()
+                            .heightIn(min = 56.dp)
+                            .background(
+                                if (selected) {
+                                    AppConfig.Colors.Accent.copy(alpha = 0.12f)
+                                } else {
+                                    Color.Transparent
+                                }
                             )
-                            .clip(listShape)
-                            .background(AppConfig.Colors.Card)
-                            .border(1.5.dp, AppConfig.Colors.AccentBorder, listShape)
-                            .heightIn(max = 280.dp)
-                            .verticalScroll(rememberScrollState())
+                            .clickable {
+                                onDestinationSelected(destination.id)
+                                expanded = false
+                            }
+                            .padding(horizontal = 20.dp, vertical = 16.dp),
+                        contentAlignment = Alignment.CenterStart
                     ) {
-                        destinations.forEachIndexed { index, destination ->
-                            val selected = destination.id == selectedDestinationId
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .heightIn(min = itemHeight)
-                                    .background(
-                                        if (selected) {
-                                            AppConfig.Colors.Accent.copy(alpha = 0.12f)
-                                        } else {
-                                            Color.Transparent
-                                        }
-                                    )
-                                    .clickable {
-                                        onDestinationSelected(destination.id)
-                                        expanded = false
-                                    }
-                                    .padding(horizontal = 20.dp, vertical = 14.dp),
-                                contentAlignment = Alignment.CenterStart
-                            ) {
-                                Text(
-                                    text = destination.displayName,
-                                    color = AppConfig.Colors.Ink,
-                                    fontSize = 20.sp,
-                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium
-                                )
-                            }
-                            if (index < destinations.lastIndex) {
-                                HorizontalDivider(
-                                    thickness = 1.dp,
-                                    color = AppConfig.Colors.AccentBorder.copy(alpha = 0.55f),
-                                    modifier = Modifier.padding(horizontal = 12.dp)
-                                )
-                            }
-                        }
+                        Text(
+                            text = destination.displayName,
+                            color = AppConfig.Colors.Ink,
+                            fontSize = 20.sp,
+                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium
+                        )
+                    }
+                    if (index < destinations.lastIndex) {
+                        HorizontalDivider(
+                            thickness = 1.dp,
+                            color = AppConfig.Colors.Divider,
+                            modifier = Modifier.padding(horizontal = 14.dp)
+                        )
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .shadow(4.dp, shape, spotColor = Color(0x22000000), ambientColor = Color(0x12000000))
+                .clip(shape)
+                .background(AppConfig.Colors.Card)
+                .border(1.5.dp, AppConfig.Colors.AccentBorder, shape)
+                .clickable { expanded = !expanded }
+                .padding(horizontal = 18.dp, vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = selectedLabel.ifEmpty { placeholder },
+                color = if (selectedLabel.isEmpty()) {
+                    AppConfig.Colors.InkMuted.copy(alpha = 0.65f)
+                } else {
+                    AppConfig.Colors.Ink
+                },
+                fontSize = 20.sp,
+                modifier = Modifier.weight(1f)
+            )
+            ChevronDown(modifier = Modifier.size(20.dp))
         }
     }
 }

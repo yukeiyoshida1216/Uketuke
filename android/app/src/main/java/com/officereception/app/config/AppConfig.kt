@@ -22,15 +22,16 @@ object AppConfig {
     }
 
     object Colors {
-        val CreamTop = Color(0xFFFFFBF0)
-        val CreamCenter = Color(0xFFFFF8E4)
-        val CreamBottom = Color(0xFFFFEFC0)
-        val Accent = Color(0xFFE8A020)
+        val CreamTop = Color(0xFFFFFBF2)
+        val CreamCenter = Color(0xFFFFF6DC)
+        val CreamBottom = Color(0xFFFFEFB8)
+        val Accent = Color(0xFFF0A020)
         val AccentBorder = Color(0xFFF0C56A)
         val Card = Color(0xFFFFFFFF)
         val Ink = Color(0xFF4A3E31)
         val InkMuted = Color(0xFF8A8178)
-        val Border = Color(0xFFF0D9A8)
+        val Border = Color(0xFFE8D4A8)
+        val Divider = Color(0xFFE8DCC8)
         val Error = Color(0xFFB3261E)
         val White = Color(0xFFFFFFFF)
         val Yellow = CreamBottom

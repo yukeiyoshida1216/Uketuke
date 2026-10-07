@@ -231,7 +231,7 @@
       font-size: 14px;
       font-weight: 600;
     }
-    .field input, .field select {
+    .field input {
       min-height: 52px;
       border: 1.5px solid var(--gold);
       border-radius: 16px;
@@ -241,28 +241,53 @@
       background: var(--card);
       box-shadow: 0 3px 10px rgba(0,0,0,.08);
     }
-    .field select {
-      appearance: none;
-      -webkit-appearance: none;
-      background-image:
-        linear-gradient(45deg, transparent 50%, var(--accent) 50%),
-        linear-gradient(135deg, var(--accent) 50%, transparent 50%);
-      background-position:
-        calc(100% - 22px) calc(50% - 3px),
-        calc(100% - 16px) calc(50% - 3px);
-      background-size: 6px 6px, 6px 6px;
-      background-repeat: no-repeat;
-      padding-right: 40px;
-    }
-    .field select:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: 1px;
-    }
-    .field select option {
+    .soft-dropdown { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+    .soft-dropdown-list {
+      display: none;
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
       background: var(--card);
-      color: var(--ink);
+      box-shadow: 0 8px 18px rgba(0,0,0,.12);
+      overflow: hidden;
+    }
+    .soft-dropdown.open .soft-dropdown-list { display: block; }
+    .soft-dropdown-option {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      padding: 16px 20px;
       font-size: 18px;
-      padding: 12px 16px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      border-bottom: 1px solid #e8dcc8;
+    }
+    .soft-dropdown-option:last-child { border-bottom: 0; }
+    .soft-dropdown-option.selected,
+    .soft-dropdown-option:hover {
+      background: rgba(232, 160, 32, 0.12);
+    }
+    .soft-dropdown-trigger {
+      min-height: 52px;
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
+      padding: 0 16px;
+      font-size: 18px;
+      color: var(--ink);
+      background: var(--card);
+      box-shadow: 0 3px 10px rgba(0,0,0,.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      width: 100%;
+    }
+    .soft-dropdown-trigger .placeholder { color: rgba(138, 129, 120, 0.65); }
+    .soft-dropdown-trigger .chevron {
+      color: var(--accent);
+      font-size: 14px;
+      line-height: 1;
     }
     .chips {
       width: min(100%, 640px);
@@ -439,14 +464,21 @@
               <button type="button" class="chip" data-party="4">4人以上</button>
             </div>
           </div>
-          <label class="field">担当者名
-            <select id="destination">
-              <option value="">選択してください</option>
-              <option value="nosaka">野坂 星司</option>
-              <option value="yanase">梁瀬 聖太</option>
-              <option value="ito">伊藤 功</option>
-            </select>
-          </label>
+          <div class="field">
+            <span id="destinationLabel">担当者名</span>
+            <div class="soft-dropdown" id="destinationDropdown">
+              <div class="soft-dropdown-list" id="destinationList" role="listbox">
+                <button type="button" class="soft-dropdown-option" data-value="nosaka">野坂 星司</button>
+                <button type="button" class="soft-dropdown-option" data-value="yanase">梁瀬 聖太</button>
+                <button type="button" class="soft-dropdown-option" data-value="ito">伊藤 功</button>
+              </div>
+              <button type="button" class="soft-dropdown-trigger" id="destinationTrigger" aria-haspopup="listbox">
+                <span class="placeholder" id="destinationText">選択してください</span>
+                <span class="chevron">▼</span>
+              </button>
+              <input type="hidden" id="destination" value="" />
+            </div>
+          </div>
           <p class="note" id="requiredNote">会社名・氏名・人数・担当者名はすべて必須です</p>
           <button type="button" class="submit" id="generalNext" disabled>送信する</button>
         </div>
@@ -502,6 +534,9 @@
       const company = document.getElementById("company");
       const visitorName = document.getElementById("visitorName");
       const destination = document.getElementById("destination");
+      const destinationDropdown = document.getElementById("destinationDropdown");
+      const destinationTrigger = document.getElementById("destinationTrigger");
+      const destinationText = document.getElementById("destinationText");
       const interviewName = document.getElementById("interviewName");
       const purposeInterview = document.getElementById("purposeInterview");
       const purposeTraining = document.getElementById("purposeTraining");
@@ -514,6 +549,7 @@
       let busy = false;
       let idleTimer = null;
       let completeTimer = null;
+      const destinationPlaceholder = { ja: "選択してください", en: "Please select" };
 
       const copy = {
         ja: {
@@ -579,9 +615,27 @@
         generalNext.textContent = c.submit;
         interviewSubmit.textContent = c.submit;
         document.getElementById("successMsg").textContent = c.success;
+        document.getElementById("destinationLabel").textContent =
+          language === "ja" ? "担当者名" : "Host";
+        if (!destination.value) {
+          destinationText.textContent = destinationPlaceholder[language];
+          destinationText.classList.add("placeholder");
+        }
         [...document.querySelectorAll("#partyChips .chip")].forEach((chip, i) => {
           chip.textContent = c.party[i];
         });
+      }
+
+      function setDestination(value, label) {
+        destination.value = value;
+        destinationText.textContent = label || destinationPlaceholder[language];
+        destinationText.classList.toggle("placeholder", !value);
+        document.querySelectorAll(".soft-dropdown-option").forEach((opt) => {
+          opt.classList.toggle("selected", opt.getAttribute("data-value") === value);
+        });
+        destinationDropdown.classList.remove("open");
+        updateGeneral();
+        resetIdle();
       }
 
       function tickClock() {
@@ -614,7 +668,7 @@
         company.value = "";
         visitorName.value = "";
         partySize = "";
-        destination.value = "";
+        setDestination("", "");
         interviewName.value = "";
         interviewPurpose = null;
         document.querySelectorAll("#partyChips .chip").forEach((c) => c.classList.remove("selected"));
@@ -752,7 +806,20 @@
 
       company.addEventListener("input", () => { updateGeneral(); resetIdle(); });
       visitorName.addEventListener("input", () => { updateGeneral(); resetIdle(); });
-      destination.addEventListener("change", () => { updateGeneral(); resetIdle(); });
+      destinationTrigger.addEventListener("click", () => {
+        destinationDropdown.classList.toggle("open");
+        resetIdle();
+      });
+      document.querySelectorAll(".soft-dropdown-option").forEach((opt) => {
+        opt.addEventListener("click", () => {
+          setDestination(opt.getAttribute("data-value"), opt.textContent.trim());
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (!destinationDropdown.contains(e.target)) {
+          destinationDropdown.classList.remove("open");
+        }
+      });
       interviewName.addEventListener("input", () => { updateInterview(); resetIdle(); });
 
       document.getElementById("app").addEventListener("pointerdown", resetIdle);
