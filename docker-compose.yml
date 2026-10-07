@@ -11,6 +11,8 @@ services:
       SLACK_MENTION_DELIVERY: "${SLACK_MENTION_DELIVERY:-U012DELIVERY}"
       DESTINATIONS_PATH: /app/destinations.json
       DUPLICATE_WINDOW_MS: "10000"
+      SLACK_TIMEOUT_MS: "8000"
+      IDEMPOTENCY_WINDOW_MS: "10000"
     # 実運用時は api/destinations.json を用意してマウントする
     # volumes:
     #   - ./api/destinations.json:/app/destinations.json:ro

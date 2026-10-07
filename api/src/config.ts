@@ -38,6 +38,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     slackWebhookUrl: requiredInProd("SLACK_WEBHOOK_URL", env.SLACK_WEBHOOK_URL, dryRun),
     destinationsPath,
     duplicateWindowMs: Number.parseInt(env.DUPLICATE_WINDOW_MS ?? "10000", 10),
+    slackTimeoutMs: Number.parseInt(env.SLACK_TIMEOUT_MS ?? "8000", 10),
+    idempotencyWindowMs: Number.parseInt(
+      env.IDEMPOTENCY_WINDOW_MS ?? env.DUPLICATE_WINDOW_MS ?? "10000",
+      10
+    ),
     interviewMentionUserIds: parseIdList(env.SLACK_MENTION_INTERVIEW),
     deliveryMentionUserIds: parseIdList(env.SLACK_MENTION_DELIVERY)
   };

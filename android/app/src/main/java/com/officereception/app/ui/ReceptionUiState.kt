@@ -33,6 +33,9 @@ data class ReceptionUiState(
 )
 
 sealed class PendingAction {
-    data class Notify(val payload: NotifyPayload) : PendingAction()
+    data class Notify(
+        val payload: NotifyPayload,
+        val idempotencyKey: String
+    ) : PendingAction()
     data object LoadDestinations : PendingAction()
 }

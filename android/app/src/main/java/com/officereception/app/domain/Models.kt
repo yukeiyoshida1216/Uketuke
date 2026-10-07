@@ -13,7 +13,7 @@ enum class InterviewPurpose(val apiValue: String) {
 sealed class NotifyPayload {
     abstract val type: String
     abstract fun fingerprint(): String
-    abstract fun toJson(): String
+    abstract fun toJson(idempotencyKey: String): String
 
     data class General(
         val companyName: String,
@@ -27,8 +27,8 @@ sealed class NotifyPayload {
             return "general|$companyName|$visitorName|$partySize|$destinationId"
         }
 
-        override fun toJson(): String {
-            return """{"type":"general","companyName":${jsonString(companyName)},"visitorName":${jsonString(visitorName)},"partySize":$partySize,"destinationId":${jsonString(destinationId)}}"""
+        override fun toJson(idempotencyKey: String): String {
+            return """{"type":"general","companyName":${jsonString(companyName)},"visitorName":${jsonString(visitorName)},"partySize":$partySize,"destinationId":${jsonString(destinationId)},"idempotencyKey":${jsonString(idempotencyKey)}}"""
         }
     }
 
@@ -40,15 +40,16 @@ sealed class NotifyPayload {
 
         override fun fingerprint(): String = "interview|${purpose.apiValue}|$visitorName"
 
-        override fun toJson(): String {
-            return """{"type":"interview","purpose":${jsonString(purpose.apiValue)},"visitorName":${jsonString(visitorName)}}"""
+        override fun toJson(idempotencyKey: String): String {
+            return """{"type":"interview","purpose":${jsonString(purpose.apiValue)},"visitorName":${jsonString(visitorName)},"idempotencyKey":${jsonString(idempotencyKey)}}"""
         }
     }
 
     data object Delivery : NotifyPayload() {
         override val type: String = "delivery"
         override fun fingerprint(): String = "delivery"
-        override fun toJson(): String = """{"type":"delivery"}"""
+        override fun toJson(idempotencyKey: String): String =
+            """{"type":"delivery","idempotencyKey":${jsonString(idempotencyKey)}}"""
     }
 }
 

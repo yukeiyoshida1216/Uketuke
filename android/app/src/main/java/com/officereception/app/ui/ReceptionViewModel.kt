@@ -8,6 +8,7 @@ import com.officereception.app.domain.FormValidator
 import com.officereception.app.domain.InterviewPurpose
 import com.officereception.app.domain.NotifyPayload
 import com.officereception.app.domain.SubmitGuard
+import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -165,7 +166,7 @@ class ReceptionViewModel(
             is PendingAction.Notify -> {
                 if (requestInFlight) return
                 onUserActivity()
-                submit(action.payload)
+                submit(action.payload, action.idempotencyKey)
             }
             PendingAction.LoadDestinations -> {
                 showLoadingScreen()
@@ -237,19 +238,20 @@ class ReceptionViewModel(
         }
     }
 
-    private fun submit(payload: NotifyPayload) {
+    private fun submit(payload: NotifyPayload, idempotencyKey: String? = null) {
         if (requestInFlight) return
         if (!submitGuard.tryBegin(payload.fingerprint())) {
             return
         }
+        val key = idempotencyKey ?: UUID.randomUUID().toString()
         requestInFlight = true
-        pendingAction = PendingAction.Notify(payload)
+        pendingAction = PendingAction.Notify(payload, key)
         idleJob?.cancel()
         completeJob?.cancel()
         _state.update { it.copy(screen = Screen.Sending, statusMessage = AppConfig.Text.sending) }
         viewModelScope.launch {
             try {
-                withContext(Dispatchers.IO) { repository.notify(payload) }
+                withContext(Dispatchers.IO) { repository.notify(payload, key) }
                 submitGuard.endSuccess(payload.fingerprint())
                 _state.update { it.copy(screen = Screen.Success) }
                 startCompleteTimer()

@@ -1,6 +1,7 @@
 import express, { type ErrorRequestHandler, type Express } from "express";
 import { loadDestinations, toPublicDestinations } from "./destinations.js";
 import { DuplicateWindow } from "./duplicate.js";
+import { IdempotencyStore } from "./idempotency.js";
 import { toReceptionLog, writeReceptionLog } from "./logger.js";
 import { createNotifyService } from "./notify.js";
 import { createWebhookSlackClient } from "./slack.js";
@@ -12,9 +13,18 @@ export function createApp(input: {
   slack?: SlackClient;
   clock?: () => number;
 }): Express {
-  const slack = input.slack ?? createWebhookSlackClient(input.config.slackWebhookUrl);
-  const duplicates = new DuplicateWindow(input.config.duplicateWindowMs, input.clock);
-  const notifyService = createNotifyService({ config: input.config, slack, duplicates });
+  const clock = input.clock ?? Date.now;
+  const slack =
+    input.slack ??
+    createWebhookSlackClient(input.config.slackWebhookUrl, input.config.slackTimeoutMs);
+  const duplicates = new DuplicateWindow(input.config.duplicateWindowMs, clock);
+  const idempotency = new IdempotencyStore(input.config.idempotencyWindowMs, clock);
+  const notifyService = createNotifyService({
+    config: input.config,
+    slack,
+    duplicates,
+    idempotency
+  });
   const app = express();
 
   app.disable("x-powered-by");

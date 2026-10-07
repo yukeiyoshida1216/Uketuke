@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildSlackMessage } from "../src/slack.js";
+import { buildSlackMessage, toPlainTextSlackPayload } from "../src/slack.js";
 
 describe("buildSlackMessage", () => {
   it("mentions only the selected destination for general reception", () => {
@@ -58,5 +58,22 @@ describe("buildSlackMessage", () => {
     expect(delivery.mentionedUserIds).toEqual(["U012DELIVERY"]);
     expect(delivery.text).toContain("【配達員】");
     expect(delivery.text).not.toContain("U012INTERVIEW");
+  });
+});
+
+describe("toPlainTextSlackPayload", () => {
+  it("wraps the message as Block Kit plain_text", () => {
+    const payload = toPlainTextSlackPayload("【総合受付】来客がありました\n<@U011YAMADA>");
+    expect(payload.text).toBe("【総合受付】来客がありました\n<@U011YAMADA>");
+    expect(payload.blocks).toEqual([
+      {
+        type: "section",
+        text: {
+          type: "plain_text",
+          text: "【総合受付】来客がありました\n<@U011YAMADA>",
+          emoji: true
+        }
+      }
+    ]);
   });
 });

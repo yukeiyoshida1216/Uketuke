@@ -52,17 +52,54 @@ export function buildSlackMessage(input: {
   return { text, mentionedUserIds };
 }
 
-export function createWebhookSlackClient(webhookUrl: string) {
+/** Incoming Webhook 向け。本文は Block Kit の plain_text で送る（mrkdwn 解釈なし）。 */
+export function toPlainTextSlackPayload(text: string): {
+  text: string;
+  blocks: Array<{
+    type: "section";
+    text: { type: "plain_text"; text: string; emoji: boolean };
+  }>;
+} {
+  // plain_text の上限は 3000 文字
+  const plain = text.length > 3000 ? text.slice(0, 2999) + "…" : text;
+  return {
+    text: plain,
+    blocks: [
+      {
+        type: "section",
+        text: {
+          type: "plain_text",
+          text: plain,
+          emoji: true
+        }
+      }
+    ]
+  };
+}
+
+export function createWebhookSlackClient(webhookUrl: string, timeoutMs = 8_000) {
   return {
     async send(text: string): Promise<void> {
-      const response = await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text })
-      });
-      if (!response.ok) {
-        const detail = await response.text().catch(() => "");
-        throw new Error(`Slack webhook failed: ${response.status} ${detail}`.trim());
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(toPlainTextSlackPayload(text)),
+          signal: controller.signal
+        });
+        if (!response.ok) {
+          const detail = await response.text().catch(() => "");
+          throw new Error(`Slack webhook failed: ${response.status} ${detail}`.trim());
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") {
+          throw new Error(`Slack webhook timed out after ${timeoutMs}ms`);
+        }
+        throw error;
+      } finally {
+        clearTimeout(timer);
       }
     }
   };

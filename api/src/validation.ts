@@ -6,6 +6,12 @@ const trimmedNonEmpty = z
   .transform((value) => value.trim())
   .pipe(z.string().min(1, "required"));
 
+const idempotencyKey = z
+  .string()
+  .trim()
+  .min(8, "idempotencyKey must be at least 8 characters")
+  .max(128, "idempotencyKey must be at most 128 characters");
+
 const generalSchema = z.object({
   type: z.literal("general"),
   companyName: trimmedNonEmpty,
@@ -15,7 +21,8 @@ const generalSchema = z.object({
     .int("partySize must be an integer")
     .min(1, "partySize must be between 1 and 99")
     .max(99, "partySize must be between 1 and 99"),
-  destinationId: trimmedNonEmpty
+  destinationId: trimmedNonEmpty,
+  idempotencyKey
 });
 
 const interviewSchema = z.object({
@@ -23,11 +30,13 @@ const interviewSchema = z.object({
   purpose: z.enum(["interview", "training"], {
     errorMap: () => ({ message: "purpose must be interview or training" })
   }),
-  visitorName: trimmedNonEmpty
+  visitorName: trimmedNonEmpty,
+  idempotencyKey
 });
 
 const deliverySchema = z.object({
-  type: z.literal("delivery")
+  type: z.literal("delivery"),
+  idempotencyKey
 });
 
 const notifySchema = z.discriminatedUnion("type", [
