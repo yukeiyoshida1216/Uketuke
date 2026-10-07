@@ -83,71 +83,81 @@ fun GeneralFormScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 64.dp, bottom = 48.dp)
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                    .padding(top = 64.dp, bottom = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = copy.generalTitle,
-                    color = AppConfig.Colors.Ink,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                SoftTextField(
-                    label = copy.company,
-                    value = companyName,
-                    onValueChange = onCompanyNameChange,
-                    placeholder = copy.companyPlaceholder
-                )
-                SoftTextField(
-                    label = copy.visitorName,
-                    value = visitorName,
-                    onValueChange = onVisitorNameChange,
-                    placeholder = copy.namePlaceholder
-                )
-                Column(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
                     Text(
-                        text = copy.partySize,
+                        text = copy.generalTitle,
                         color = AppConfig.Colors.Ink,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        partyOptions.forEach { (value, label) ->
-                            ChoiceChip(
-                                text = label,
-                                selected = partySize == value,
-                                onClick = { onPartySizeSelected(value) },
-                                modifier = Modifier.weight(1f)
-                            )
+                    SoftTextField(
+                        label = copy.company,
+                        value = companyName,
+                        onValueChange = onCompanyNameChange,
+                        placeholder = copy.companyPlaceholder
+                    )
+                    SoftTextField(
+                        label = copy.visitorName,
+                        value = visitorName,
+                        onValueChange = onVisitorNameChange,
+                        placeholder = copy.namePlaceholder
+                    )
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = copy.partySize,
+                            color = AppConfig.Colors.Ink,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            partyOptions.forEach { (value, label) ->
+                                ChoiceChip(
+                                    text = label,
+                                    selected = partySize == value,
+                                    onClick = { onPartySizeSelected(value) },
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
                         }
                     }
+                    SoftDropdown(
+                        label = copy.destination,
+                        placeholder = copy.destinationPlaceholder,
+                        destinations = destinations,
+                        selectedDestinationId = selectedDestinationId,
+                        onDestinationSelected = onDestinationSelected
+                    )
+                    Text(
+                        text = copy.requiredNote,
+                        color = AppConfig.Colors.InkMuted,
+                        fontSize = 13.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
                 }
-                SoftDropdown(
-                    label = copy.destination,
-                    placeholder = copy.destinationPlaceholder,
-                    destinations = destinations,
-                    selectedDestinationId = selectedDestinationId,
-                    onDestinationSelected = onDestinationSelected
-                )
-                Text(
-                    text = copy.requiredNote,
-                    color = AppConfig.Colors.InkMuted,
-                    fontSize = 13.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(4.dp))
+
                 SubmitButton(
                     text = copy.submit,
                     onClick = onSubmit,
                     enabled = canProceed,
-                    modifier = Modifier.fillMaxWidth(0.55f)
+                    modifier = Modifier
+                        .fillMaxWidth(0.55f)
+                        .padding(bottom = 28.dp)
                 )
             }
 
