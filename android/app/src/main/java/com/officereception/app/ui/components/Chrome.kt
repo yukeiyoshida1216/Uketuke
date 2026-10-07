@@ -385,9 +385,9 @@ fun BrandLogo(modifier: Modifier = Modifier, size: Dp = 88.dp) {
             drawCircle(color = accent, radius = figureR * 0.45f, center = Offset(fx, fy - figureR * 0.55f))
             val body = Path().apply {
                 moveTo(fx, fy - figureR * 0.15f)
-                quadraticBezierTo(fx - figureR * 0.9f, fy + figureR * 0.4f, fx - figureR * 0.55f, fy + figureR * 1.1f)
+                quadraticTo(fx - figureR * 0.9f, fy + figureR * 0.4f, fx - figureR * 0.55f, fy + figureR * 1.1f)
                 lineTo(fx + figureR * 0.55f, fy + figureR * 1.1f)
-                quadraticBezierTo(fx + figureR * 0.9f, fy + figureR * 0.4f, fx, fy - figureR * 0.15f)
+                quadraticTo(fx + figureR * 0.9f, fy + figureR * 0.4f, fx, fy - figureR * 0.15f)
                 close()
             }
             drawPath(body, color = accent)
@@ -441,9 +441,9 @@ fun MenuIcon(kind: MenuIconKind, modifier: Modifier = Modifier) {
                     drawCircle(accent, radius = s * 0.22f, center = Offset(cx, cy - s * 0.35f))
                     val body = Path().apply {
                         moveTo(cx, cy - s * 0.1f)
-                        quadraticBezierTo(cx - s * 0.45f, cy + s * 0.1f, cx - s * 0.35f, cy + s * 0.55f)
+                        quadraticTo(cx - s * 0.45f, cy + s * 0.1f, cx - s * 0.35f, cy + s * 0.55f)
                         lineTo(cx + s * 0.35f, cy + s * 0.55f)
-                        quadraticBezierTo(cx + s * 0.45f, cy + s * 0.1f, cx, cy - s * 0.1f)
+                        quadraticTo(cx + s * 0.45f, cy + s * 0.1f, cx, cy - s * 0.1f)
                         close()
                     }
                     drawPath(body, accent)
@@ -542,12 +542,12 @@ private fun BellIcon(modifier: Modifier = Modifier) {
         val h = size.height
         val path = Path().apply {
             moveTo(w * 0.22f, h * 0.38f)
-            quadraticBezierTo(w * 0.22f, h * 0.18f, w * 0.5f, h * 0.16f)
-            quadraticBezierTo(w * 0.78f, h * 0.18f, w * 0.78f, h * 0.38f)
+            quadraticTo(w * 0.22f, h * 0.18f, w * 0.5f, h * 0.16f)
+            quadraticTo(w * 0.78f, h * 0.18f, w * 0.78f, h * 0.38f)
             lineTo(w * 0.78f, h * 0.58f)
-            quadraticBezierTo(w * 0.9f, h * 0.7f, w * 0.9f, h * 0.76f)
+            quadraticTo(w * 0.9f, h * 0.7f, w * 0.9f, h * 0.76f)
             lineTo(w * 0.1f, h * 0.76f)
-            quadraticBezierTo(w * 0.1f, h * 0.7f, w * 0.22f, h * 0.58f)
+            quadraticTo(w * 0.1f, h * 0.7f, w * 0.22f, h * 0.58f)
             close()
         }
         drawPath(path, accent)
@@ -601,7 +601,6 @@ fun SoftDropdown(
                     .clip(shape)
                     .background(AppConfig.Colors.Card)
                     .border(1.5.dp, AppConfig.Colors.AccentBorder, shape)
-                    .clickable { expanded = true }
                     .padding(horizontal = 18.dp, vertical = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
