@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -67,7 +65,7 @@ fun GeneralFormScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(28.dp)
+                .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
             BackChip(
                 text = copy.back,
@@ -84,22 +82,21 @@ fun GeneralFormScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 64.dp, bottom = 8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(top = 52.dp, bottom = 4.dp)
+                    .widthIn(max = 720.dp)
+                    .align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .widthIn(max = 720.dp)
-                        .fillMaxWidth()
-                        .verticalScroll(rememberScrollState()),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
                         text = copy.generalTitle,
                         color = AppConfig.Colors.Ink,
-                        fontSize = 30.sp,
+                        fontSize = 26.sp,
                         fontWeight = FontWeight.Bold
                     )
                     SoftTextField(
@@ -118,13 +115,13 @@ fun GeneralFormScreen(
                         Text(
                             text = copy.partySize,
                             color = AppConfig.Colors.Ink,
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Medium
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(4.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             partyOptions.forEach { (value, label) ->
                                 ChoiceChip(
@@ -146,11 +143,10 @@ fun GeneralFormScreen(
                     Text(
                         text = copy.requiredNote,
                         color = AppConfig.Colors.InkMuted,
-                        fontSize = 13.sp,
+                        fontSize = 12.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
                 }
 
                 SubmitButton(
@@ -158,9 +154,9 @@ fun GeneralFormScreen(
                     onClick = onSubmit,
                     enabled = canProceed,
                     modifier = Modifier
-                        .widthIn(max = 400.dp)
-                        .fillMaxWidth(0.55f)
-                        .padding(bottom = 28.dp)
+                        .widthIn(max = 360.dp)
+                        .fillMaxWidth(0.5f)
+                        .padding(bottom = 20.dp)
                 )
             }
 

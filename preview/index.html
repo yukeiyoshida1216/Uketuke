@@ -56,11 +56,12 @@
     .panel {
       position: absolute;
       inset: 0;
-      padding: 24px 28px;
+      padding: 16px 24px 18px;
       display: none;
       flex-direction: column;
       color: var(--ink);
       background: linear-gradient(180deg, var(--cream-top), var(--cream-bottom));
+      overflow: hidden;
     }
     .panel.active { display: flex; }
     .top-bar {
@@ -184,10 +185,11 @@
       z-index: 2;
     }
     .heading {
-      margin: 18px 0 22px;
+      margin: 8px 0 10px;
       text-align: center;
-      font-size: clamp(22px, 3vw, 28px);
+      font-size: clamp(20px, 2.6vw, 26px);
       font-weight: 700;
+      flex-shrink: 0;
     }
     .menu-grid {
       display: grid;
@@ -217,38 +219,53 @@
     .form {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
       flex: 1;
       min-height: 0;
-      overflow: auto;
+      overflow: hidden;
       align-items: center;
+      justify-content: space-between;
+    }
+    .form-fields {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      min-height: 0;
     }
     .field {
       width: min(100%, 640px);
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      font-size: 14px;
+      gap: 4px;
+      font-size: 13px;
       font-weight: 600;
     }
     .field input {
-      min-height: 52px;
+      min-height: 44px;
       border: 1.5px solid var(--gold);
-      border-radius: 16px;
-      padding: 0 16px;
-      font-size: 18px;
+      border-radius: 14px;
+      padding: 0 14px;
+      font-size: 16px;
       color: var(--ink);
       background: var(--card);
       box-shadow: 0 3px 10px rgba(0,0,0,.08);
     }
-    .soft-dropdown { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+    .soft-dropdown { width: 100%; position: relative; display: flex; flex-direction: column; gap: 0; }
     .soft-dropdown-list {
       display: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(100% + 4px);
+      z-index: 5;
       border: 1.5px solid var(--gold);
-      border-radius: 16px;
+      border-radius: 14px;
       background: var(--card);
       box-shadow: 0 8px 18px rgba(0,0,0,.12);
       overflow: hidden;
+      max-height: 180px;
     }
     .soft-dropdown.open .soft-dropdown-list { display: block; }
     .soft-dropdown-option {
@@ -256,8 +273,8 @@
       border: 0;
       background: transparent;
       text-align: left;
-      padding: 16px 20px;
-      font-size: 18px;
+      padding: 12px 16px;
+      font-size: 16px;
       font-weight: 600;
       color: var(--ink);
       cursor: pointer;
@@ -269,11 +286,11 @@
       background: rgba(232, 160, 32, 0.12);
     }
     .soft-dropdown-trigger {
-      min-height: 52px;
+      min-height: 44px;
       border: 1.5px solid var(--gold);
-      border-radius: 16px;
-      padding: 0 16px;
-      font-size: 18px;
+      border-radius: 14px;
+      padding: 0 14px;
+      font-size: 16px;
       color: var(--ink);
       background: var(--card);
       box-shadow: 0 3px 10px rgba(0,0,0,.08);
@@ -297,12 +314,12 @@
     }
     .chips.two { grid-template-columns: repeat(2, 1fr); }
     .chip {
-      min-height: 56px;
+      min-height: 44px;
       border: 1.5px solid var(--gold);
       background: var(--card);
-      border-radius: 18px;
+      border-radius: 16px;
       box-shadow: 0 3px 10px rgba(0,0,0,.08);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--ink);
       cursor: pointer;
@@ -319,16 +336,18 @@
       margin: 0;
     }
     .submit {
-      width: min(55%, 360px);
-      min-height: 56px;
+      width: min(50%, 340px);
+      min-height: 48px;
       border: 0;
-      border-radius: 20px;
+      border-radius: 18px;
       background: var(--accent);
       color: #fff;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 8px 16px rgba(0,0,0,.14);
+      flex-shrink: 0;
+      margin-top: 8px;
     }
     .submit:disabled { opacity: .45; cursor: not-allowed; }
     .status {
@@ -453,33 +472,35 @@
         </div>
         <p class="heading" id="generalHeading">企業様向け</p>
         <div class="form">
-          <label class="field">会社名<input id="company" placeholder="株式会社ライトパス" autocomplete="organization" /></label>
-          <label class="field">氏名<input id="visitorName" placeholder="ライト 一郎" autocomplete="name" /></label>
-          <div class="field">
-            <span>来社人数</span>
-            <div class="chips" id="partyChips">
-              <button type="button" class="chip" data-party="1">1人</button>
-              <button type="button" class="chip" data-party="2">2人</button>
-              <button type="button" class="chip" data-party="3">3人</button>
-              <button type="button" class="chip" data-party="4">4人以上</button>
-            </div>
-          </div>
-          <div class="field">
-            <span id="destinationLabel">担当者名</span>
-            <div class="soft-dropdown" id="destinationDropdown">
-              <div class="soft-dropdown-list" id="destinationList" role="listbox">
-                <button type="button" class="soft-dropdown-option" data-value="nosaka">野坂 星司</button>
-                <button type="button" class="soft-dropdown-option" data-value="yanase">梁瀬 聖太</button>
-                <button type="button" class="soft-dropdown-option" data-value="ito">伊藤 功</button>
+          <div class="form-fields">
+            <label class="field">会社名<input id="company" placeholder="株式会社ライトパス" autocomplete="organization" /></label>
+            <label class="field">氏名<input id="visitorName" placeholder="ライト 一郎" autocomplete="name" /></label>
+            <div class="field">
+              <span>来社人数</span>
+              <div class="chips" id="partyChips">
+                <button type="button" class="chip" data-party="1">1人</button>
+                <button type="button" class="chip" data-party="2">2人</button>
+                <button type="button" class="chip" data-party="3">3人</button>
+                <button type="button" class="chip" data-party="4">4人以上</button>
               </div>
-              <button type="button" class="soft-dropdown-trigger" id="destinationTrigger" aria-haspopup="listbox">
-                <span class="placeholder" id="destinationText">選択してください</span>
-                <span class="chevron">▼</span>
-              </button>
-              <input type="hidden" id="destination" value="" />
             </div>
+            <div class="field">
+              <span id="destinationLabel">担当者名</span>
+              <div class="soft-dropdown" id="destinationDropdown">
+                <div class="soft-dropdown-list" id="destinationList" role="listbox">
+                  <button type="button" class="soft-dropdown-option" data-value="nosaka">野坂 星司</button>
+                  <button type="button" class="soft-dropdown-option" data-value="yanase">梁瀬 聖太</button>
+                  <button type="button" class="soft-dropdown-option" data-value="ito">伊藤 功</button>
+                </div>
+                <button type="button" class="soft-dropdown-trigger" id="destinationTrigger" aria-haspopup="listbox">
+                  <span class="placeholder" id="destinationText">選択してください</span>
+                  <span class="chevron">▼</span>
+                </button>
+                <input type="hidden" id="destination" value="" />
+              </div>
+            </div>
+            <p class="note" id="requiredNote">会社名・氏名・人数・担当者名はすべて必須です</p>
           </div>
-          <p class="note" id="requiredNote">会社名・氏名・人数・担当者名はすべて必須です</p>
           <button type="button" class="submit" id="generalNext" disabled>送信する</button>
         </div>
         <div class="corner">N</div>
@@ -495,12 +516,14 @@
         </div>
         <p class="heading" id="interviewHeading">面接・会社説明</p>
         <div class="form">
-          <label class="field">氏名<input id="interviewName" placeholder="ライト 一郎" autocomplete="name" /></label>
-          <div class="chips two" style="width:min(100%,640px)">
-            <button type="button" class="chip" id="purposeInterview">面接</button>
-            <button type="button" class="chip" id="purposeTraining">会社説明</button>
+          <div class="form-fields">
+            <label class="field">氏名<input id="interviewName" placeholder="ライト 一郎" autocomplete="name" /></label>
+            <div class="chips two" style="width:min(100%,640px)">
+              <button type="button" class="chip" id="purposeInterview">面接</button>
+              <button type="button" class="chip" id="purposeTraining">会社説明</button>
+            </div>
+            <p class="note" id="interviewHint">氏名を入力し、面接・会社説明のいずれかを選択してください</p>
           </div>
-          <p class="note" id="interviewHint">氏名を入力し、面接・会社説明のいずれかを選択してください</p>
           <button type="button" class="submit" id="interviewSubmit" disabled>送信する</button>
         </div>
         <div class="corner">N</div>
