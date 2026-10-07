@@ -6,18 +6,21 @@
   <title>オフィス受付プレビュー</title>
   <style>
     :root {
-      --yellow: #ffe566;
-      --yamabuki: #f8b500;
-      --white: #ffffff;
-      --ink: #3b2a00;
+      --cream-top: #fffbf0;
+      --cream-bottom: #ffefc0;
+      --accent: #e8a020;
+      --ink: #4a3e31;
+      --ink-muted: #8a8178;
+      --gold: #f0c56a;
+      --card: #ffffff;
       --error: #b3261e;
-      --bg: #f2efe8;
+      --bg: #f5efe3;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
+      font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
       background: var(--bg);
       color: var(--ink);
       display: flex;
@@ -26,11 +29,7 @@
       padding: 16px;
       gap: 12px;
     }
-    h1 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 600;
-    }
+    h1 { margin: 0; font-size: 18px; font-weight: 600; }
     .hint {
       margin: 0;
       font-size: 13px;
@@ -39,7 +38,7 @@
       max-width: 720px;
     }
     .device {
-      width: min(100%, 900px);
+      width: min(100%, 960px);
       aspect-ratio: 16 / 10;
       background: #222;
       border-radius: 22px;
@@ -51,89 +50,322 @@
       height: 100%;
       border-radius: 12px;
       overflow: hidden;
-      background: var(--white);
       position: relative;
+      background: linear-gradient(180deg, var(--cream-top), var(--cream-bottom));
     }
     .panel {
       position: absolute;
       inset: 0;
-      padding: 32px;
+      padding: 24px 28px;
       display: none;
       flex-direction: column;
-      background: var(--white);
       color: var(--ink);
+      background: linear-gradient(180deg, var(--cream-top), var(--cream-bottom));
     }
     .panel.active { display: flex; }
-    #welcome {
-      background: var(--yamabuki);
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      min-height: 48px;
+    }
+    .lang {
+      display: flex;
+      gap: 8px;
+    }
+    .pill {
+      border: 1.5px solid var(--gold);
+      background: var(--card);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,.08);
+    }
+    .pill.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .back-chip {
+      border: 1.5px solid var(--gold);
+      background: var(--card);
+      color: var(--ink);
+      border-radius: 16px;
+      padding: 10px 18px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    .clock {
+      color: var(--ink-muted);
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.25;
+    }
+    #welcome { cursor: pointer; }
+    .welcome-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
       text-align: center;
+      gap: 10px;
+      pointer-events: none;
     }
-    #welcome .title { font-size: clamp(40px, 6vw, 56px); font-weight: 700; margin: 0; }
-    #welcome .sub { font-size: clamp(18px, 2.5vw, 26px); margin: 20px 0 0; }
-    .heading { font-size: clamp(22px, 3vw, 30px); font-weight: 600; margin: 0 0 20px; }
+    .welcome-title {
+      margin: 0;
+      color: var(--accent);
+      font-size: clamp(36px, 5vw, 48px);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+    .logo {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .company-ja { margin: 0; font-size: 24px; font-weight: 700; }
+    .company-en {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      line-height: 1.35;
+    }
+    .touch-hint { margin: 12px 0 0; color: var(--accent); font-size: 16px; font-weight: 600; }
+    .delivery {
+      position: absolute;
+      right: 28px;
+      top: 50%;
+      transform: translateY(-40%);
+      width: 120px;
+      min-height: 140px;
+      border: 2px solid var(--gold);
+      background: var(--card);
+      border-radius: 28px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.12);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .delivery .bell { font-size: 36px; line-height: 1; }
+    .corner {
+      position: absolute;
+      left: 20px;
+      bottom: 16px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 15px;
+      z-index: 2;
+    }
+    .heading {
+      margin: 18px 0 22px;
+      text-align: center;
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 700;
+    }
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       flex: 1;
-      align-content: start;
+      align-content: stretch;
+      min-height: 0;
     }
-    .btn {
+    .soft-card {
+      border: 1.5px solid var(--gold);
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.1);
+      padding: 20px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .soft-card .icon { font-size: 40px; color: var(--accent); }
+    .soft-card .title { font-size: 18px; font-weight: 700; }
+    .soft-card .sub { font-size: 12px; color: var(--ink-muted); line-height: 1.4; }
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      align-items: center;
+    }
+    .field {
+      width: min(100%, 640px);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .field input {
+      min-height: 52px;
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
+      padding: 0 16px;
+      font-size: 18px;
+      color: var(--ink);
+      background: var(--card);
+      box-shadow: 0 3px 10px rgba(0,0,0,.08);
+    }
+    .soft-dropdown { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+    .soft-dropdown-list {
+      display: none;
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
+      background: var(--card);
+      box-shadow: 0 8px 18px rgba(0,0,0,.12);
+      overflow: hidden;
+    }
+    .soft-dropdown.open .soft-dropdown-list { display: block; }
+    .soft-dropdown-option {
+      width: 100%;
       border: 0;
-      border-radius: 18px;
-      min-height: 84px;
-      padding: 16px 18px;
-      font-size: clamp(18px, 2.4vw, 24px);
+      background: transparent;
+      text-align: left;
+      padding: 16px 20px;
+      font-size: 18px;
       font-weight: 600;
       color: var(--ink);
-      background: var(--yamabuki);
+      cursor: pointer;
+      border-bottom: 1px solid #e8dcc8;
+    }
+    .soft-dropdown-option:last-child { border-bottom: 0; }
+    .soft-dropdown-option.selected,
+    .soft-dropdown-option:hover {
+      background: rgba(232, 160, 32, 0.12);
+    }
+    .soft-dropdown-trigger {
+      min-height: 52px;
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
+      padding: 0 16px;
+      font-size: 18px;
+      color: var(--ink);
+      background: var(--card);
+      box-shadow: 0 3px 10px rgba(0,0,0,.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       cursor: pointer;
       width: 100%;
     }
-    .btn:disabled { opacity: .4; cursor: not-allowed; }
-    .btn.outline {
-      background: transparent;
-      border: 2px solid rgba(59,42,0,.35);
+    .soft-dropdown-trigger .placeholder { color: rgba(138, 129, 120, 0.65); }
+    .soft-dropdown-trigger .chevron {
+      color: var(--accent);
+      font-size: 14px;
+      line-height: 1;
     }
-    .form { display: flex; flex-direction: column; gap: 14px; flex: 1; }
-    label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
-    input {
-      min-height: 52px;
-      border: 1.5px solid rgba(59,42,0,.28);
-      border-radius: 12px;
-      padding: 0 14px;
-      font-size: 22px;
+    .chips {
+      width: min(100%, 640px);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .chips.two { grid-template-columns: repeat(2, 1fr); }
+    .chip {
+      min-height: 56px;
+      border: 1.5px solid var(--gold);
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: 0 3px 10px rgba(0,0,0,.08);
+      font-size: 16px;
+      font-weight: 600;
       color: var(--ink);
+      cursor: pointer;
     }
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 14px;
-      margin-top: auto;
+    .chip.selected {
+      border-color: var(--accent);
+      background: rgba(232, 160, 32, 0.18);
     }
-    .dest-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      flex: 1;
-      align-content: start;
+    .note {
+      width: min(100%, 640px);
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 12px;
+      margin: 0;
     }
+    .submit {
+      width: min(55%, 360px);
+      min-height: 56px;
+      border: 0;
+      border-radius: 20px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(0,0,0,.14);
+    }
+    .submit:disabled { opacity: .45; cursor: not-allowed; }
     .status {
-      background: var(--yellow);
       align-items: center;
       justify-content: center;
       text-align: center;
     }
     .status p {
       margin: 0;
-      font-size: clamp(26px, 4vw, 36px);
-      font-weight: 650;
+      font-size: clamp(26px, 4vw, 34px);
+      font-weight: 700;
     }
     .error-title { color: var(--error); font-size: clamp(24px, 3.5vw, 32px); font-weight: 700; margin: 0; }
     .error-body { font-size: 18px; margin: 14px 0 0; }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 14px;
+      margin-top: 28px;
+      width: min(100%, 520px);
+    }
+    .btn {
+      border: 0;
+      border-radius: 18px;
+      min-height: 64px;
+      padding: 14px 16px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+      cursor: pointer;
+    }
+    .btn.outline {
+      background: var(--card);
+      color: var(--ink);
+      border: 1.5px solid var(--gold);
+    }
     .fail-toggle {
       display: flex;
       gap: 8px;
@@ -143,12 +375,14 @@
     @media (max-width: 700px) {
       .device { aspect-ratio: 10 / 14; }
       .menu-grid { grid-template-columns: 1fr; }
+      .chips { grid-template-columns: repeat(2, 1fr); }
+      .delivery { position: static; transform: none; margin: 8px auto 0; }
     }
   </style>
 </head>
 <body>
   <h1>オフィス受付アプリ 操作プレビュー</h1>
-  <p class="hint">実際のタブレットUIと同じ流れです。画面をタップして操作してください。送信はデモ用で、失敗を再現する場合は下のスイッチをオンにしてください。</p>
+  <p class="hint">Cream Soft UI の流れです。画面をタップして操作してください。送信はデモ用で、失敗を再現する場合は下のスイッチをオンにしてください。</p>
   <label class="fail-toggle">
     <input type="checkbox" id="forceFail" />
     次の送信を失敗させる
@@ -156,68 +390,140 @@
   <div class="device" aria-label="タブレットプレビュー">
     <div class="screen" id="app">
       <section class="panel active" id="welcome" data-panel="welcome">
-        <p class="title">ようこそ</p>
-        <p class="sub">画面をタップしてください</p>
+        <div class="top-bar">
+          <div class="clock">
+            <div id="dateLine">10/07</div>
+            <div id="timeLine">00:00:00</div>
+          </div>
+          <div class="lang" id="langWelcome">
+            <button type="button" class="pill active" data-lang="ja">日本語</button>
+            <button type="button" class="pill" data-lang="en">EN</button>
+          </div>
+        </div>
+        <div class="welcome-center">
+          <p class="welcome-title">WELCOME</p>
+          <div class="logo">◎</div>
+          <p class="company-ja">株式会社ライトパス</p>
+          <p class="company-en">L I G H T<br />P A T H</p>
+          <p class="touch-hint" id="touchHint">画面をタッチしてください</p>
+        </div>
+        <button type="button" class="delivery" id="deliveryBtn">
+          <span class="bell">🔔</span>
+          <span id="deliveryLabel">宅配/郵便</span>
+        </button>
+        <div class="corner">N</div>
       </section>
 
       <section class="panel" id="menu" data-panel="menu">
-        <p class="heading">ご用件を選んでください</p>
-        <div class="menu-grid">
-          <button type="button" class="btn" data-go="general">総合受付</button>
-          <button type="button" class="btn" data-go="interview">面接・研修</button>
-          <button type="button" class="btn" id="deliveryBtn">配達員</button>
+        <div class="top-bar">
+          <button type="button" class="back-chip" data-go="welcome" id="menuBack">←戻る</button>
+          <div class="lang" id="langMenu">
+            <button type="button" class="pill active" data-lang="ja">日本語</button>
+            <button type="button" class="pill" data-lang="en">EN</button>
+          </div>
         </div>
+        <p class="heading" id="menuTitle">ご用件を選択してください</p>
+        <div class="menu-grid">
+          <button type="button" class="soft-card" data-go="general">
+            <div class="icon">💬</div>
+            <div class="title" id="generalTitle">企業様向け</div>
+            <div class="sub" id="generalSub">打ち合わせ・ご訪問</div>
+          </button>
+          <button type="button" class="soft-card" data-go="interview">
+            <div class="icon">👥</div>
+            <div class="title" id="interviewTitle">面接・会社説明</div>
+            <div class="sub" id="interviewSub">面接・会社説明でお越しの方</div>
+          </button>
+          <button type="button" class="soft-card" id="otherBtn">
+            <div class="icon">📅</div>
+            <div class="title" id="otherTitle">その他</div>
+            <div class="sub" id="otherSub">点検やビル関係者など</div>
+          </button>
+        </div>
+        <div class="corner">N</div>
       </section>
 
       <section class="panel" id="general" data-panel="general">
-        <div class="form">
-          <label>会社名<input id="company" autocomplete="organization" /></label>
-          <label>お名前<input id="visitorName" autocomplete="name" /></label>
-          <label>来社人数<input id="partySize" inputmode="numeric" autocomplete="off" /></label>
-          <label>訪問先（どなた宛）
-            <select id="destination" style="min-height:52px;font-size:20px;border-radius:12px;padding:0 12px;">
-              <option value="">選択してください</option>
-              <option value="yamada">山田 太郎</option>
-              <option value="sato">佐藤 花子</option>
-            </select>
-          </label>
-          <div class="actions">
-            <button type="button" class="btn outline" data-go="menu">戻る</button>
-            <button type="button" class="btn" id="generalNext" disabled>呼び出す</button>
+        <div class="top-bar">
+          <button type="button" class="back-chip" data-go="menu">←戻る</button>
+          <div class="lang">
+            <button type="button" class="pill active" data-lang="ja">日本語</button>
+            <button type="button" class="pill" data-lang="en">EN</button>
           </div>
         </div>
+        <p class="heading" id="generalHeading">企業様向け</p>
+        <div class="form">
+          <label class="field">会社名<input id="company" placeholder="株式会社ライトパス" autocomplete="organization" /></label>
+          <label class="field">氏名<input id="visitorName" placeholder="ライト 一郎" autocomplete="name" /></label>
+          <div class="field">
+            <span>来社人数</span>
+            <div class="chips" id="partyChips">
+              <button type="button" class="chip" data-party="1">1人</button>
+              <button type="button" class="chip" data-party="2">2人</button>
+              <button type="button" class="chip" data-party="3">3人</button>
+              <button type="button" class="chip" data-party="4">4人以上</button>
+            </div>
+          </div>
+          <div class="field">
+            <span id="destinationLabel">担当者名</span>
+            <div class="soft-dropdown" id="destinationDropdown">
+              <div class="soft-dropdown-list" id="destinationList" role="listbox">
+                <button type="button" class="soft-dropdown-option" data-value="nosaka">野坂 星司</button>
+                <button type="button" class="soft-dropdown-option" data-value="yanase">梁瀬 聖太</button>
+                <button type="button" class="soft-dropdown-option" data-value="ito">伊藤 功</button>
+              </div>
+              <button type="button" class="soft-dropdown-trigger" id="destinationTrigger" aria-haspopup="listbox">
+                <span class="placeholder" id="destinationText">選択してください</span>
+                <span class="chevron">▼</span>
+              </button>
+              <input type="hidden" id="destination" value="" />
+            </div>
+          </div>
+          <p class="note" id="requiredNote">会社名・氏名・人数・担当者名はすべて必須です</p>
+          <button type="button" class="submit" id="generalNext" disabled>送信する</button>
+        </div>
+        <div class="corner">N</div>
       </section>
 
       <section class="panel" id="interview" data-panel="interview">
-        <div class="form">
-          <p class="heading">用件を選び、お名前を入力してください</p>
-          <div class="actions" style="margin-top:0">
-            <button type="button" class="btn outline" id="purposeInterview">面接</button>
-            <button type="button" class="btn outline" id="purposeTraining">研修</button>
-          </div>
-          <label>お名前<input id="interviewName" autocomplete="name" /></label>
-          <div class="actions">
-            <button type="button" class="btn outline" data-go="menu">戻る</button>
-            <button type="button" class="btn" id="interviewSubmit" disabled>呼び出す</button>
+        <div class="top-bar">
+          <button type="button" class="back-chip" data-go="menu">←戻る</button>
+          <div class="lang">
+            <button type="button" class="pill active" data-lang="ja">日本語</button>
+            <button type="button" class="pill" data-lang="en">EN</button>
           </div>
         </div>
+        <p class="heading" id="interviewHeading">面接・会社説明</p>
+        <div class="form">
+          <label class="field">氏名<input id="interviewName" placeholder="ライト 一郎" autocomplete="name" /></label>
+          <div class="chips two" style="width:min(100%,640px)">
+            <button type="button" class="chip" id="purposeInterview">面接</button>
+            <button type="button" class="chip" id="purposeTraining">会社説明</button>
+          </div>
+          <p class="note" id="interviewHint">氏名を入力し、面接・会社説明のいずれかを選択してください</p>
+          <button type="button" class="submit" id="interviewSubmit" disabled>送信する</button>
+        </div>
+        <div class="corner">N</div>
       </section>
 
       <section class="panel status" id="sending" data-panel="sending">
         <p id="sendingMsg">送信しています…</p>
+        <div class="corner">N</div>
       </section>
 
       <section class="panel status" id="success" data-panel="success">
-        <p>入力ありがとうございます！</p>
+        <p id="successMsg">入力ありがとうございます！</p>
+        <div class="corner">N</div>
       </section>
 
       <section class="panel" id="error" data-panel="error">
-        <p class="error-title">送信できませんでした</p>
+        <p class="error-title" id="errorTitle">送信できませんでした</p>
         <p class="error-body" id="errorBody">通信に失敗しました。もう一度お試しください。</p>
-        <div class="actions" style="margin-top:28px">
+        <div class="actions">
           <button type="button" class="btn outline" id="goHome">最初の画面へ戻る</button>
           <button type="button" class="btn" id="retry">再試行</button>
         </div>
+        <div class="corner">N</div>
       </section>
     </div>
   </div>
@@ -227,18 +533,121 @@
       const forceFail = document.getElementById("forceFail");
       const company = document.getElementById("company");
       const visitorName = document.getElementById("visitorName");
-      const partySize = document.getElementById("partySize");
       const destination = document.getElementById("destination");
+      const destinationDropdown = document.getElementById("destinationDropdown");
+      const destinationTrigger = document.getElementById("destinationTrigger");
+      const destinationText = document.getElementById("destinationText");
       const interviewName = document.getElementById("interviewName");
       const purposeInterview = document.getElementById("purposeInterview");
       const purposeTraining = document.getElementById("purposeTraining");
       const generalNext = document.getElementById("generalNext");
       const interviewSubmit = document.getElementById("interviewSubmit");
+      let language = "ja";
+      let partySize = "";
       let interviewPurpose = null;
       let pending = null;
       let busy = false;
       let idleTimer = null;
       let completeTimer = null;
+      const destinationPlaceholder = { ja: "選択してください", en: "Please select" };
+
+      const copy = {
+        ja: {
+          touchHint: "画面をタッチしてください",
+          delivery: "宅配/郵便",
+          menuTitle: "ご用件を選択してください",
+          generalTitle: "企業様向け",
+          generalSub: "打ち合わせ・ご訪問",
+          interviewTitle: "面接・会社説明",
+          interviewSub: "面接・会社説明でお越しの方",
+          otherTitle: "その他",
+          otherSub: "点検やビル関係者など",
+          requiredNote: "会社名・氏名・人数・担当者名はすべて必須です",
+          interviewHint: "氏名を入力し、面接・会社説明のいずれかを選択してください",
+          submit: "送信する",
+          sending: "送信しています…",
+          success: "入力ありがとうございます！",
+          purposeInterview: "面接",
+          purposeBriefing: "会社説明",
+          party: ["1人", "2人", "3人", "4人以上"]
+        },
+        en: {
+          touchHint: "Please touch the screen",
+          delivery: "Delivery / Mail",
+          menuTitle: "Please select your purpose",
+          generalTitle: "Business visitors",
+          generalSub: "Meetings & visits",
+          interviewTitle: "Interview / Briefing",
+          interviewSub: "For interviews or company briefings",
+          otherTitle: "Other",
+          otherSub: "Inspections & building staff",
+          requiredNote: "Company, name, party size, and host are required",
+          interviewHint: "Enter your name and select Interview or Briefing",
+          submit: "Submit",
+          sending: "Sending…",
+          success: "Thank you!",
+          purposeInterview: "Interview",
+          purposeBriefing: "Briefing",
+          party: ["1", "2", "3", "4+"]
+        }
+      };
+
+      function applyLanguage() {
+        const c = copy[language];
+        document.querySelectorAll("[data-lang]").forEach((el) => {
+          el.classList.toggle("active", el.getAttribute("data-lang") === language);
+        });
+        document.getElementById("touchHint").textContent = c.touchHint;
+        document.getElementById("deliveryLabel").textContent = c.delivery;
+        document.getElementById("menuTitle").textContent = c.menuTitle;
+        document.getElementById("generalTitle").textContent = c.generalTitle;
+        document.getElementById("generalSub").textContent = c.generalSub;
+        document.getElementById("interviewTitle").textContent = c.interviewTitle;
+        document.getElementById("interviewSub").textContent = c.interviewSub;
+        document.getElementById("otherTitle").textContent = c.otherTitle;
+        document.getElementById("otherSub").textContent = c.otherSub;
+        document.getElementById("generalHeading").textContent = c.generalTitle;
+        document.getElementById("interviewHeading").textContent = c.interviewTitle;
+        document.getElementById("requiredNote").textContent = c.requiredNote;
+        document.getElementById("interviewHint").textContent = c.interviewHint;
+        purposeInterview.textContent = c.purposeInterview;
+        purposeTraining.textContent = c.purposeBriefing;
+        generalNext.textContent = c.submit;
+        interviewSubmit.textContent = c.submit;
+        document.getElementById("successMsg").textContent = c.success;
+        document.getElementById("destinationLabel").textContent =
+          language === "ja" ? "担当者名" : "Host";
+        if (!destination.value) {
+          destinationText.textContent = destinationPlaceholder[language];
+          destinationText.classList.add("placeholder");
+        }
+        [...document.querySelectorAll("#partyChips .chip")].forEach((chip, i) => {
+          chip.textContent = c.party[i];
+        });
+      }
+
+      function setDestination(value, label) {
+        destination.value = value;
+        destinationText.textContent = label || destinationPlaceholder[language];
+        destinationText.classList.toggle("placeholder", !value);
+        document.querySelectorAll(".soft-dropdown-option").forEach((opt) => {
+          opt.classList.toggle("selected", opt.getAttribute("data-value") === value);
+        });
+        destinationDropdown.classList.remove("open");
+        updateGeneral();
+        resetIdle();
+      }
+
+      function tickClock() {
+        const now = new Date();
+        const mm = String(now.getMonth() + 1).padStart(2, "0");
+        const dd = String(now.getDate()).padStart(2, "0");
+        const hh = String(now.getHours()).padStart(2, "0");
+        const mi = String(now.getMinutes()).padStart(2, "0");
+        const ss = String(now.getSeconds()).padStart(2, "0");
+        document.getElementById("dateLine").textContent = `${mm}/${dd}`;
+        document.getElementById("timeLine").textContent = `${hh}:${mi}:${ss}`;
+      }
 
       function show(id) {
         panels.forEach((p) => p.classList.toggle("active", p.id === id));
@@ -258,12 +667,13 @@
         pending = null;
         company.value = "";
         visitorName.value = "";
-        partySize.value = "";
-        destination.value = "";
+        partySize = "";
+        setDestination("", "");
         interviewName.value = "";
         interviewPurpose = null;
-        purposeInterview.classList.add("outline");
-        purposeTraining.classList.add("outline");
+        document.querySelectorAll("#partyChips .chip").forEach((c) => c.classList.remove("selected"));
+        purposeInterview.classList.remove("selected");
+        purposeTraining.classList.remove("selected");
         updateGeneral();
         updateInterview();
         show("welcome");
@@ -280,7 +690,7 @@
         const ok =
           company.value.trim() &&
           visitorName.value.trim() &&
-          /^([1-9]|[1-9]\d)$/.test(partySize.value.trim()) &&
+          ["1", "2", "3", "4"].includes(partySize) &&
           destination.value;
         generalNext.disabled = !ok;
       }
@@ -291,8 +701,8 @@
 
       function selectPurpose(purpose) {
         interviewPurpose = purpose;
-        purposeInterview.classList.toggle("outline", purpose !== "interview");
-        purposeTraining.classList.toggle("outline", purpose !== "training");
+        purposeInterview.classList.toggle("selected", purpose === "interview");
+        purposeTraining.classList.toggle("selected", purpose === "training");
         updateInterview();
         resetIdle();
       }
@@ -301,7 +711,7 @@
         if (busy) return;
         busy = true;
         pending = payload;
-        document.getElementById("sendingMsg").textContent = "送信しています…";
+        document.getElementById("sendingMsg").textContent = copy[language].sending;
         show("sending");
         clearTimers();
         setTimeout(() => {
@@ -309,7 +719,9 @@
             forceFail.checked = false;
             busy = false;
             document.getElementById("errorBody").textContent =
-              "通信に失敗しました。もう一度お試しください。";
+              language === "ja"
+                ? "通信に失敗しました。もう一度お試しください。"
+                : "Network error. Please try again.";
             show("error");
             return;
           }
@@ -319,17 +731,45 @@
         }, 800);
       }
 
-      document.getElementById("welcome").addEventListener("click", () => show("menu"));
+      document.getElementById("welcome").addEventListener("click", (e) => {
+        if (e.target.closest(".lang") || e.target.closest("#deliveryBtn")) return;
+        show("menu");
+      });
 
       document.querySelectorAll("[data-go]").forEach((el) => {
-        el.addEventListener("click", () => {
+        el.addEventListener("click", (e) => {
+          e.stopPropagation();
           if (busy) return;
           show(el.getAttribute("data-go"));
         });
       });
 
-      document.getElementById("deliveryBtn").addEventListener("click", () => {
+      document.getElementById("deliveryBtn").addEventListener("click", (e) => {
+        e.stopPropagation();
         send({ kind: "delivery" });
+      });
+
+      document.getElementById("otherBtn").addEventListener("click", () => {
+        send({ kind: "other" });
+      });
+
+      document.querySelectorAll("[data-lang]").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.stopPropagation();
+          language = el.getAttribute("data-lang");
+          applyLanguage();
+          resetIdle();
+        });
+      });
+
+      document.querySelectorAll("#partyChips .chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          partySize = chip.getAttribute("data-party");
+          document.querySelectorAll("#partyChips .chip").forEach((c) => c.classList.remove("selected"));
+          chip.classList.add("selected");
+          updateGeneral();
+          resetIdle();
+        });
       });
 
       generalNext.addEventListener("click", () => {
@@ -338,7 +778,7 @@
           kind: "general",
           company: company.value.trim(),
           visitorName: visitorName.value.trim(),
-          partySize: Number(partySize.value.trim()),
+          partySize: Number(partySize),
           destinationId: destination.value
         });
       });
@@ -366,15 +806,26 @@
 
       company.addEventListener("input", () => { updateGeneral(); resetIdle(); });
       visitorName.addEventListener("input", () => { updateGeneral(); resetIdle(); });
-      destination.addEventListener("change", () => { updateGeneral(); resetIdle(); });
-      partySize.addEventListener("input", () => {
-        partySize.value = partySize.value.replace(/\D/g, "").slice(0, 2);
-        updateGeneral();
+      destinationTrigger.addEventListener("click", () => {
+        destinationDropdown.classList.toggle("open");
         resetIdle();
+      });
+      document.querySelectorAll(".soft-dropdown-option").forEach((opt) => {
+        opt.addEventListener("click", () => {
+          setDestination(opt.getAttribute("data-value"), opt.textContent.trim());
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (!destinationDropdown.contains(e.target)) {
+          destinationDropdown.classList.remove("open");
+        }
       });
       interviewName.addEventListener("input", () => { updateInterview(); resetIdle(); });
 
       document.getElementById("app").addEventListener("pointerdown", resetIdle);
+      applyLanguage();
+      tickClock();
+      setInterval(tickClock, 1000);
       resetIdle();
     })();
   </script>

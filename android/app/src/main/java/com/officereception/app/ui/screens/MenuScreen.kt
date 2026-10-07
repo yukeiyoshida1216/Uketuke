@@ -11,47 +11,128 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.officereception.app.config.AppConfig
-import com.officereception.app.ui.components.PrimaryButton
+import com.officereception.app.config.AppLanguage
+import com.officereception.app.ui.components.BackChip
+import com.officereception.app.ui.components.CornerMark
+import com.officereception.app.ui.components.LanguageToggle
+import com.officereception.app.ui.components.MenuIconKind
+import com.officereception.app.ui.components.SoftBackground
+import com.officereception.app.ui.components.SoftCard
 
 @Composable
 fun MenuScreen(
+    language: AppLanguage,
+    onLanguageChange: (AppLanguage) -> Unit,
     onGeneral: () -> Unit,
     onInterview: () -> Unit,
-    onDelivery: () -> Unit
+    onOther: () -> Unit,
+    onBack: () -> Unit
 ) {
-    BoxWithConstraints(modifier = Modifier.fillMaxSize().padding(32.dp)) {
-        val landscape = maxWidth > maxHeight
-        Column(modifier = Modifier.fillMaxSize()) {
-            Text(
-                text = AppConfig.Text.menuTitle,
-                fontSize = 32.sp,
-                color = AppConfig.Colors.Ink
+    val copy = AppConfig.copy(language)
+
+    SoftBackground {
+        BoxWithConstraints(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(28.dp)
+        ) {
+            val landscape = maxWidth > maxHeight
+
+            BackChip(
+                text = copy.back,
+                onClick = onBack,
+                modifier = Modifier.align(Alignment.TopStart)
             )
-            Spacer(modifier = Modifier.height(24.dp))
-            if (landscape) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().weight(1f),
-                    horizontalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    PrimaryButton(AppConfig.Text.general, onGeneral, Modifier.weight(1f))
-                    PrimaryButton(AppConfig.Text.interview, onInterview, Modifier.weight(1f))
-                    PrimaryButton(AppConfig.Text.delivery, onDelivery, Modifier.weight(1f))
-                }
-            } else {
-                Column(
-                    modifier = Modifier.fillMaxWidth().weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    PrimaryButton(AppConfig.Text.general, onGeneral, Modifier.weight(1f))
-                    PrimaryButton(AppConfig.Text.interview, onInterview, Modifier.weight(1f))
-                    PrimaryButton(AppConfig.Text.delivery, onDelivery, Modifier.weight(1f))
-                    Spacer(modifier = Modifier.weight(0.15f))
+            LanguageToggle(
+                language = language,
+                onLanguageChange = onLanguageChange,
+                copy = copy,
+                modifier = Modifier.align(Alignment.TopEnd)
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 64.dp, bottom = 40.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = copy.menuTitle,
+                    color = AppConfig.Colors.Ink,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(28.dp))
+                if (landscape) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        horizontalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        SoftCard(
+                            title = copy.generalTitle,
+                            subtitle = copy.generalSubtitle,
+                            icon = MenuIconKind.Business,
+                            onClick = onGeneral,
+                            modifier = Modifier.weight(1f).fillMaxSize()
+                        )
+                        SoftCard(
+                            title = copy.interviewTitle,
+                            subtitle = copy.interviewSubtitle,
+                            icon = MenuIconKind.Interview,
+                            onClick = onInterview,
+                            modifier = Modifier.weight(1f).fillMaxSize()
+                        )
+                        SoftCard(
+                            title = copy.otherTitle,
+                            subtitle = copy.otherSubtitle,
+                            icon = MenuIconKind.Other,
+                            onClick = onOther,
+                            modifier = Modifier.weight(1f).fillMaxSize()
+                        )
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        SoftCard(
+                            title = copy.generalTitle,
+                            subtitle = copy.generalSubtitle,
+                            icon = MenuIconKind.Business,
+                            onClick = onGeneral,
+                            modifier = Modifier.weight(1f).fillMaxWidth()
+                        )
+                        SoftCard(
+                            title = copy.interviewTitle,
+                            subtitle = copy.interviewSubtitle,
+                            icon = MenuIconKind.Interview,
+                            onClick = onInterview,
+                            modifier = Modifier.weight(1f).fillMaxWidth()
+                        )
+                        SoftCard(
+                            title = copy.otherTitle,
+                            subtitle = copy.otherSubtitle,
+                            icon = MenuIconKind.Other,
+                            onClick = onOther,
+                            modifier = Modifier.weight(1f).fillMaxWidth()
+                        )
+                    }
                 }
             }
+
+            CornerMark(modifier = Modifier.align(Alignment.BottomStart))
         }
     }
 }

@@ -93,4 +93,12 @@ describe("parseNotifyRequest", () => {
       idempotencyKey: key
     });
   });
+
+  it("accepts other notify with idempotencyKey", () => {
+    expect(() => parseNotifyRequest({ type: "other" })).toThrow(/Required|idempotencyKey/);
+    expect(parseNotifyRequest({ type: "other", idempotencyKey: key })).toEqual({
+      type: "other",
+      idempotencyKey: key
+    });
+  });
 });

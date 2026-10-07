@@ -1,6 +1,7 @@
 package com.officereception.app.ui
 
 import com.officereception.app.config.AppConfig
+import com.officereception.app.config.AppLanguage
 import com.officereception.app.domain.Destination
 import com.officereception.app.domain.InterviewPurpose
 import com.officereception.app.domain.NotifyPayload
@@ -18,6 +19,7 @@ enum class Screen {
 
 data class ReceptionUiState(
     val screen: Screen = Screen.Loading,
+    val language: AppLanguage = AppLanguage.Japanese,
     val companyName: String = "",
     val visitorName: String = "",
     val partySize: String = "",
@@ -29,7 +31,7 @@ data class ReceptionUiState(
     val showErrorHome: Boolean = true,
     val errorTitle: String = "",
     val errorBody: String = "",
-    val statusMessage: String = AppConfig.Text.loading
+    val statusMessage: String = AppConfig.copy(AppLanguage.Japanese).loading
 )
 
 sealed class PendingAction {

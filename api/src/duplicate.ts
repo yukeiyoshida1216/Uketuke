@@ -18,6 +18,7 @@ export function canonicalNotifyKey(request: NotifyRequest): string {
       visitorName: request.visitorName
     });
   }
+  // delivery / other — type alone is the fingerprint
   return JSON.stringify({ type: request.type });
 }
 

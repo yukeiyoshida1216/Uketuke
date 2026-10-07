@@ -19,13 +19,13 @@ val NotoSansJp = FontFamily(
 )
 
 private val ColorScheme = lightColorScheme(
-    primary = AppConfig.Colors.Yamabuki,
-    onPrimary = AppConfig.Colors.Ink,
-    secondary = AppConfig.Colors.Yellow,
+    primary = AppConfig.Colors.Accent,
+    onPrimary = AppConfig.Colors.White,
+    secondary = AppConfig.Colors.AccentBorder,
     onSecondary = AppConfig.Colors.Ink,
-    background = AppConfig.Colors.White,
+    background = AppConfig.Colors.CreamTop,
     onBackground = AppConfig.Colors.Ink,
-    surface = AppConfig.Colors.White,
+    surface = AppConfig.Colors.Card,
     onSurface = AppConfig.Colors.Ink,
     error = AppConfig.Colors.Error
 )
