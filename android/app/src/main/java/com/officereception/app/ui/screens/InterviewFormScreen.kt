@@ -1,14 +1,13 @@
 package com.officereception.app.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.officereception.app.config.AppConfig
 import com.officereception.app.config.AppLanguage
 import com.officereception.app.domain.FormValidator
@@ -28,6 +26,7 @@ import com.officereception.app.ui.components.LanguageToggle
 import com.officereception.app.ui.components.SoftBackground
 import com.officereception.app.ui.components.SoftTextField
 import com.officereception.app.ui.components.SubmitButton
+import com.officereception.app.ui.components.rememberFitScale
 
 @Composable
 fun InterviewFormScreen(
@@ -44,11 +43,16 @@ fun InterviewFormScreen(
     val canSubmit = FormValidator.canSubmitInterview(purpose, visitorName)
 
     SoftBackground {
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(28.dp)
+                .padding(horizontal = 20.dp, vertical = 12.dp)
         ) {
+            val scale = rememberFitScale(
+                availableHeight = maxHeight,
+                designHeight = 640.dp
+            )
+
             BackChip(
                 text = copy.back,
                 onClick = onBack,
@@ -64,52 +68,67 @@ fun InterviewFormScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 64.dp, bottom = 48.dp),
+                    .padding(top = scale.dp(48f), bottom = scale.dp(8f))
+                    .widthIn(max = 720.dp)
+                    .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(18.dp)
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = copy.interviewTitle,
-                    color = AppConfig.Colors.Ink,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                SoftTextField(
-                    label = copy.visitorName,
-                    value = visitorName,
-                    onValueChange = onVisitorNameChange,
-                    placeholder = copy.namePlaceholder
-                )
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(scale.dp(12f))
                 ) {
-                    ChoiceChip(
-                        text = copy.purposeInterview,
-                        selected = purpose == InterviewPurpose.Interview,
-                        onClick = { onPurposeSelected(InterviewPurpose.Interview) },
-                        modifier = Modifier.weight(1f)
+                    Text(
+                        text = copy.interviewTitle,
+                        color = AppConfig.Colors.Ink,
+                        fontSize = scale.sp(26f),
+                        fontWeight = FontWeight.Bold
                     )
-                    ChoiceChip(
-                        text = copy.purposeBriefing,
-                        selected = purpose == InterviewPurpose.Training,
-                        onClick = { onPurposeSelected(InterviewPurpose.Training) },
-                        modifier = Modifier.weight(1f)
+                    SoftTextField(
+                        label = copy.visitorName,
+                        value = visitorName,
+                        onValueChange = onVisitorNameChange,
+                        placeholder = copy.namePlaceholder,
+                        scale = scale
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(scale.dp(14f))
+                    ) {
+                        ChoiceChip(
+                            text = copy.purposeInterview,
+                            selected = purpose == InterviewPurpose.Interview,
+                            onClick = { onPurposeSelected(InterviewPurpose.Interview) },
+                            modifier = Modifier.weight(1f),
+                            scale = scale
+                        )
+                        ChoiceChip(
+                            text = copy.purposeBriefing,
+                            selected = purpose == InterviewPurpose.Training,
+                            onClick = { onPurposeSelected(InterviewPurpose.Training) },
+                            modifier = Modifier.weight(1f),
+                            scale = scale
+                        )
+                    }
+                    Text(
+                        text = copy.interviewFormHint,
+                        color = AppConfig.Colors.InkMuted,
+                        fontSize = scale.sp(13f),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
-                Text(
-                    text = copy.interviewFormHint,
-                    color = AppConfig.Colors.InkMuted,
-                    fontSize = 14.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+
                 SubmitButton(
                     text = copy.submit,
                     onClick = onSubmit,
                     enabled = canSubmit,
-                    modifier = Modifier.fillMaxWidth(0.55f)
+                    scale = scale,
+                    modifier = Modifier
+                        .widthIn(max = 360.dp)
+                        .fillMaxWidth(0.5f)
+                        .padding(bottom = scale.dp(18f))
                 )
             }
 

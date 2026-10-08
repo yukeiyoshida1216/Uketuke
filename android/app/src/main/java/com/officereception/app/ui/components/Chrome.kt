@@ -8,7 +8,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,10 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,13 +41,18 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import com.officereception.app.config.AppConfig
 import com.officereception.app.config.AppLanguage
 import com.officereception.app.domain.Destination
@@ -184,26 +185,26 @@ fun SoftCard(
             .background(AppConfig.Colors.Card)
             .border(1.5.dp, AppConfig.Colors.AccentBorder, SoftShape)
             .clickable(onClick = onClick)
-            .padding(horizontal = 20.dp, vertical = 28.dp),
+            .padding(horizontal = 14.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        MenuIcon(kind = icon, modifier = Modifier.size(72.dp))
-        Spacer(modifier = Modifier.height(18.dp))
+        MenuIcon(kind = icon, modifier = Modifier.size(56.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = title,
             color = AppConfig.Colors.Ink,
-            fontSize = 22.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = subtitle,
             color = AppConfig.Colors.InkMuted,
-            fontSize = 14.sp,
+            fontSize = 13.sp,
             textAlign = TextAlign.Center,
-            lineHeight = 20.sp
+            lineHeight = 18.sp
         )
     }
 }
@@ -215,31 +216,32 @@ fun SoftTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    scale: FitScale = FitScale(1f)
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = label,
             color = AppConfig.Colors.Ink,
-            fontSize = 16.sp,
+            fontSize = scale.sp(15f),
             fontWeight = FontWeight.Medium
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        val shape = RoundedCornerShape(18.dp)
+        Spacer(modifier = Modifier.height(scale.dp(5f)))
+        val shape = RoundedCornerShape(scale.dp(16f))
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(4.dp, shape, spotColor = Color(0x22000000), ambientColor = Color(0x12000000))
+                .shadow(3.dp, shape, spotColor = Color(0x22000000), ambientColor = Color(0x12000000))
                 .clip(shape)
                 .background(AppConfig.Colors.Card)
                 .border(1.5.dp, AppConfig.Colors.AccentBorder, shape)
-                .padding(horizontal = 18.dp, vertical = 16.dp)
+                .padding(horizontal = scale.dp(16f), vertical = scale.dp(12f))
         ) {
             if (value.isEmpty()) {
                 Text(
                     text = placeholder,
                     color = AppConfig.Colors.InkMuted.copy(alpha = 0.65f),
-                    fontSize = 20.sp
+                    fontSize = scale.sp(18f)
                 )
             }
             BasicTextField(
@@ -248,7 +250,7 @@ fun SoftTextField(
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
                 textStyle = TextStyle(
-                    fontSize = 20.sp,
+                    fontSize = scale.sp(18f),
                     color = AppConfig.Colors.Ink
                 ),
                 cursorBrush = SolidColor(AppConfig.Colors.Accent),
@@ -263,9 +265,10 @@ fun ChoiceChip(
     text: String,
     selected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scale: FitScale = FitScale(1f)
 ) {
-    val shape = ChipShape
+    val shape = RoundedCornerShape(scale.dp(18f))
     Box(
         modifier = modifier
             .shadow(
@@ -284,14 +287,14 @@ fun ChoiceChip(
                 shape = shape
             )
             .clickable(onClick = onClick)
-            .heightIn(min = 64.dp)
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+            .heightIn(min = scale.dp(48f))
+            .padding(horizontal = scale.dp(12f), vertical = scale.dp(10f)),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = AppConfig.Colors.Ink,
-            fontSize = 20.sp,
+            fontSize = scale.sp(18f),
             fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
             textAlign = TextAlign.Center
         )
@@ -303,9 +306,10 @@ fun SubmitButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    scale: FitScale = FitScale(1f)
 ) {
-    val shape = RoundedCornerShape(22.dp)
+    val shape = RoundedCornerShape(scale.dp(20f))
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -320,14 +324,14 @@ fun SubmitButton(
                 if (enabled) AppConfig.Colors.Accent else AppConfig.Colors.Accent.copy(alpha = 0.4f)
             )
             .clickable(enabled = enabled, onClick = onClick)
-            .heightIn(min = 64.dp)
-            .padding(horizontal = 24.dp, vertical = 16.dp),
+            .heightIn(min = scale.dp(52f))
+            .padding(horizontal = scale.dp(20f), vertical = scale.dp(12f)),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = AppConfig.Colors.White,
-            fontSize = 22.sp,
+            fontSize = scale.sp(20f),
             fontWeight = FontWeight.Bold
         )
     }
@@ -563,7 +567,6 @@ private fun BellIcon(modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SoftDropdown(
     label: String,
@@ -571,37 +574,39 @@ fun SoftDropdown(
     destinations: List<Destination>,
     selectedDestinationId: String?,
     onDestinationSelected: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scale: FitScale = FitScale(1f)
 ) {
     var expanded by remember { mutableStateOf(false) }
+    var fieldWidthPx by remember { mutableStateOf(0) }
+    val density = LocalDensity.current
     val selectedLabel = destinations
         .firstOrNull { it.id == selectedDestinationId }
         ?.displayName
         .orEmpty()
-    val shape = RoundedCornerShape(18.dp)
+    val shape = RoundedCornerShape(scale.dp(16f))
+    val listShape = RoundedCornerShape(scale.dp(14f))
+    val itemHeight = scale.dp(48f)
 
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = label,
             color = AppConfig.Colors.Ink,
-            fontSize = 16.sp,
+            fontSize = scale.sp(15f),
             fontWeight = FontWeight.Medium
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Spacer(modifier = Modifier.height(scale.dp(5f)))
+        Box(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier
-                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                     .fillMaxWidth()
-                    .shadow(4.dp, shape, spotColor = Color(0x22000000), ambientColor = Color(0x12000000))
+                    .onGloballyPositioned { fieldWidthPx = it.size.width }
+                    .shadow(3.dp, shape, spotColor = Color(0x22000000), ambientColor = Color(0x12000000))
                     .clip(shape)
                     .background(AppConfig.Colors.Card)
                     .border(1.5.dp, AppConfig.Colors.AccentBorder, shape)
-                    .padding(horizontal = 18.dp, vertical = 16.dp),
+                    .clickable { expanded = !expanded }
+                    .padding(horizontal = scale.dp(16f), vertical = scale.dp(12f)),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -611,31 +616,80 @@ fun SoftDropdown(
                     } else {
                         AppConfig.Colors.Ink
                     },
-                    fontSize = 20.sp,
+                    fontSize = scale.sp(18f),
                     modifier = Modifier.weight(1f)
                 )
-                ChevronDown(modifier = Modifier.size(20.dp))
+                ChevronDown(modifier = Modifier.size(scale.dp(18f)))
             }
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier.background(AppConfig.Colors.Card)
-            ) {
-                destinations.forEach { destination ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = destination.displayName,
-                                fontSize = 20.sp,
-                                color = AppConfig.Colors.Ink
+
+            // Overlay above the field: does not grow layout height / force scroll.
+            if (expanded && fieldWidthPx > 0) {
+                val gapPx = with(density) { scale.dp(4f).roundToPx() }
+                val listWidth = with(density) { fieldWidthPx.toDp() }
+                val estimatedListHeight = with(density) {
+                    (itemHeight * destinations.size.coerceAtLeast(1))
+                        .coerceAtMost(scale.dp(220f))
+                        .roundToPx()
+                }
+                Popup(
+                    alignment = Alignment.TopStart,
+                    offset = IntOffset(0, -(estimatedListHeight + gapPx)),
+                    onDismissRequest = { expanded = false },
+                    properties = PopupProperties(focusable = true)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .width(listWidth)
+                            .shadow(
+                                10.dp,
+                                listShape,
+                                spotColor = Color(0x33000000),
+                                ambientColor = Color(0x18000000)
                             )
-                        },
-                        onClick = {
-                            onDestinationSelected(destination.id)
-                            expanded = false
-                        },
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
-                    )
+                            .clip(listShape)
+                            .background(AppConfig.Colors.Card)
+                            .border(1.5.dp, AppConfig.Colors.AccentBorder, listShape)
+                            .heightIn(max = scale.dp(220f))
+                    ) {
+                        destinations.forEachIndexed { index, destination ->
+                            val selected = destination.id == selectedDestinationId
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(min = itemHeight)
+                                    .background(
+                                        if (selected) {
+                                            AppConfig.Colors.Accent.copy(alpha = 0.12f)
+                                        } else {
+                                            Color.Transparent
+                                        }
+                                    )
+                                    .clickable {
+                                        onDestinationSelected(destination.id)
+                                        expanded = false
+                                    }
+                                    .padding(
+                                        horizontal = scale.dp(16f),
+                                        vertical = scale.dp(12f)
+                                    ),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                Text(
+                                    text = destination.displayName,
+                                    color = AppConfig.Colors.Ink,
+                                    fontSize = scale.sp(18f),
+                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium
+                                )
+                            }
+                            if (index < destinations.lastIndex) {
+                                HorizontalDivider(
+                                    thickness = 1.dp,
+                                    color = AppConfig.Colors.Border.copy(alpha = 0.7f),
+                                    modifier = Modifier.padding(horizontal = scale.dp(12f))
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

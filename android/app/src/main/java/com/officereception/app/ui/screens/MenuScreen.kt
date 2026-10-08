@@ -41,9 +41,11 @@ fun MenuScreen(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(28.dp)
+                .padding(horizontal = 20.dp, vertical = 12.dp)
         ) {
             val landscape = maxWidth > maxHeight
+            val titleSize = if (maxHeight < 560.dp) 22.sp else 26.sp
+            val titleGap = if (maxHeight < 560.dp) 12.dp else 16.dp
 
             BackChip(
                 text = copy.back,
@@ -60,23 +62,23 @@ fun MenuScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 64.dp, bottom = 40.dp),
+                    .padding(top = 48.dp, bottom = 28.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = copy.menuTitle,
                     color = AppConfig.Colors.Ink,
-                    fontSize = 30.sp,
+                    fontSize = titleSize,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(28.dp))
+                Spacer(modifier = Modifier.height(titleGap))
                 if (landscape) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
-                        horizontalArrangement = Arrangement.spacedBy(20.dp)
+                        horizontalArrangement = Arrangement.spacedBy(14.dp)
                     ) {
                         SoftCard(
                             title = copy.generalTitle,
